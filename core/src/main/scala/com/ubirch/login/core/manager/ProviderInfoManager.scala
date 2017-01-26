@@ -11,12 +11,16 @@ object ProviderInfoManager {
   def providerInfoList(): Seq[ProviderInfo] = {
 
     // TODO read providers from config
-    val genericProvider = ProviderInfo(name = "Generic",
-      logoUrl = "https://example.com/logo.jpg",
-      redirectUrl = "https://example.com?foo=bar"
+    val genericProvider1 = ProviderInfo(name = "Generic1",
+      logoUrl = "https://example.com/logo-generic1.jpg",
+      redirectUrl = "https://example.com?foo1=bar1"
+    )
+    val genericProvider2 = ProviderInfo(name = "Generic2",
+      logoUrl = "https://example.com/logo-generic2.jpg",
+      redirectUrl = "https://example.com?foo2=bar2"
     )
 
-    Seq(genericProvider)
+    Seq(genericProvider1, genericProvider2)
 
   }
 
