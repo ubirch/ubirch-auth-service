@@ -6,8 +6,12 @@ package com.ubirch.login.util.server
   */
 object RouteConstants {
 
-  final val api = "api"
+  final val apiPrefix = "api"
   final val serviceName = "loginService"
   final val currentVersion = "v1"
+  final val providerInfo = "providerInfo"
+  final val list = "list"
+
+  val pathPrefix = s"/$apiPrefix/$serviceName/$currentVersion"
 
 }

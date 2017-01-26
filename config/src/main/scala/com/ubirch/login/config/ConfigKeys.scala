@@ -11,6 +11,7 @@ object ConfigKeys {
   final val INTERFACE = s"$prefix.interface"
   final val PORT = s"$prefix.port"
   final val TIMEOUT = s"$prefix.timeout"
+  final val ACTOR_TIMEOUT = s"$prefix.actorTimeout"
 
   private val openIdConnectPrefix = s"$prefix.openid-connect-generic"
   final val OPENID_CONNECT_GENERIC_CLIENT_ID = s"$openIdConnectPrefix.client-id"

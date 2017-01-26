@@ -93,13 +93,20 @@ libraryDependencies ++= Seq(
 
 ### Welcome / Health
 
-    curl localhost:8080/
-    curl localhost:8080/api/loginService/v1
+    curl localhost:8091/
+    curl localhost:8091/api/loginService/v1
 
 If healthy the server response is:
 
     200 {"version":"1.0","status":"OK","message":"Welcome to the ubirchLoginService"}
 
+
+### Provider Infos
+
+Gives us a list of configured providers.
+
+    curl localhost:8091/api/loginService/v1/providerInfo/list
+    
 
 ## Configuration
 

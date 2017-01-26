@@ -61,7 +61,7 @@ lazy val config = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(openIdUtil)
+  .dependsOn(model, openIdUtil)
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -105,7 +105,8 @@ lazy val depServer = Seq(
 ) ++ scalaLogging
 
 lazy val depCore = Seq(
-
+  akkaActor,
+  ubirchUtilResponse
 )
 
 lazy val depOpenIdUtil = Seq(
@@ -141,6 +142,8 @@ lazy val scalaLogging = Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.7",
   "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
 )
+
+lazy val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaV
 
 lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "3.4.1"
 

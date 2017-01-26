@@ -29,6 +29,13 @@ object Config extends ConfigBase {
     */
   def timeout: Int = config.getInt(ConfigKeys.TIMEOUT)
 
+  /**
+    * Default actor timeout.
+    *
+    * @return timeout in seconds
+    */
+  def actorTimeout: Int = config.getInt(ConfigKeys.ACTOR_TIMEOUT)
+
   /*
    * OpenID Connect Related
    ************************************************************************************************/

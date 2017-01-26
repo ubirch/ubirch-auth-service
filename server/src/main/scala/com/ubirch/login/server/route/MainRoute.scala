@@ -14,20 +14,27 @@ class MainRoute {
   val login = new LoginRoute {}
   val callback = new CallbackRoute {}
   val welcome = new WelcomeRoute {}
+  val provider = new ProviderRoute {}
 
   val myRoute: Route = {
-    pathPrefix(RouteConstants.api / RouteConstants.serviceName / RouteConstants.currentVersion) {
 
-      login.route ~
-        callback.route ~
-        pathEndOrSingleSlash {
-          welcome.route
+    pathPrefix(RouteConstants.apiPrefix) {
+      pathPrefix(RouteConstants.serviceName) {
+        pathPrefix(RouteConstants.currentVersion) {
+
+          login.route ~
+            callback.route ~
+            pathEndOrSingleSlash {
+              welcome.route
+            } ~ provider.route
+
         }
-
+      }
     } ~
       pathSingleSlash {
         welcome.route
       }
+
   }
 
 }
