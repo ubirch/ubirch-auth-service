@@ -1,0 +1,212 @@
+packagedArtifacts in file(".") := Map.empty // disable publishing of root/default project
+
+// see http://www.scala-sbt.org/0.13/docs/Parallel-Execution.html for details
+concurrentRestrictions in Global := Seq(
+  Tags.limit(Tags.Test, 1)
+)
+
+val projectVersion = "0.0.1-SNAPSHOT"
+lazy val commonSettings = Seq(
+
+  scalaVersion := "2.11.8",
+  scalacOptions ++= Seq("-feature"),
+  organization := "com.ubirch.login",
+
+  homepage := Some(url("http://ubirch.com")),
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/ubirch/ubirch-login-service"),
+    "scm:git:git@github.com:ubirch/ubirch-login-service.git"
+  )),
+  version := "0.0.1-SNAPSHOT",
+  test in assembly := {},
+  resolvers ++= Seq(
+    Resolver.sonatypeRepo("releases"),
+    Resolver.sonatypeRepo("snapshots")
+  )
+
+)
+
+/*
+ * MODULES
+ ********************************************************/
+
+lazy val loginService = (project in file("."))
+  .settings(commonSettings: _*)
+  .aggregate(server, config, core, openIdUtil, model, util)
+
+lazy val server = project
+  .settings(commonSettings: _*)
+  .settings(mergeStrategy: _*)
+  .dependsOn(config, core, model, util)
+  .enablePlugins(DockerPlugin)
+  .settings(
+    description := "REST interface and Akka HTTP specific code",
+    libraryDependencies ++= depServer,
+    fork in run := true,
+    resolvers ++= Seq(
+      resolverSeebergerJson
+    ),
+    mainClass in(Compile, run) := Some("com.ubirch.login.server.Boot"),
+    resourceGenerators in Compile += Def.task {
+      generateDockerFile(baseDirectory.value / ".." / "Dockerfile", name.value, version.value, (assemblyOutputPath in assembly).value)
+    }.taskValue
+  )
+
+lazy val config = project
+  .settings(commonSettings: _*)
+  .settings(
+    description := "trackle specific config and config tools",
+    libraryDependencies += ubirchUtilConfig
+  )
+
+lazy val core = project
+  .settings(commonSettings: _*)
+  .dependsOn(openIdUtil)
+  .settings(
+    description := "business logic",
+    libraryDependencies ++= depCore
+  )
+
+lazy val openIdUtil = (project in file("openid-util"))
+  .settings(commonSettings: _*)
+  .dependsOn(config)
+  .settings(
+    name := "openid-util",
+    description := "OpenID Connect utils",
+    libraryDependencies ++= depOpenIdUtil
+  )
+
+lazy val model = project
+  .settings(commonSettings: _*)
+  .settings(
+    description := "JSON models"
+  )
+
+lazy val util = project
+  .settings(commonSettings: _*)
+  .settings(
+    description := "utils"
+  )
+
+/*
+ * MODULE DEPENDENCIES
+ ********************************************************/
+
+lazy val depServer = Seq(
+
+  "com.typesafe.akka" %% "akka-slf4j" % akkaV,
+  "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
+  ubirchUtilRestAkkaHttp,
+  ubirchUtilRestAkkaHttpTest % "test",
+
+  ubirchUtilJsonAutoConvert,
+  ubirchUtilResponse
+
+) ++ scalaLogging
+
+lazy val depCore = Seq(
+
+)
+
+lazy val depOpenIdUtil = Seq(
+  nimbusOidc
+)
+
+lazy val depModel = Seq(
+  ubirchUtilJsonAutoConvert,
+  json4sNative
+)
+
+/*
+ * DEPENDENCIES
+ ********************************************************/
+
+// VERSIONS
+lazy val akkaV = "2.4.11"
+lazy val json4sV = "3.4.2"
+
+lazy val scalaTestV = "3.0.0"
+
+// GROUP NAMES
+lazy val ubirchUtilG = "com.ubirch.util"
+lazy val json4sG = "org.json4s"
+
+lazy val json4sNative = json4sG %% "json4s-native" % json4sV
+
+lazy val scalaLogging = Seq(
+  "org.slf4j" % "slf4j-api" % "1.7.21",
+  "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2" exclude("org.slf4j", "slf4j-api"),
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0" exclude("org.slf4j", "slf4j-api"),
+  "ch.qos.logback" % "logback-core" % "1.1.7",
+  "ch.qos.logback" % "logback-classic" % "1.1.7",
+  "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
+)
+
+lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "3.4.1"
+
+lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilResponse = ubirchUtilG %% "responseutil" % "0.1" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+
+/*
+ * RESOLVER
+ ********************************************************/
+
+lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
+
+/*
+ * MISC
+ ********************************************************/
+
+lazy val mergeStrategy = Seq(
+  assemblyMergeStrategy in assembly := {
+    case PathList("org", "joda", "time", xs@_*) => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("manifest.mf") => MergeStrategy.discard
+    case m if m.toLowerCase.matches("meta-inf.*\\.sf$") => MergeStrategy.discard
+    case m if m.toLowerCase.endsWith("application.conf") => MergeStrategy.concat
+    case m if m.toLowerCase.endsWith("application.dev.conf") => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("application.base.conf") => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("logback.xml") => MergeStrategy.first
+    case m if m.toLowerCase.endsWith("logback-test.xml") => MergeStrategy.discard
+    case "reference.conf" => MergeStrategy.concat
+    case _ => MergeStrategy.first
+  }
+)
+
+def generateDockerFile(file: File, nameString: String, versionString: String, jarFile: sbt.File): Seq[File] = {
+  val jarTargetPath = s"/opt/jar/${jarFile.name}"
+  val contents =
+    s"""FROM ubirch/java
+       		  |RUN mkdir -p /opt/ubirch/etc
+       	 |ADD server/target/scala-2.11/${jarFile.getName} $jarTargetPath
+       		  |ADD config/src/main/resources/application.docker.conf /opt/ubirch/etc/application.conf
+       		  |ADD config/src/main/resources/logback.docker.xml /opt/ubirch/etc/logback.xml
+       |EXPOSE 8080
+       	 |ENTRYPOINT ["java","-Dlogback.configurationFile=/opt/ubirch/etc/logback.xml", "-Dconfig.file=/opt/ubirch/etc/application.conf","-jar", "$jarTargetPath","-Dfile.encoding=UTF-8", "-XX:+UseCMSInitiatingOccupancyOnly","-XX:+DisableExplicitGC","-XX:CMSInitiatingOccupancyFraction=75", "-XX:+UseParNewGC","-XX:+UseConcMarkSweepGC", "-Xms1g", "-Xmx2g", "-Djava.awt.headless=true"]
+       	 |""".stripMargin
+  IO.write(file, contents)
+  Seq(file)
+}
+
