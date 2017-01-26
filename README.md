@@ -110,7 +110,35 @@ Gives us a list of configured providers.
 
 ## Configuration
 
-TODO
+### OpenID Connect Providers
+
+We can configure as many OpenID Connect providers as we want by using the following pattern:
+
+    ubirchLoginService {
+
+      openIdConnectProviders {
+
+        providerList = ["generic1", "generic2"]
+
+        openIdConnectProviders {
+
+          generic1 {
+            name = "Generic-1"
+            scope = "openid"
+            logoUrl = "https://example.com/logo-generic1.jpg"
+            clientId = "1234"
+            loginUrl = "https://example.com/login-generic1"
+            callbackUrl = "http://client.com/callback-generic1"
+          }
+        }
+
+      }
+
+    }
+
+Provider configs are read dynamically based on the list defined in
+_ubirchLoginService.openIdConnectProviders.providerList_. When adding a new one please don't forget to add it's name to
+that list, too. In the above example _generic2_ has no configuration which will result in runtime errors.
 
 
 ## Deployment Notes
@@ -120,7 +148,7 @@ TODO
 
 ## Automated Tests
 
-TODO
+TODO (if necessary)
 
 
 ## Local Setup

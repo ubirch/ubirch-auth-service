@@ -2,6 +2,8 @@ package com.ubirch.login.config
 
 import com.ubirch.util.config.ConfigBase
 
+import scala.collection.JavaConversions._
+
 /**
   * author: cvandrei
   * since: 2017-01-19
@@ -40,8 +42,18 @@ object Config extends ConfigBase {
    * OpenID Connect Related
    ************************************************************************************************/
 
-  def openIdConnectGenericClientId: String = config.getString(ConfigKeys.OPENID_CONNECT_GENERIC_CLIENT_ID)
-  def openIdConnectGenericCallbackUrl: String = config.getString(ConfigKeys.OPENID_CONNECT_GENERIC_CALLBACK_URL)
-  def openIdConnectGenericScope: String = config.getString(ConfigKeys.OPENID_CONNECT_GENERIC_SCOPE)
+  def oidcProviders: Seq[String] = config.getStringList(ConfigKeys.OIDC_PROVIDERS_LIST).toList
+
+  def oidcProviderName(provider: String): String = config.getString(ConfigKeys.oidcProviderName(provider))
+
+  def oidcProviderScope(provider: String): String = config.getString(ConfigKeys.oidcProviderScope(provider))
+
+  def oidcProviderLogoUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderLogoUrl(provider))
+
+  def oidcProviderClientId(provider: String): String = config.getString(ConfigKeys.oidcProviderClientId(provider))
+
+  def oidcProviderLoginUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderLoginUrl(provider))
+
+  def oidcProviderCallbackUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderCallbackUrl(provider))
 
 }

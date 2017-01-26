@@ -14,25 +14,17 @@ import com.ubirch.login.config.Config
   */
 object AuthRequest {
 
-  def create: AuthenticationRequest = {
+  def create(provider: String): AuthenticationRequest = {
 
-    // The client identifier provisioned by the server
-    val clientID = new ClientID(Config.openIdConnectGenericClientId)
-
-    // The client callback URL
-    val callback: URI = new URL(Config.openIdConnectGenericCallbackUrl).toURI
-
-    // Generate random state string for pairing the response to the request
+    val clientID = new ClientID(Config.oidcProviderClientId(provider))
+    val callback: URI = new URL(Config.oidcProviderCallbackUrl(provider)).toURI
     val state = new State()
-
-    // Generate nonce
     val nonce = new Nonce()
 
-    // Compose the request (in code flow)
     new AuthenticationRequest(
-      new URL("https://example.com/login").toURI,
+      new URL(Config.oidcProviderLoginUrl(provider)).toURI,
       new ResponseType(ResponseType.Value.CODE),
-      Scope.parse(Config.openIdConnectGenericScope),
+      Scope.parse(Config.oidcProviderScope(provider)),
       clientID,
       callback,
       state,
@@ -41,9 +33,9 @@ object AuthRequest {
 
   }
 
-  def redirectUrl: String = {
+  def redirectUrl(provider: String): String = {
 
-    val authReq = create
+    val authReq = create(provider)
     authReq.toHTTPRequest.send()
     val redirectHostUrl = authReq.toHTTPRequest.getURL.toString
     val redirectParams = authReq.toHTTPRequest().getQuery

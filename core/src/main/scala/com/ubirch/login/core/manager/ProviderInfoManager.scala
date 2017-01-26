@@ -1,6 +1,8 @@
 package com.ubirch.login.core.manager
 
+import com.ubirch.login.config.Config
 import com.ubirch.login.model.provider.ProviderInfo
+import com.ubirch.login.oidcutil.AuthRequest
 
 /**
   * author: cvandrei
@@ -10,17 +12,14 @@ object ProviderInfoManager {
 
   def providerInfoList(): Seq[ProviderInfo] = {
 
-    // TODO read providers from config
-    val genericProvider1 = ProviderInfo(name = "Generic1",
-      logoUrl = "https://example.com/logo-generic1.jpg",
-      redirectUrl = "https://example.com?foo1=bar1"
-    )
-    val genericProvider2 = ProviderInfo(name = "Generic2",
-      logoUrl = "https://example.com/logo-generic2.jpg",
-      redirectUrl = "https://example.com?foo2=bar2"
-    )
-
-    Seq(genericProvider1, genericProvider2)
+    // TODO add mechanism to remember states (consider remembering only the one that will be used)
+    Config.oidcProviders map { provider =>
+      val redirectUrl = AuthRequest.redirectUrl(provider)
+      ProviderInfo(name = Config.oidcProviderName(provider),
+        logoUrl = Config.oidcProviderLogoUrl(provider),
+        redirectUrl = redirectUrl
+      )
+    }
 
   }
 
