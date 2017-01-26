@@ -11,8 +11,6 @@ import akka.http.scaladsl.server.Route
   */
 class MainRoute {
 
-  val login = new LoginRoute {}
-  val callback = new CallbackRoute {}
   val welcome = new WelcomeRoute {}
   val provider = new ProviderRoute {}
 
@@ -22,11 +20,10 @@ class MainRoute {
       pathPrefix(RouteConstants.serviceName) {
         pathPrefix(RouteConstants.currentVersion) {
 
-          login.route ~
-            callback.route ~
+          provider.route ~
             pathEndOrSingleSlash {
               welcome.route
-            } ~ provider.route
+            }
 
         }
       }
