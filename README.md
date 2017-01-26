@@ -125,7 +125,9 @@ TODO
 
 ## Local Setup
 
-TODO
+To start the server run:
+
+    ./sbt server/run
 
 
 ## Create Docker Image
