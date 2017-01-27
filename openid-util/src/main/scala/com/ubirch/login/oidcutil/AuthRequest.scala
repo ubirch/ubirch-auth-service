@@ -22,7 +22,7 @@ object AuthRequest {
     val nonce = new Nonce()
 
     new AuthenticationRequest(
-      new URL(Config.oidcProviderLoginUrl(provider)).toURI,
+      new URL(Config.oidcProviderAuthorizationEndpoint(provider)).toURI,
       new ResponseType(ResponseType.Value.CODE),
       Scope.parse(Config.oidcProviderScope(provider)),
       clientID,
