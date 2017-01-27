@@ -52,6 +52,8 @@ object Config extends ConfigBase {
 
   def oidcProviderClientId(provider: String): String = config.getString(ConfigKeys.oidcProviderClientId(provider))
 
+  def oidcProviderClientSecret(provider: String): String = config.getString(ConfigKeys.oidcProviderClientSecret(provider))
+
   def oidcProviderLoginUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderLoginUrl(provider))
 
   def oidcProviderCallbackUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderCallbackUrl(provider))

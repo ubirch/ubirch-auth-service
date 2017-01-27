@@ -32,6 +32,8 @@ object ConfigKeys {
 
   final def oidcProviderClientId(provider: String) = s"$oidcProvidersPrefix.$provider.clientId"
 
+  final def oidcProviderClientSecret(provider: String) = s"$oidcProvidersPrefix.$provider.clientSecret"
+
   final def oidcProviderLoginUrl(provider: String) = s"$oidcProvidersPrefix.$provider.loginUrl"
 
   final def oidcProviderCallbackUrl(provider: String) = s"$oidcProvidersPrefix.$provider.callbackUrl"
