@@ -12,7 +12,7 @@ object ProviderInfoManager {
 
   def providerInfoList(): Seq[ProviderInfo] = {
 
-    // TODO add mechanism to remember states (consider remembering only the one that will be used)
+    // TODO add mechanism to remember states (as we need it to verify the token later)
     Config.oidcProviders map { provider =>
       val redirectUrl = AuthRequest.redirectUrl(provider)
       ProviderInfo(name = Config.oidcProviderName(provider),
