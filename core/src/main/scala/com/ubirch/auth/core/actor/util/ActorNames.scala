@@ -1,4 +1,4 @@
-package com.ubirch.login.core.actor.util
+package com.ubirch.auth.core.actor.util
 
 /**
   * author: cvandrei

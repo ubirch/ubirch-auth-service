@@ -1,4 +1,4 @@
-package com.ubirch.login.server.route
+package com.ubirch.auth.server.route
 
 import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.model.JsonResponse
@@ -17,7 +17,7 @@ trait WelcomeRoute extends MyJsonProtocol {
 
     get {
       complete {
-        JsonResponse(message = "Welcome to the ubirchLoginService")
+        JsonResponse(message = "Welcome to the ubirchAuthService")
       }
     }
 

@@ -1,8 +1,8 @@
-package com.ubirch.login.core.manager
+package com.ubirch.auth.core.manager
 
-import com.ubirch.login.config.Config
-import com.ubirch.login.model.provider.ProviderInfo
-import com.ubirch.login.oidcutil.AuthRequest
+import com.ubirch.auth.config.Config
+import com.ubirch.auth.oidcutil.AuthRequest
+import com.ubirch.auth.model.provider.ProviderInfo
 
 /**
   * author: cvandrei

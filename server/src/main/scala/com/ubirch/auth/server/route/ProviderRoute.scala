@@ -1,10 +1,10 @@
-package com.ubirch.login.server.route
+package com.ubirch.auth.server.route
 
-import com.ubirch.login.config.Config
-import com.ubirch.login.core.actor.util.ActorNames
-import com.ubirch.login.core.actor.{ProviderInfoActor, ProviderInfoList}
-import com.ubirch.login.model.provider.ProviderInfo
-import com.ubirch.login.util.server.RouteConstants
+import com.ubirch.auth.config.Config
+import com.ubirch.auth.core.actor.util.ActorNames
+import com.ubirch.auth.util.server.RouteConstants
+import com.ubirch.auth.core.actor.{ProviderInfoActor, ProviderInfoList}
+import com.ubirch.auth.model.provider.ProviderInfo
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.rest.akka.directives.CORSDirective

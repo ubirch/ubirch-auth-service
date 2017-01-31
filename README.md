@@ -1,12 +1,12 @@
-# ubirch-login-service
+# ubirch-auth-service
 
 
 ## General Information
 
-Not wanting to implement all aspects of a user management logins are done with OpenID Connect. This service bundles
-functionalities related to this.
+Not wanting to implement all aspects of a user management logins are done with OpenID Connect. This service bundles the
+related functionality.
 
-The ubirch Login Service is responsible for:
+The ubirch AuthService is responsible for:
 
 * list available OpenID Connect providers
 * remember new valid tokens and userIds
@@ -28,7 +28,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.login" %% "config" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "config" % "0.0.1-SNAPSHOT"
 )
 ```
 
@@ -39,7 +39,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.login" %% "core" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "core" % "0.0.1-SNAPSHOT"
 )
 ```
 
@@ -50,7 +50,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.login" %% "model" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "model" % "0.0.1-SNAPSHOT"
 )
 ```
 
@@ -61,7 +61,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.login" %% "openid-util" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "openid-util" % "0.0.1-SNAPSHOT"
 )
 ```
 
@@ -73,7 +73,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.login" %% "server" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "server" % "0.0.1-SNAPSHOT"
 )
 ```
 
@@ -84,7 +84,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.login" %% "util" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "util" % "0.0.1-SNAPSHOT"
 )
 ```
 
@@ -94,18 +94,18 @@ libraryDependencies ++= Seq(
 ### Welcome / Health
 
     curl localhost:8091/
-    curl localhost:8091/api/loginService/v1
+    curl localhost:8091/api/authService/v1
 
 If healthy the server response is:
 
-    200 {"version":"1.0","status":"OK","message":"Welcome to the ubirchLoginService"}
+    200 {"version":"1.0","status":"OK","message":"Welcome to the ubirchAuthService"}
 
 
 ### Provider Infos
 
 Gives us a list of configured providers.
 
-    curl localhost:8091/api/loginService/v1/providerInfo/list
+    curl localhost:8091/api/authService/v1/providerInfo/list
     
 
 ## Configuration
@@ -114,7 +114,7 @@ Gives us a list of configured providers.
 
 We can configure as many OpenID Connect providers as we want by using the following pattern:
 
-    ubirchLoginService {
+    ubirchAuthService {
 
       openIdConnectProviders {
 
@@ -122,12 +122,18 @@ We can configure as many OpenID Connect providers as we want by using the follow
 
         openIdConnectProviders {
 
-          generic1 {
-            name = "Generic-1"
+          gemeric {
+            name = "Generic1"
             scope = "openid"
-            logoUrl = "https://example.com/logo-generic1.jpg"
-            clientId = "1234"
-            loginUrl = "https://example.com/login-generic1"
+            clientId = "12341234"
+            clientSecret = "asdfölkjasdf"
+            endpointConfig = "https://login.example.com/.well-known/openid-configuration"
+            endpoints {
+              // TODO query dynamically from endpointConfig
+              authorization = "https://login.example.com/oidc/auth"
+              token = "https://login.example.com/oidctoken"
+              userInfo = "https://login.example.com/oidc/userinfo"
+            }
             callbackUrl = "http://client.com/callback-generic1"
           }
         }
@@ -137,7 +143,7 @@ We can configure as many OpenID Connect providers as we want by using the follow
     }
 
 Provider configs are read dynamically based on the list defined in
-_ubirchLoginService.openIdConnectProviders.providerList_. When adding a new one please don't forget to add it's name to
+_ubirchauthService.openIdConnectProviders.providerList_. When adding a new one please don't forget to add it's name to
 that list, too. In the above example _generic2_ has no configuration which will result in runtime errors.
 
 

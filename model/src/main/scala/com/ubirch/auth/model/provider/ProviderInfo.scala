@@ -1,4 +1,4 @@
-package com.ubirch.login.model.provider
+package com.ubirch.auth.model.provider
 
 /**
   * author: cvandrei

@@ -1,11 +1,11 @@
-package com.ubirch.login.server
+package com.ubirch.auth.server
 
 import java.util.concurrent.TimeUnit
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.login.config.Config
-import com.ubirch.login.server.route.MainRoute
+import com.ubirch.auth.config.Config
+import com.ubirch.auth.server.route.MainRoute
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http

@@ -1,4 +1,4 @@
-package com.ubirch.login.oidcutil
+package com.ubirch.auth.oidcutil
 
 import java.net.{URI, URL}
 
@@ -6,7 +6,7 @@ import com.nimbusds.oauth2.sdk.id.{ClientID, State}
 import com.nimbusds.oauth2.sdk.{ResponseType, Scope}
 import com.nimbusds.openid.connect.sdk.{AuthenticationRequest, Nonce}
 
-import com.ubirch.login.config.Config
+import com.ubirch.auth.config.Config
 
 /**
   * author: cvandrei

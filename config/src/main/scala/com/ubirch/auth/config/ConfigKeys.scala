@@ -1,4 +1,4 @@
-package com.ubirch.login.config
+package com.ubirch.auth.config
 
 /**
   * author: cvandrei
@@ -6,7 +6,7 @@ package com.ubirch.login.config
   */
 object ConfigKeys {
 
-  private final val prefix = "ubirchLoginService"
+  private final val prefix = "ubirchAuthService"
 
   /*
    * general server configs

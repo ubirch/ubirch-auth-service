@@ -10,12 +10,12 @@ lazy val commonSettings = Seq(
 
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-feature"),
-  organization := "com.ubirch.login",
+  organization := "com.ubirch.auth",
 
   homepage := Some(url("http://ubirch.com")),
   scmInfo := Some(ScmInfo(
-    url("https://github.com/ubirch/ubirch-login-service"),
-    "scm:git:git@github.com:ubirch/ubirch-login-service.git"
+    url("https://github.com/ubirch/ubirch-auth-service"),
+    "scm:git:git@github.com:ubirch/ubirch-auth-service.git"
   )),
   version := "0.0.1-SNAPSHOT",
   test in assembly := {},
@@ -30,7 +30,7 @@ lazy val commonSettings = Seq(
  * MODULES
  ********************************************************/
 
-lazy val loginService = (project in file("."))
+lazy val authService = (project in file("."))
   .settings(commonSettings: _*)
   .aggregate(server, config, core, openIdUtil, model, util)
 
@@ -46,7 +46,7 @@ lazy val server = project
     resolvers ++= Seq(
       resolverSeebergerJson
     ),
-    mainClass in(Compile, run) := Some("com.ubirch.login.server.Boot"),
+    mainClass in(Compile, run) := Some("com.ubirch.auth.server.Boot"),
     resourceGenerators in Compile += Def.task {
       generateDockerFile(baseDirectory.value / ".." / "Dockerfile", name.value, version.value, (assemblyOutputPath in assembly).value)
     }.taskValue

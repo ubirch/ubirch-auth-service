@@ -1,4 +1,4 @@
-package com.ubirch.login.config
+package com.ubirch.auth.config
 
 import com.ubirch.util.config.ConfigBase
 

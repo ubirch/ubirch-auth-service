@@ -1,4 +1,4 @@
-package com.ubirch.login.util.server
+package com.ubirch.auth.util.server
 
 /**
   * author: cvandrei
@@ -7,7 +7,7 @@ package com.ubirch.login.util.server
 object RouteConstants {
 
   final val apiPrefix = "api"
-  final val serviceName = "loginService"
+  final val serviceName = "authService"
   final val currentVersion = "v1"
   final val providerInfo = "providerInfo"
   final val list = "list"

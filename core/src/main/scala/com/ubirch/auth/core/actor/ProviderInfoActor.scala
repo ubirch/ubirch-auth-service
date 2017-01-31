@@ -1,6 +1,6 @@
-package com.ubirch.login.core.actor
+package com.ubirch.auth.core.actor
 
-import com.ubirch.login.core.manager.ProviderInfoManager
+import com.ubirch.auth.core.manager.ProviderInfoManager
 import com.ubirch.util.model.JsonErrorResponse
 
 import akka.actor.{Actor, ActorLogging}
