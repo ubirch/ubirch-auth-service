@@ -24,6 +24,8 @@ object ConfigKeys {
   private val oidcProvidersPrefix = s"$prefix.openIdConnectProviders"
   final val OIDC_PROVIDERS_LIST = s"$oidcProvidersPrefix.providerList"
 
+  final def oidcProviderId(provider: String) = s"$oidcProvidersPrefix.$provider.id"
+
   final def oidcProviderName(provider: String) = s"$oidcProvidersPrefix.$provider.name"
 
   final def oidcProviderScope(provider: String) = s"$oidcProvidersPrefix.$provider.scope"

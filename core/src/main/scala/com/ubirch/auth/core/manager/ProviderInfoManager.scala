@@ -16,6 +16,7 @@ object ProviderInfoManager {
     Config.oidcProviders map { provider =>
       val redirectUrl = AuthRequest.redirectUrl(provider)
       ProviderInfo(
+        id = Config.oidcProviderId(provider),
         name = Config.oidcProviderName(provider),
         redirectUrl = redirectUrl
       )

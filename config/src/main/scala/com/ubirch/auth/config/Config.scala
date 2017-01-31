@@ -44,6 +44,8 @@ object Config extends ConfigBase {
 
   def oidcProviders: Seq[String] = config.getStringList(ConfigKeys.OIDC_PROVIDERS_LIST).toList
 
+  def oidcProviderId(provider: String): String = config.getString(ConfigKeys.oidcProviderId(provider))
+
   def oidcProviderName(provider: String): String = config.getString(ConfigKeys.oidcProviderName(provider))
 
   def oidcProviderScope(provider: String): String = config.getString(ConfigKeys.oidcProviderScope(provider))
