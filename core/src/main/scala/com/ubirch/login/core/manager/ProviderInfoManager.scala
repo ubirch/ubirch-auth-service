@@ -15,8 +15,8 @@ object ProviderInfoManager {
     // TODO remember states (as we need them to verify the token later)
     Config.oidcProviders map { provider =>
       val redirectUrl = AuthRequest.redirectUrl(provider)
-      ProviderInfo(name = Config.oidcProviderName(provider),
-        logoUrl = Config.oidcProviderLogoUrl(provider),
+      ProviderInfo(
+        name = Config.oidcProviderName(provider),
         redirectUrl = redirectUrl
       )
     }

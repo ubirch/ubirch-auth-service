@@ -28,8 +28,6 @@ object ConfigKeys {
 
   final def oidcProviderScope(provider: String) = s"$oidcProvidersPrefix.$provider.scope"
 
-  final def oidcProviderLogoUrl(provider: String) = s"$oidcProvidersPrefix.$provider.logoUrl"
-
   final def oidcProviderClientId(provider: String) = s"$oidcProvidersPrefix.$provider.clientId"
 
   final def oidcProviderClientSecret(provider: String) = s"$oidcProvidersPrefix.$provider.clientSecret"

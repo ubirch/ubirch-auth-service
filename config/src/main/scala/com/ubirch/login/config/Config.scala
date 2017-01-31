@@ -48,8 +48,6 @@ object Config extends ConfigBase {
 
   def oidcProviderScope(provider: String): String = config.getString(ConfigKeys.oidcProviderScope(provider))
 
-  def oidcProviderLogoUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderLogoUrl(provider))
-
   def oidcProviderClientId(provider: String): String = config.getString(ConfigKeys.oidcProviderClientId(provider))
 
   def oidcProviderClientSecret(provider: String): String = config.getString(ConfigKeys.oidcProviderClientSecret(provider))
