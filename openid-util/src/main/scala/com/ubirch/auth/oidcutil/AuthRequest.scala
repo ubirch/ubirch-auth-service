@@ -19,7 +19,7 @@ object AuthRequest {
     val clientID = new ClientID(Config.oidcProviderClientId(provider))
     val callback: URI = new URL(Config.oidcProviderCallbackUrl(provider)).toURI
     val state = new State()
-    val nonce = new Nonce()
+    val nonce = new Nonce() // TODO this is optional?
 
     new AuthenticationRequest(
       new URL(Config.oidcProviderAuthorizationEndpoint(provider)).toURI,
