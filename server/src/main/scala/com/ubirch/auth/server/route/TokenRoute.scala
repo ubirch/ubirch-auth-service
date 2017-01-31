@@ -44,7 +44,7 @@ trait TokenRoute extends MyJsonProtocol
           entity(as[AfterLogin]) { afterLogin =>
             onSuccess(tokenActor ? afterLogin) {
               case res: AfterLogin => complete(afterLogin)
-              case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
+              case _ => complete(serverErrorResponse(errorType = "VerificationError", errorMessage = "failed to verify token"))
             }
           }
         }
