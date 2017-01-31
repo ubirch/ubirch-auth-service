@@ -7,5 +7,6 @@ package com.ubirch.auth.core.actor.util
 object ActorNames {
 
   final val PROVIDER_INFO = "provider-info-actor"
+  final val TOKEN = "token-actor"
 
 }

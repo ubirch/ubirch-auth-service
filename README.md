@@ -106,6 +106,16 @@ If healthy the server response is:
 Gives us a list of configured providers.
 
     curl localhost:8091/api/authService/v1/providerInfo/list
+
+
+### Verify Token
+
+    curl -XPOST localhost:8091/api/authService/v1/token/verify -d'{
+      "code": "$CODE",
+      "state": "$STATE"
+    }'
+
+TODO: document responses
     
 
 ## Configuration
