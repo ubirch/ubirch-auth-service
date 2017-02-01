@@ -108,7 +108,11 @@ Gives us a list of configured providers.
     curl localhost:8091/api/authService/v1/providerInfo/list
 
 
-### Verify Token
+### Verify Code
+
+After a successful login users are being redirect to the Frontend. That call includes a _code_ and _state_. Calling this
+method has the effect that our system verifies the code and responds with the resulting token. This token can then be
+used to request protected resources in other backend services.
 
     curl -XPOST localhost:8091/api/authService/v1/verify/code -d'{
       "providerId": "$PROVIDER_ID",
