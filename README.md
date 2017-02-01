@@ -138,6 +138,14 @@ To invalidate a token (logout) please call:
         "token": "$TOKEN"
     }'
 
+In case of a successful logout the endpoint responds with:
+
+    200 OK
+
+In case of an error the response is:
+
+    400 {"version":"1.0","status":"NOK","errorType":"LogoutError","errorMessage":"logout failed"}
+
 ## Configuration
 
 ### OpenID Connect Providers
