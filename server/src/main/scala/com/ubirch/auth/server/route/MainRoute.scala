@@ -13,6 +13,7 @@ class MainRoute {
 
   val welcome = new WelcomeRoute {}
   val provider = new ProviderRoute {}
+  val token = new TokenRoute {}
 
   val myRoute: Route = {
 
@@ -21,6 +22,7 @@ class MainRoute {
         pathPrefix(RouteConstants.currentVersion) {
 
           provider.route ~
+            token.route ~
             pathEndOrSingleSlash {
               welcome.route
             }
