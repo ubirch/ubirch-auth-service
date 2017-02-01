@@ -1,6 +1,6 @@
 package com.ubirch.auth.oidcutil
 
-import java.net.{URI, URL}
+import java.net.{URI, URL, URLDecoder}
 
 import com.nimbusds.oauth2.sdk.id.{ClientID, State}
 import com.nimbusds.oauth2.sdk.{ResponseType, Scope}
@@ -37,10 +37,10 @@ object AuthRequest {
 
     val authReq = create(provider)
     authReq.toHTTPRequest.send()
-    val redirectHostUrl = authReq.toHTTPRequest.getURL.toString // TODO convert to url-decoded string
+    val redirectHost = URLDecoder.decode(authReq.toHTTPRequest.getURL.toString, "UTF-8")
     val redirectParams = authReq.toHTTPRequest().getQuery
 
-    s"$redirectHostUrl?$redirectParams"
+    s"$redirectHost?$redirectParams"
 
   }
 
