@@ -1,11 +1,13 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.model.token.AfterLogin
+import com.ubirch.auth.core.manager.TokenManager
+import com.ubirch.auth.model.token.{AfterLogin, Token}
 import com.ubirch.util.model.JsonErrorResponse
 
 import akka.actor.{Actor, ActorLogging}
 
 import scala.concurrent.ExecutionContextExecutor
+import scala.util.{Failure, Success}
 
 /**
   * author: cvandrei
@@ -19,7 +21,18 @@ class TokenActor extends Actor
   override def receive: Receive = {
 
     case afterLogin: AfterLogin =>
-      context.sender() ! afterLogin // TODO implement logic verify "code" and "status" from "afterLogin"
+
+      val sender = context.sender()
+      TokenManager.verifyCode(afterLogin).onComplete {
+
+        case Success(token: Token) =>
+          sender ! token
+
+        case Failure(t) =>
+          log.error(t, s"code verification failed: afterLogin=$afterLogin")
+          sender ! JsonErrorResponse(errorType = "ServerError", errorMessage = "code verification failed")
+
+      }
 
     case _ =>
       log.error("unknown message")

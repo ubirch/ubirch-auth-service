@@ -11,6 +11,8 @@ import scala.concurrent.Future
 object TokenManager {
 
   def verifyCode(afterLogin: AfterLogin): Future[Token] = {
+    // TODO verify that "afterLogin.state" matches the one from when we created the redirectUrl
+    // TODO verify "afterLogin.code" w/ OpenID Connect provider
     Future(Token(s"${afterLogin.code}-${afterLogin.state}"))
   }
 
