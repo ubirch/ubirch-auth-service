@@ -1,7 +1,7 @@
 package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.core.manager.TokenManager
-import com.ubirch.auth.model.token.{AfterLogin, Token}
+import com.ubirch.auth.model.{AfterLogin, Token}
 import com.ubirch.util.model.JsonErrorResponse
 
 import akka.actor.{Actor, ActorLogging}

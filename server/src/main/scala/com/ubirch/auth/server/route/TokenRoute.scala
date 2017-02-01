@@ -3,7 +3,7 @@ package com.ubirch.auth.server.route
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.TokenActor
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.model.token.{AfterLogin, Token}
+import com.ubirch.auth.model.{AfterLogin, Token}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol

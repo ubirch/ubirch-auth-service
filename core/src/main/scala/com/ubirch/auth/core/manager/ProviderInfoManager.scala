@@ -1,8 +1,8 @@
 package com.ubirch.auth.core.manager
 
 import com.ubirch.auth.config.Config
+import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
-import com.ubirch.auth.model.provider.ProviderInfo
 
 /**
   * author: cvandrei
