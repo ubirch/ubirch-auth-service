@@ -2,6 +2,7 @@ package com.ubirch.auth.core.manager
 
 import com.ubirch.auth.model.token.{AfterLogin, Token}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
