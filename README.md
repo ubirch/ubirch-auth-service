@@ -100,6 +100,10 @@ If healthy the server response is:
 
     200 {"version":"1.0","status":"OK","message":"Welcome to the ubirchAuthService"}
 
+If not healthy the server response is:
+
+    400 {"version":"1.0","status":"NOK","message":"$ERROR_MESSAGE"}
+
 
 ### Provider Infos
 
