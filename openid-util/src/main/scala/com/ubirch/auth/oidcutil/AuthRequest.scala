@@ -33,14 +33,14 @@ object AuthRequest {
 
   }
 
-  def redirectUrl(provider: String): String = {
+  def redirectUrl(provider: String): (String, State) = {
 
     val authReq = create(provider)
     authReq.toHTTPRequest.send()
     val redirectHost = URLDecoder.decode(authReq.toHTTPRequest.getURL.toString, "UTF-8")
     val redirectParams = authReq.toHTTPRequest().getQuery
 
-    s"$redirectHost?$redirectParams"
+    (s"$redirectHost?$redirectParams", authReq.getState)
 
   }
 
