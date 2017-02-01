@@ -13,6 +13,7 @@ object RouteConstants {
   final val list = "list"
   final val verify = "verify"
   final val code = "code"
+  final val logout = "logout"
 
   val pathPrefix = s"/$apiPrefix/$serviceName/$currentVersion"
 

@@ -1,5 +1,6 @@
 package com.ubirch.auth.server.route
 
+import com.ubirch.auth.server.LogoutRoute
 import com.ubirch.auth.util.server.RouteConstants
 
 import akka.http.scaladsl.server.Directives._
@@ -14,6 +15,7 @@ class MainRoute {
   val welcome = new WelcomeRoute {}
   val provider = new ProviderRoute {}
   val token = new TokenRoute {}
+  val logout = new LogoutRoute {}
 
   val myRoute: Route = {
 
@@ -23,6 +25,7 @@ class MainRoute {
 
           provider.route ~
             token.route ~
+            logout.route ~
             pathEndOrSingleSlash {
               welcome.route
             }

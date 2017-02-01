@@ -131,7 +131,6 @@ In case of an error the response will be:
 
 ### Logout
 
-**TODO implement with UBD-276**
 To invalidate a token (logout) please call:
 
     curl -XPOST localhost:8091/api/authService/v1/logout -d'{
