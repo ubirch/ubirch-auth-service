@@ -46,6 +46,10 @@ object Config extends ConfigBase {
 
   def redisPort: Int = config.getInt(ConfigKeys.REDIS_PORT)
 
+  def redisDatabase: String = config.getString(ConfigKeys.REDIS_DATABASE)
+
+  def redisPassword: String = config.getString(ConfigKeys.REDIS_PASSWORD)
+
   /*
    * OpenID Connect Related
    ************************************************************************************************/

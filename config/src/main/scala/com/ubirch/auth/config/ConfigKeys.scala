@@ -25,6 +25,8 @@ object ConfigKeys {
 
   final val REDIS_HOST = s"$redisPrefix.host"
   final val REDIS_PORT = s"$redisPrefix.port"
+  final val REDIS_DATABASE = s"$redisPrefix.database"
+  final val REDIS_PASSWORD = s"$redisPrefix.password"
 
   /*
    * OpenID Connect (= oidc)
