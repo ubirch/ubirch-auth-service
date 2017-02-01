@@ -37,7 +37,7 @@ object AuthRequest {
 
     val authReq = create(provider)
     authReq.toHTTPRequest.send()
-    val redirectHostUrl = authReq.toHTTPRequest.getURL.toString
+    val redirectHostUrl = authReq.toHTTPRequest.getURL.toString // TODO convert to url-decoded string
     val redirectParams = authReq.toHTTPRequest().getQuery
 
     s"$redirectHostUrl?$redirectParams"
