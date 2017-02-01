@@ -39,6 +39,14 @@ object Config extends ConfigBase {
   def actorTimeout: Int = config.getInt(ConfigKeys.ACTOR_TIMEOUT)
 
   /*
+   * Redis
+   ************************************************************************************************/
+
+  def redisHost: String = config.getString(ConfigKeys.REDIS_HOST)
+
+  def redisPort: Int = config.getInt(ConfigKeys.REDIS_PORT)
+
+  /*
    * OpenID Connect Related
    ************************************************************************************************/
 
