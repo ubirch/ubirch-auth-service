@@ -37,7 +37,7 @@ trait TokenRoute extends MyJsonProtocol
 
   val route: Route = {
 
-    path(RouteConstants.token / RouteConstants.verify) {
+    path(RouteConstants.verify / RouteConstants.code) {
       respondWithCORS {
 
         post {

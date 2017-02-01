@@ -110,7 +110,7 @@ Gives us a list of configured providers.
 
 ### Verify Token
 
-    curl -XPOST localhost:8091/api/authService/v1/token/verify -d'{
+    curl -XPOST localhost:8091/api/authService/v1/verify/code -d'{
       "code": "$CODE",
       "state": "$STATE"
     }'
