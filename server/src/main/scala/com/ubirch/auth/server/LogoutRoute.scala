@@ -10,6 +10,7 @@ import com.ubirch.util.rest.akka.directives.CORSDirective
 import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Route
 import akka.util.Timeout
+import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
