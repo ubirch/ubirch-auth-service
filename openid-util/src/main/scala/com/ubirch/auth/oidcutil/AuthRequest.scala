@@ -4,7 +4,7 @@ import java.net.{URI, URL, URLDecoder}
 
 import com.nimbusds.oauth2.sdk.id.{ClientID, State}
 import com.nimbusds.oauth2.sdk.{ResponseType, Scope}
-import com.nimbusds.openid.connect.sdk.{AuthenticationRequest, Nonce}
+import com.nimbusds.openid.connect.sdk.AuthenticationRequest
 
 import com.ubirch.auth.config.Config
 
@@ -19,7 +19,7 @@ object AuthRequest {
     val clientID = new ClientID(Config.oidcProviderClientId(provider))
     val callback: URI = new URL(Config.oidcProviderCallbackUrl(provider)).toURI
     val state = new State()
-    val nonce = new Nonce() // TODO this is optional?
+    val nonce = null
 
     new AuthenticationRequest(
       new URL(Config.oidcProviderAuthorizationEndpoint(provider)).toURI,
