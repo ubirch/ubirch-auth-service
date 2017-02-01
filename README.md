@@ -146,6 +146,7 @@ In case of an error the response is:
 
     400 {"version":"1.0","status":"NOK","errorType":"LogoutError","errorMessage":"logout failed"}
 
+
 ## Configuration
 
 ### OpenID Connect Providers
