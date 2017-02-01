@@ -4,6 +4,7 @@ import com.ubirch.auth.model.token.{AfterLogin, Token}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Random
 
 /**
   * author: cvandrei
@@ -11,10 +12,16 @@ import scala.concurrent.Future
   */
 object TokenManager {
 
-  def verifyCode(afterLogin: AfterLogin): Future[Token] = {
+  def verifyCode(afterLogin: AfterLogin): Future[Option[Token]] = {
+
     // TODO verify that "afterLogin.state" matches the one from when we created the redirectUrl
     // TODO verify "afterLogin.code" w/ OpenID Connect provider
-    Future(Token(s"${afterLogin.code}-${afterLogin.state}"))
+
+    Random.nextBoolean() match {
+      case true => Future(Some(Token(s"${afterLogin.providerId}-${afterLogin.code}-${afterLogin.state}")))
+      case false => Future(None)
+    }
+
   }
 
 }

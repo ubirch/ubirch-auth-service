@@ -25,8 +25,11 @@ class TokenActor extends Actor
       val sender = context.sender()
       TokenManager.verifyCode(afterLogin).onComplete {
 
-        case Success(token: Token) =>
-          sender ! token
+        case Success(tokenOpt: Option[Token]) =>
+          tokenOpt match {
+            case Some(token) => sender ! token
+            case None => sender ! JsonErrorResponse(errorType = "VerificationError", errorMessage = "invalid code")
+          }
 
         case Failure(t) =>
           log.error(t, s"code verification failed: afterLogin=$afterLogin")

@@ -3,10 +3,11 @@ package com.ubirch.auth.server.route
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.TokenActor
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.model.token.AfterLogin
+import com.ubirch.auth.model.token.{AfterLogin, Token}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
+import com.ubirch.util.model.JsonErrorResponse
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
 import akka.actor.{ActorSystem, Props}
@@ -43,7 +44,8 @@ trait TokenRoute extends MyJsonProtocol
         post {
           entity(as[AfterLogin]) { afterLogin =>
             onSuccess(tokenActor ? afterLogin) {
-              case res: AfterLogin => complete(afterLogin)
+              case token: Token => complete(token)
+              case jsonError: JsonErrorResponse => complete(requestErrorResponse(jsonError))
               case _ => complete(serverErrorResponse(errorType = "VerificationError", errorMessage = "failed to verify code"))
             }
           }
