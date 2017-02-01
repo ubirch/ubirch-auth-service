@@ -111,12 +111,18 @@ Gives us a list of configured providers.
 ### Verify Token
 
     curl -XPOST localhost:8091/api/authService/v1/verify/code -d'{
-      "providerId": $PROVIDER_ID,
+      "providerId": "$PROVIDER_ID",
       "code": "$CODE",
       "state": "$STATE"
     }'
 
-TODO: document responses
+If the code could be verified the response will be:
+
+    200 {"token": "a_token_1234"}
+
+In case of an error the response will be:
+
+    400 {"version":"1.0","status":"NOK","errorType":"VerificationError","errorMessage":"invalid code"}
     
 
 ## Configuration
