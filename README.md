@@ -127,7 +127,17 @@ If the code could be verified the response will be:
 In case of an error the response will be:
 
     400 {"version":"1.0","status":"NOK","errorType":"VerificationError","errorMessage":"invalid code"}
-    
+
+
+### Logout
+
+**TODO implement with UBD-276**
+To invalidate a token (logout) please call:
+
+    curl -XPOST localhost:8091/api/authService/v1/logout -d'{
+        "providerId": "$PROVIDER_ID",
+        "token": "$TOKEN"
+    }'
 
 ## Configuration
 
