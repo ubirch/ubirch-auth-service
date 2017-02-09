@@ -39,18 +39,6 @@ object Config extends ConfigBase {
   def actorTimeout: Int = config.getInt(ConfigKeys.ACTOR_TIMEOUT)
 
   /*
-   * Redis
-   ************************************************************************************************/
-
-  def redisHost: String = config.getString(ConfigKeys.REDIS_HOST)
-
-  def redisPort: Int = config.getInt(ConfigKeys.REDIS_PORT)
-
-  def redisDatabase: String = config.getString(ConfigKeys.REDIS_DATABASE)
-
-  def redisPassword: String = config.getString(ConfigKeys.REDIS_PASSWORD)
-
-  /*
    * OpenID Connect Related
    ************************************************************************************************/
 
@@ -75,5 +63,15 @@ object Config extends ConfigBase {
   def oidcProviderUserInfoEndpoint(provider: String): String = config.getString(ConfigKeys.oidcProviderUserInfoEndpoint(provider))
 
   def oidcProviderCallbackUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderCallbackUrl(provider))
+
+  /**
+    * States are an additional OpenID Connect security feature. We create them when provider infos are queried and not
+    * all of them will be used. Hence we want them the have a time-to-live (TTL).
+    *
+    * This method returns the TTL in seconds.
+    *
+    * @return ttl in seconds
+    */
+  def oidcStateTtl: Long = config.getLong(ConfigKeys.OIDC_STATE_TTL)
 
 }

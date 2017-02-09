@@ -44,7 +44,8 @@ lazy val server = project
     libraryDependencies ++= depServer,
     fork in run := true,
     resolvers ++= Seq(
-      resolverSeebergerJson
+      resolverSeebergerJson,
+      roundeightsHasher
     ),
     mainClass in(Compile, run) := Some("com.ubirch.auth.server.Boot"),
     resourceGenerators in Compile += Def.task {
@@ -95,19 +96,21 @@ lazy val util = project
 lazy val depServer = Seq(
 
   "com.typesafe.akka" %% "akka-slf4j" % akkaV,
-  "com.typesafe.akka" %% "akka-http-experimental" % akkaV,
+  "com.typesafe.akka" %% "akka-http-experimental" % akkaHttpV,
   ubirchUtilRestAkkaHttp,
   ubirchUtilRestAkkaHttpTest % "test",
 
   ubirchUtilJsonAutoConvert,
   ubirchUtilResponse
 
-) ++ scalaLogging
+)
 
 lazy val depCore = Seq(
   akkaActor,
-  ubirchUtilResponse
-)
+  rediscala,
+  ubirchUtilResponse,
+  ubirchUtilCrypto
+) ++ scalaLogging
 
 lazy val depOpenIdUtil = Seq(
   nimbusOidc
@@ -123,7 +126,8 @@ lazy val depModel = Seq(
  ********************************************************/
 
 // VERSIONS
-lazy val akkaV = "2.4.11"
+lazy val akkaV = "2.4.16"
+lazy val akkaHttpV = "2.4.11.1"
 lazy val json4sV = "3.4.2"
 
 lazy val scalaTestV = "3.0.0"
@@ -147,7 +151,17 @@ lazy val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaV
 
 lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "3.4.1"
 
+lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll(
+  ExclusionRule(organization = "com.typesafe.akka")
+)
+
 lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+
+lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
@@ -178,6 +192,7 @@ lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2
  ********************************************************/
 
 lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
+lazy val roundeightsHasher = "RoundEights" at "http://maven.spikemark.net/roundeights"
 
 /*
  * MISC

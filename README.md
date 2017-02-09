@@ -190,9 +190,17 @@ _ubirchauthService.openIdConnectProviders.providerList_. When adding a new one p
 that list, too. In the above example _generic2_ has no configuration which will result in runtime errors.
 
 
+### Redis
+
+Since we're using the [rediscala library|https://github.com/etaty/rediscala] we can use it's
+[configuration options|https://github.com/etaty/rediscala/blob/master/src/main/resources/reference.conf]. 
+
+
 ## Deployment Notes
 
-TODO
+This service has the following dependencies:
+ 
+* Redis 3.2.x (verification needed; definitely works with 3.2.7)
 
 
 ## Automated Tests

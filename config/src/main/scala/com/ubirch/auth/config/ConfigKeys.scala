@@ -18,17 +18,6 @@ object ConfigKeys {
   final val ACTOR_TIMEOUT = s"$prefix.actorTimeout"
 
   /*
-   * Redis
-   *********************************************************************************************/
-
-  private val redisPrefix = s"$prefix.redis"
-
-  final val REDIS_HOST = s"$redisPrefix.host"
-  final val REDIS_PORT = s"$redisPrefix.port"
-  final val REDIS_DATABASE = s"$redisPrefix.database"
-  final val REDIS_PASSWORD = s"$redisPrefix.password"
-
-  /*
    * OpenID Connect (= oidc)
    *********************************************************************************************/
 
@@ -57,5 +46,7 @@ object ConfigKeys {
   final def oidcProviderUserInfoEndpoint(provider: String) = s"${oidcEndpointsPrefix(provider)}.userInfo"
 
   final def oidcProviderCallbackUrl(provider: String) = s"$oidcProvidersPrefix.$provider.callbackUrl"
+
+  final val OIDC_STATE_TTL = s"$oidcProvidersPrefix.state.ttl"
 
 }
