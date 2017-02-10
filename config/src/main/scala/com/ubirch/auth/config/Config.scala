@@ -68,10 +68,15 @@ object Config extends ConfigBase {
     * States are an additional OpenID Connect security feature. We create them when provider infos are queried and not
     * all of them will be used. Hence we want them the have a time-to-live (TTL).
     *
-    * This method returns the TTL in seconds.
+    * @return ttl in seconds
+    */
+  def oidcStateTtl(): Long = config.getLong(ConfigKeys.OIDC_STATE_TTL)
+
+  /**
+    * Tokens exist when a user successfully logged in but not without a time-to-live (TTL).
     *
     * @return ttl in seconds
     */
-  def oidcStateTtl: Long = config.getLong(ConfigKeys.OIDC_STATE_TTL)
+  def oidcTokenTtl(): Long = config.getLong(ConfigKeys.OIDC_TOKEN_TTL)
 
 }

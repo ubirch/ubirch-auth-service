@@ -45,7 +45,7 @@ object ProviderInfoManager extends App
     val redis = RedisClient()
 
     val key = HashUtil.sha256HexString(OidcUtil.stateToHashedKey(provider, state.toString))
-    val ttl = Some(Config.oidcStateTtl)
+    val ttl = Some(Config.oidcStateTtl())
 
     redis.set(key, "1", ttl) onComplete {
 

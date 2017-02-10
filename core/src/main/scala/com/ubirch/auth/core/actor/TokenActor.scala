@@ -1,6 +1,6 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.core.manager.TokenManager
+import com.ubirch.auth.core.manager.{TokenManager, VerifyCodeError, VerifyCodeResult}
 import com.ubirch.auth.model.{AfterLogin, Token}
 import com.ubirch.util.model.JsonErrorResponse
 
@@ -25,10 +25,39 @@ class TokenActor extends Actor
       val sender = context.sender()
       TokenManager.verifyCode(afterLogin).onComplete {
 
-        case Success(tokenOpt: Option[Token]) =>
-          tokenOpt match {
-            case Some(token) => sender ! token
-            case None => sender ! JsonErrorResponse(errorType = "VerificationError", errorMessage = "invalid code")
+        case Success(verifyCodeResult: VerifyCodeResult) =>
+
+          verifyCodeResult.token match {
+
+            case Some(token) => sender ! Token(token)
+
+            case None =>
+
+              verifyCodeResult.errorType match {
+
+                case VerifyCodeError.InvalidState =>
+                  // TODO BadRequest (400)
+                  log.error("unable to verify unknown state (it might be beyond it's TTL)")
+                  sender ! JsonErrorResponse(errorType = "InvalidState", errorMessage = "invalid state")
+
+                case VerifyCodeError.LoginFailed =>
+                  // TODO Unauthorized (401)
+                  log.error("code verification failed")
+                  sender ! JsonErrorResponse(errorType = "LoginFailed", errorMessage = "invalid code")
+
+                case None =>
+                  // TODO InternalServerError (500)
+                  log.error("request does not make sense: token and errorType were None (check TokenManager.verifyCode() for bugs!!!)")
+                  sender ! JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")
+
+                case _ =>
+                  // TODO InternalServerError (500)
+                  log.error(s"unknown server error")
+                  sender ! JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")
+
+              }
+
+
           }
 
         case Failure(t) =>

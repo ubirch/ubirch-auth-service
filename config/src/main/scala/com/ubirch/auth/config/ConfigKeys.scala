@@ -49,4 +49,6 @@ object ConfigKeys {
 
   final val OIDC_STATE_TTL = s"$oidcProvidersPrefix.state.ttl"
 
+  final val OIDC_TOKEN_TTL = s"$oidcProvidersPrefix.token.ttl"
+
 }
