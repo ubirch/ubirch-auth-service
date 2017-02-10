@@ -109,7 +109,8 @@ lazy val depCore = Seq(
   akkaActor,
   rediscala,
   ubirchUtilResponse,
-  ubirchUtilCrypto
+  ubirchUtilCrypto,
+  scalatest % "test"
 ) ++ scalaLogging
 
 lazy val depOpenIdUtil = Seq(
@@ -135,6 +136,8 @@ lazy val scalaTestV = "3.0.0"
 // GROUP NAMES
 lazy val ubirchUtilG = "com.ubirch.util"
 lazy val json4sG = "org.json4s"
+
+lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
 
 lazy val json4sNative = json4sG %% "json4s-native" % json4sV
 
