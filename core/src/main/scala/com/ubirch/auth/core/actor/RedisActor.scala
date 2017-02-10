@@ -2,7 +2,6 @@ package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.util.OidcUtil
-import com.ubirch.auth.model.AfterLogin
 
 import akka.actor.{Actor, ActorLogging, ActorSystem}
 import redis.RedisClient
@@ -26,9 +25,13 @@ class RedisActor extends Actor
 
     case ds: DeleteState => deleteState(ds)
 
-    case vse: VerifyStateExists => // TODO
+    case vse: VerifyStateExists => sender ! stateExists(vse)
 
     case rt: RememberToken => rememberToken(rt)
+
+    case vte: VerifyTokenExists => sender ! tokenExists(vte)
+
+    case dt: DeleteToken => deleteToken(dt)
 
     case _ => log.error("unknown message")
 
@@ -57,7 +60,7 @@ class RedisActor extends Actor
 
   }
 
-  private def deleteState(ds: DeleteState): Unit = {
+  private def deleteState(ds: DeleteState): Future[Boolean] = {
 
     val redis = RedisClient()
 
@@ -65,27 +68,30 @@ class RedisActor extends Actor
     val state = ds.state
     val key = OidcUtil.stateToHashedKey(provider, state)
 
-    redis.del(key) onComplete {
+    redis.del(key) map {
 
-      case Success(result) =>
-        result match {
-          case 1 => log.debug(s"deleted state: $provider:$state ")
-          case 0 => log.error(s"failed to delete state: $provider:$state")
-          case _ => log.error(s"unexpected error while deleting state: $provider:$state")
-        }
+      case 1 =>
+        log.debug(s"deleted state: $provider:$state ")
+        true
 
-      case Failure(e) => log.error(s"failed to delete state: $provider:$state", e)
+      case 0 =>
+        log.error(s"failed to delete state: $provider:$state")
+        false
+
+      case _ =>
+        log.error(s"unexpected error while deleting state: $provider:$state")
+        false
 
     }
 
   }
 
-  private def stateExists(afterLogin: AfterLogin): Future[Boolean] = {
+  private def stateExists(vse: VerifyStateExists): Future[Boolean] = {
 
     val redis = RedisClient()
 
-    val provider = afterLogin.providerId
-    val state = afterLogin.state
+    val provider = vse.provider
+    val state = vse.state
     val key = OidcUtil.stateToHashedKey(provider, state)
 
     redis.exists(key)
@@ -116,6 +122,44 @@ class RedisActor extends Actor
 
   }
 
+  private def tokenExists(vte: VerifyTokenExists): Future[Boolean] = {
+
+    val redis = RedisClient()
+
+    val provider = vte.provider
+    val token = vte.token
+    val key = OidcUtil.tokenToHashedKey(provider, token)
+
+    redis.exists(key)
+
+  }
+
+  private def deleteToken(dt: DeleteToken): Future[Boolean] = {
+
+    val redis = RedisClient()
+
+    val provider = dt.provider
+    val token = dt.token
+    val key = OidcUtil.tokenToHashedKey(provider, token)
+
+    redis.del(key) map {
+
+      case 1 =>
+        log.debug(s"deleted token: $provider:$token")
+        true
+
+      case 0 =>
+        log.error(s"failed to delete token: $provider:$token")
+        false
+
+      case _ =>
+        log.error(s"unexpected error while deleting token: $provider:$token")
+        false
+
+    }
+
+  }
+
 }
 
 case class RememberState(provider: String,
@@ -134,3 +178,11 @@ case class RememberToken(provider: String,
                          token: String,
                          userId: String
                         )
+
+case class VerifyTokenExists(provider: String,
+                             token: String
+                            )
+
+case class DeleteToken(provider: String,
+                       token: String
+                      )
