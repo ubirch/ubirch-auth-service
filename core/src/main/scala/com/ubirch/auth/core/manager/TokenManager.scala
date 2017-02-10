@@ -39,7 +39,7 @@ object TokenManager extends App
       case false =>
 
         logger.error(s"invalid state: $afterLogin")
-        VerifyCodeResult(errorType = Some(VerifyCodeError.InvalidState))
+        VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState))
 
     }
 
@@ -88,6 +88,6 @@ case class VerifyCodeResult(token: Option[String] = None,
 
 object VerifyCodeError extends Enumeration {
 
-  val InvalidState, LoginFailed = Value
+  val UnknownState, LoginFailed = Value
 
 }
