@@ -1,6 +1,7 @@
 package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.config.Config
+import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.core.util.OidcUtil
 
 import akka.actor.{Actor, ActorLogging, ActorSystem}
@@ -21,6 +22,8 @@ class RedisActor extends Actor
 
   override def receive: Receive = {
 
+    case vc: VerifyCode => sender ! verifyCodeGetToken(vc)
+
     case rs: RememberState => rememberState(rs)
 
     case ds: DeleteState => deleteState(ds)
@@ -34,6 +37,36 @@ class RedisActor extends Actor
     case dt: DeleteToken => deleteToken(dt)
 
     case _ => log.error("unknown message")
+
+  }
+
+  private def verifyCodeGetToken(vc: VerifyCode): Future[VerifyCodeResult] = {
+
+    val provider = vc.provider
+    val code = vc.code
+    val state = vc.state
+
+    stateExists(VerifyStateExists(provider, state)) flatMap {
+
+      case true =>
+
+        TokenManager.verifyCodeWith3rdParty(provider, code) map { tokenUserId =>
+
+          val token = tokenUserId.token
+          val userId = tokenUserId.userId
+          self ! RememberToken(provider, token, userId)
+          self ! DeleteState(provider, state)
+
+          VerifyCodeResult(token = Some(token))
+
+        }
+
+      case false =>
+
+        log.error(s"unknown state: $vc")
+        Future(VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState)))
+
+    }
 
   }
 
@@ -162,6 +195,11 @@ class RedisActor extends Actor
 
 }
 
+case class VerifyCode(provider: String,
+                      code: String,
+                      state: String
+                     )
+
 case class RememberState(provider: String,
                          state: String
                         )
@@ -186,3 +224,11 @@ case class VerifyTokenExists(provider: String,
 case class DeleteToken(provider: String,
                        token: String
                       )
+
+case class VerifyCodeResult(token: Option[String] = None,
+                            errorType: Option[VerifyCodeError.Value] = None
+                           )
+
+object VerifyCodeError extends Enumeration {
+  val UnknownState, LoginFailed, Server = Value
+}
