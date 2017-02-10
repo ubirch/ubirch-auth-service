@@ -3,7 +3,7 @@ package com.ubirch.auth.core.manager
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
-import com.ubirch.auth.core.OidcUtil
+import com.ubirch.auth.core.util.OidcUtil
 import com.ubirch.auth.model.AfterLogin
 
 import redis.RedisClient

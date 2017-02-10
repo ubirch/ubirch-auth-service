@@ -4,7 +4,7 @@ import com.nimbusds.oauth2.sdk.id.State
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
-import com.ubirch.auth.core.OidcUtil
+import com.ubirch.auth.core.util.OidcUtil
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
 

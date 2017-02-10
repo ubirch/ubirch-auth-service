@@ -1,4 +1,4 @@
-package com.ubirch.auth.core
+package com.ubirch.auth.core.util
 
 import com.ubirch.crypto.hash.HashUtil
 
