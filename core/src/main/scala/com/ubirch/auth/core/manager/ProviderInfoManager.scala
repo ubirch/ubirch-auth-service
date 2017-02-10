@@ -20,7 +20,6 @@ import scala.language.postfixOps
 object ProviderInfoManager {
 
   implicit val system = ActorSystem()
-//  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
   // TODO extract anything performance related to config
