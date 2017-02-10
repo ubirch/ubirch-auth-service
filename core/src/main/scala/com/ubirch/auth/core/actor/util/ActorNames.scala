@@ -9,5 +9,6 @@ object ActorNames {
   final val PROVIDER_INFO = "provider-info-actor"
   final val TOKEN = "token-actor"
   final val LOGOUT = "logout-actor"
+  final val REDIS = "redis-actor"
 
 }
