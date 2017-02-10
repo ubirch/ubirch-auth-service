@@ -7,12 +7,10 @@ import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.OidcUtil
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
-import com.ubirch.crypto.hash.HashUtil
 
 import redis.RedisClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 /**
@@ -44,7 +42,7 @@ object ProviderInfoManager extends App
     implicit val akkaSystem = akka.actor.ActorSystem()
     val redis = RedisClient()
 
-    val key = HashUtil.sha256HexString(OidcUtil.stateToHashedKey(provider, state.toString))
+    val key = OidcUtil.stateToHashedKey(provider, state.toString)
     val ttl = Some(Config.oidcStateTtl())
 
     redis.set(key, "1", ttl) onComplete {

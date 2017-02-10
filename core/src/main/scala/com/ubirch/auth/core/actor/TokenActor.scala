@@ -35,12 +35,12 @@ class TokenActor extends Actor
 
               verifyCodeResult.errorType match {
 
-                case VerifyCodeError.InvalidState =>
+                case Some(VerifyCodeError.InvalidState) =>
                   // TODO BadRequest (400)
                   log.error("unable to verify unknown state (it might be beyond it's TTL)")
                   sender ! JsonErrorResponse(errorType = "InvalidState", errorMessage = "invalid state")
 
-                case VerifyCodeError.LoginFailed =>
+                case Some(VerifyCodeError.LoginFailed) =>
                   // TODO Unauthorized (401)
                   log.error("code verification failed")
                   sender ! JsonErrorResponse(errorType = "LoginFailed", errorMessage = "invalid code")
