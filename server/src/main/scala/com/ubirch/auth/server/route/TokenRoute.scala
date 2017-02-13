@@ -74,15 +74,17 @@ trait TokenRoute extends MyJsonProtocol
                         complete(serverErrorResponse(jsonError))
 
                       case _ =>
-                        logger.error(s"unknown server error")
-                        val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")
+                        logger.error(s"VerifyCodeResult responded with an unhandled error code (check RedisActor.verifyCode() for bugs!!!)")
+                        val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end")
                         complete(serverErrorResponse(jsonError))
 
                     }
 
                 }
 
-              case _ => complete(serverErrorResponse(errorType = "VerificationError", errorMessage = "failed to verify code"))
+              case _ =>
+                logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")
+                complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
 
             }
           }
