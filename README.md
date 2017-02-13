@@ -210,7 +210,9 @@ TODO (if necessary)
 
 ## Local Setup
 
-To start the server run:
+1) Start [Redis|https://redis.io/] on the default port (tested with version 3.2.7)
+
+2) Start AuthService by running:
 
     ./sbt server/run
 
