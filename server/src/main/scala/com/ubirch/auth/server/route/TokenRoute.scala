@@ -14,7 +14,7 @@ import com.ubirch.util.rest.akka.directives.CORSDirective
 
 import akka.actor.{ActorSystem, Props}
 import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
@@ -53,55 +53,59 @@ trait TokenRoute extends MyJsonProtocol
                 logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")
                 complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
 
-              case Success(resp) =>
-
-                resp match {
-
-                  case verifyCodeResult: VerifyCodeResult =>
-
-                    verifyCodeResult.token match {
-
-                      case Some(token) => complete(Token(token))
-
-                      case None =>
-
-                        verifyCodeResult.errorType match {
-
-                          case Some(VerifyCodeError.UnknownState) =>
-                            val jsonError = JsonErrorResponse(errorType = "UnknownState", errorMessage = "unknown state")
-                            complete(requestErrorResponse(jsonError, BadRequest))
-
-                          case Some(VerifyCodeError.LoginFailed) =>
-                            logger.error("code verification failed")
-                            val jsonError = JsonErrorResponse(errorType = "LoginFailed", errorMessage = "invalid code")
-                            complete(requestErrorResponse(jsonError, Unauthorized))
-
-                          case None =>
-                            logger.error("request does not make sense: the resulting token and errorType were None (check StateAndCodeActor.verifyCode() for bugs!!!)")
-                            val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")
-                            complete(serverErrorResponse(jsonError))
-
-                          case _ =>
-                            logger.error(s"VerifyCodeResult responded with an unhandled error code (check StateAndCodeActor.verifyCode() for bugs!!!)")
-                            val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end")
-                            complete(serverErrorResponse(jsonError))
-
-                        }
-
-                    }
-
-                  case _ =>
-                    logger.error(s"VerifyCodeResult was successful but did not respond with the expected VerifyCodeResult instance (check StateAndCodeActor.verifyCode() for bugs!!!)")
-                    val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end")
-                    complete(serverErrorResponse(jsonError))
-
-                }
+              case Success(resp) => handleVerifyCodeResult(resp)
 
             }
           }
         }
 
       }
+    }
+
+  }
+
+  private def handleVerifyCodeResult(resp: Any): StandardRoute = {
+
+    resp match {
+
+      case verifyCodeResult: VerifyCodeResult =>
+
+        verifyCodeResult.token match {
+
+          case Some(token) => complete(Token(token))
+
+          case None =>
+
+            verifyCodeResult.errorType match {
+
+              case Some(VerifyCodeError.UnknownState) =>
+                val jsonError = JsonErrorResponse(errorType = "UnknownState", errorMessage = "unknown state")
+                complete(requestErrorResponse(jsonError, BadRequest))
+
+              case Some(VerifyCodeError.LoginFailed) =>
+                logger.error("code verification failed")
+                val jsonError = JsonErrorResponse(errorType = "LoginFailed", errorMessage = "invalid code")
+                complete(requestErrorResponse(jsonError, Unauthorized))
+
+              case None =>
+                logger.error("request does not make sense: the resulting token and errorType were None (check StateAndCodeActor.verifyCode() for bugs!!!)")
+                val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")
+                complete(serverErrorResponse(jsonError))
+
+              case _ =>
+                logger.error(s"VerifyCodeResult responded with an unhandled error code (check StateAndCodeActor.verifyCode() for bugs!!!)")
+                val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end")
+                complete(serverErrorResponse(jsonError))
+
+            }
+
+        }
+
+      case _ =>
+        logger.error(s"VerifyCodeResult was successful but did not respond with the expected VerifyCodeResult instance (check StateAndCodeActor.verifyCode() for bugs!!!)")
+        val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end")
+        complete(serverErrorResponse(jsonError))
+
     }
 
   }
