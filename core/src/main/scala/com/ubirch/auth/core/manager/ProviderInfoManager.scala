@@ -2,7 +2,7 @@ package com.ubirch.auth.core.manager
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{RedisActor, RememberState}
+import com.ubirch.auth.core.actor.{StateAndCodeActor, RememberState}
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
 
@@ -22,14 +22,14 @@ object ProviderInfoManager {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val redisActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[RedisActor]), ActorNames.REDIS)
+  private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.REDIS)
 
   def providerInfoList(): Seq[ProviderInfo] = {
 
     Config.oidcProviders map { provider =>
 
       val (redirectUrl, state) = AuthRequest.redirectUrl(provider)
-      redisActor ! RememberState(provider, state.toString)
+      stateAndCodeActor ! RememberState(provider, state.toString)
 
       ProviderInfo(
         id = Config.oidcProviderId(provider),

@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{RedisActor, VerifyCode, VerifyCodeError, VerifyCodeResult}
+import com.ubirch.auth.core.actor.{StateAndCodeActor, VerifyCode, VerifyCodeError, VerifyCodeResult}
 import com.ubirch.auth.model.{AfterLogin, Token}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
@@ -37,7 +37,7 @@ trait TokenRoute extends MyJsonProtocol
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val redisActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[RedisActor]), ActorNames.REDIS)
+  private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.REDIS)
 
   val route: Route = {
 
@@ -46,7 +46,7 @@ trait TokenRoute extends MyJsonProtocol
 
         post {
           entity(as[AfterLogin]) { afterLogin =>
-            onSuccess(redisActor ? VerifyCode(afterLogin.providerId, afterLogin.code, afterLogin.state)) {
+            onSuccess(stateAndCodeActor ? VerifyCode(afterLogin.providerId, afterLogin.code, afterLogin.state)) {
 
               case verifyCodeResult: VerifyCodeResult =>
 
@@ -68,12 +68,12 @@ trait TokenRoute extends MyJsonProtocol
                         complete(requestErrorResponse(jsonError, Unauthorized))
 
                       case None =>
-                        logger.error("request does not make sense: the resulting token and errorType were None (check RedisActor.verifyCode() for bugs!!!)")
+                        logger.error("request does not make sense: the resulting token and errorType were None (check StateAndCodeActor.verifyCode() for bugs!!!)")
                         val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")
                         complete(serverErrorResponse(jsonError))
 
                       case _ =>
-                        logger.error(s"VerifyCodeResult responded with an unhandled error code (check RedisActor.verifyCode() for bugs!!!)")
+                        logger.error(s"VerifyCodeResult responded with an unhandled error code (check StateAndCodeActor.verifyCode() for bugs!!!)")
                         val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end")
                         complete(serverErrorResponse(jsonError))
 

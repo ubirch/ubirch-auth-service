@@ -14,7 +14,7 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-02-10
   */
-class RedisActor extends Actor
+class StateAndCodeActor extends Actor
   with ActorLogging {
 
   implicit val executionContext: ExecutionContextExecutor = context.dispatcher
