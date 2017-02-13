@@ -32,8 +32,7 @@ trait ProviderRoute extends MyJsonProtocol
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  // TODO extract anything performance related to config
-  private val providerInfoActor = system.actorOf(new RoundRobinPool(3).props(Props[ProviderInfoActor]), ActorNames.PROVIDER_INFO)
+  private val providerInfoActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[ProviderInfoActor]), ActorNames.PROVIDER_INFO)
 
   val route: Route = {
 

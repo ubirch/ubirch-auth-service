@@ -32,8 +32,7 @@ trait LogoutRoute extends MyJsonProtocol
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  // TODO extract anything performance related to config
-  private val logoutActor = system.actorOf(new RoundRobinPool(3).props(Props[LogoutActor]), ActorNames.LOGOUT)
+  private val logoutActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[LogoutActor]), ActorNames.LOGOUT)
 
   val route: Route = {
 

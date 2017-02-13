@@ -15,7 +15,15 @@ object ConfigKeys {
   final val INTERFACE = s"$prefix.interface"
   final val PORT = s"$prefix.port"
   final val TIMEOUT = s"$prefix.timeout"
-  final val ACTOR_TIMEOUT = s"$prefix.actorTimeout"
+
+  /*
+   * Akka related configs
+   *********************************************************************************************/
+
+  private val akkaPrefix = s"$prefix.akka"
+
+  final val ACTOR_TIMEOUT = s"$akkaPrefix.actorTimeout"
+  final val AKKA_NUMBER_OF_WORKERS = s"$akkaPrefix.numberOfWorkers"
 
   /*
    * OpenID Connect (= oidc)

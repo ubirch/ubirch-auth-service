@@ -37,8 +37,7 @@ trait TokenRoute extends MyJsonProtocol
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  // TODO extract anything performance related to config
-  private val redisActor = system.actorOf(new RoundRobinPool(3).props(Props[RedisActor]), ActorNames.REDIS)
+  private val redisActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[RedisActor]), ActorNames.REDIS)
 
   val route: Route = {
 

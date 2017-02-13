@@ -18,7 +18,7 @@ class ProviderInfoActor extends Actor
 
   override def receive: Receive = {
 
-    case _: ProviderInfoList => context.sender() ! ProviderInfoManager.providerInfoList()
+    case _: ProviderInfoList => sender ! ProviderInfoManager.providerInfoList()
 
     case _ =>
       log.error("unknown message")

@@ -22,8 +22,7 @@ object ProviderInfoManager {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  // TODO extract anything performance related to config
-  private val redisActor = system.actorOf(new RoundRobinPool(3).props(Props[RedisActor]), ActorNames.REDIS)
+  private val redisActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[RedisActor]), ActorNames.REDIS)
 
   def providerInfoList(): Seq[ProviderInfo] = {
 
