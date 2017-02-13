@@ -13,7 +13,6 @@ import scala.util.Random
   */
 object TokenManager extends StrictLogging {
 
-
   def verifyCodeWith3rdParty(provider: String, code: String): Future[TokenUserId] = {
 
     // TODO verify "afterLogin.code" w/ OpenID Connect provider

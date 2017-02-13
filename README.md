@@ -200,7 +200,7 @@ Since we're using the [rediscala library|https://github.com/etaty/rediscala] we 
 
 This service has the following dependencies:
  
-* Redis 3.2.x (verification needed; definitely works with 3.2.7)
+* Redis 3.2.x (verification needed; definitely works with 3.2.7 and 3.2.8)
 
 
 ## Automated Tests
@@ -210,7 +210,7 @@ TODO (if necessary)
 
 ## Local Setup
 
-1) Start [Redis|https://redis.io/] on the default port (tested with version 3.2.7)
+1) Start [Redis|https://redis.io/] on the default port (tested with version 3.2.7 and 3.2.8)
 
 2) Start AuthService by running:
 
