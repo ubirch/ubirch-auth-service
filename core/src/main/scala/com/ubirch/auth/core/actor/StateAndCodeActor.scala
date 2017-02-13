@@ -22,19 +22,25 @@ class StateAndCodeActor extends Actor
 
   override def receive: Receive = {
 
-    case vc: VerifyCode => sender ! verifyCodeGetToken(vc)
+    case vc: VerifyCode =>
+      val sender = context.sender()
+      verifyCodeGetToken(vc) map (sender ! _)
 
     case rs: RememberState => rememberState(rs)
 
     case ds: DeleteState => deleteState(ds)
 
-    case vse: VerifyStateExists => sender ! stateExists(vse)
+    case vse: VerifyStateExists =>
+      val sender = context.sender()
+      stateExists(vse) map (sender ! _)
 
     case rt: RememberToken => rememberToken(rt)
 
     case dt: DeleteToken => deleteToken(dt)
 
-    case vte: VerifyTokenExists => sender ! tokenExists(vte)
+    case vte: VerifyTokenExists =>
+      val sender = context.sender()
+      tokenExists(vte) map (sender ! _)
 
     case _ => log.error("unknown message")
 
@@ -42,6 +48,7 @@ class StateAndCodeActor extends Actor
 
   private def verifyCodeGetToken(vc: VerifyCode): Future[VerifyCodeResult] = {
 
+    // TODO refactor to be idempotent?
     val provider = vc.provider
     val code = vc.code
     val state = vc.state

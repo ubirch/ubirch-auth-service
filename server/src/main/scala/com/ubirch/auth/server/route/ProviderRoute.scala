@@ -40,6 +40,7 @@ trait ProviderRoute extends MyJsonProtocol
       respondWithCORS {
 
         get {
+          // TODO use "onComplete" instead of "onSuccess"
           onSuccess(providerInfoActor ? ProviderInfoList()) {
             case seq: Seq[ProviderInfo] => complete(seq)
             case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
