@@ -32,9 +32,9 @@ class RedisActor extends Actor
 
     case rt: RememberToken => rememberToken(rt)
 
-    case vte: VerifyTokenExists => sender ! tokenExists(vte)
-
     case dt: DeleteToken => deleteToken(dt)
+
+    case vte: VerifyTokenExists => sender ! tokenExists(vte)
 
     case _ => log.error("unknown message")
 
