@@ -1,5 +1,7 @@
 package com.ubirch.auth.server.route
 
+import com.typesafe.scalalogging.slf4j.StrictLogging
+
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{ProviderInfoActor, ProviderInfoList}
@@ -19,6 +21,7 @@ import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import scala.util.{Failure, Success}
 
 /**
   * author: cvandrei
@@ -26,7 +29,8 @@ import scala.language.postfixOps
   */
 trait ProviderRoute extends MyJsonProtocol
   with CORSDirective
-  with ResponseUtil {
+  with ResponseUtil
+  with StrictLogging {
 
   implicit val system = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
@@ -40,10 +44,19 @@ trait ProviderRoute extends MyJsonProtocol
       respondWithCORS {
 
         get {
-          // TODO use "onComplete" instead of "onSuccess"
-          onSuccess(providerInfoActor ? ProviderInfoList()) {
-            case seq: Seq[ProviderInfo] => complete(seq)
-            case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
+          onComplete(providerInfoActor ? ProviderInfoList()) {
+
+            case Failure(t) =>
+              logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")
+              complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+
+            case Success(resp) =>
+
+              resp match {
+                case seq: Seq[ProviderInfo] => complete(seq)
+                case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
+              }
+
           }
         }
 
