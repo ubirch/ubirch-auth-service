@@ -63,7 +63,7 @@ class RedisActor extends Actor
 
       case false =>
 
-        log.error(s"unknown state: $vc")
+        log.info(s"unknown state: $vc")
         Future(VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState)))
 
     }
