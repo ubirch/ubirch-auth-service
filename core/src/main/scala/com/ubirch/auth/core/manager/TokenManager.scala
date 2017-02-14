@@ -1,11 +1,12 @@
 package com.ubirch.auth.core.manager
 
+import java.net.URI
+
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import com.ubirch.auth.oidcutil.{TokenUserId, TokenUtil}
+
 import scala.language.postfixOps
-import scala.util.Random
 
 /**
   * author: cvandrei
@@ -13,21 +14,20 @@ import scala.util.Random
   */
 object TokenManager extends StrictLogging {
 
-  def verifyCodeWith3rdParty(provider: String, code: String): Future[TokenUserId] = {
+  def verifyCodeWith3rdParty(provider: String, code: String): Option[TokenUserId] = {
 
-    // TODO verify "afterLogin.code" w/ OpenID Connect provider
+    TokenUtil.requestToken(
+      provider = provider,
+      authCode = code,
+      redirectUri = new URI("") // TODO set redirectUri
+    ) match {
 
-    // TODO replace w/ correct token
-    val token = s"$provider-$code-${Random.nextInt}"
-    // TODO replace w/ correct userId
-    val userId = s"$provider-${Random.nextInt}"
+      case None => None
 
-    Future(TokenUserId(token, userId))
+      case Some(tokenResponse) => Some(TokenUserId(tokenResponse.token, tokenResponse.userId))
+
+    }
 
   }
 
 }
-
-case class TokenUserId(token: String,
-                       userId: String
-                      )

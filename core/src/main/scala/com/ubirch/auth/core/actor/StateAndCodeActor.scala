@@ -53,25 +53,29 @@ class StateAndCodeActor extends Actor
     val code = vc.code
     val state = vc.state
 
-    stateExists(VerifyStateExists(provider, state)) flatMap {
+    stateExists(VerifyStateExists(provider, state)) map {
 
       case true =>
 
-        TokenManager.verifyCodeWith3rdParty(provider, code) map { tokenUserId =>
+        TokenManager.verifyCodeWith3rdParty(provider, code) match {
 
-          val token = tokenUserId.token
-          val userId = tokenUserId.userId
-          self ! RememberToken(provider, token, userId)
-          self ! DeleteState(provider, state)
+          case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
 
-          VerifyCodeResult(token = Some(token))
+          case Some(tokenUserId) =>
+
+            val token = tokenUserId.token
+            val userId = tokenUserId.userId
+            self ! RememberToken(provider, token, userId)
+            self ! DeleteState(provider, state)
+
+            VerifyCodeResult(token = Some(token))
 
         }
 
       case false =>
 
         log.info(s"unknown state: $vc")
-        Future(VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState)))
+        VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState))
 
     }
 
@@ -237,5 +241,5 @@ case class VerifyCodeResult(token: Option[String] = None,
                            )
 
 object VerifyCodeError extends Enumeration {
-  val UnknownState, LoginFailed, Server = Value
+  val UnknownState, LoginFailed, CodeVerification, Server = Value
 }

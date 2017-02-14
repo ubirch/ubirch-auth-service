@@ -87,6 +87,10 @@ trait TokenRoute extends MyJsonProtocol
                 val jsonError = JsonErrorResponse(errorType = "LoginFailed", errorMessage = "invalid code")
                 complete(requestErrorResponse(jsonError, Unauthorized))
 
+              case Some(VerifyCodeError.CodeVerification) =>
+                val jsonError = JsonErrorResponse(errorType = "CodeVerification", errorMessage = "code verification failed due to a problem communicating with the related OpenID Connect provider")
+                complete(serverErrorResponse(jsonError))
+
               case None =>
                 logger.error("request does not make sense: the resulting token and errorType were None (check StateAndCodeActor.verifyCode() for bugs!!!)")
                 val jsonError = JsonErrorResponse(errorType = "ServerError", errorMessage = "internal server error")

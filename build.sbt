@@ -115,7 +115,7 @@ lazy val depCore = Seq(
 
 lazy val depOpenIdUtil = Seq(
   nimbusOidc
-)
+) ++ scalaLogging
 
 lazy val depModel = Seq(
   ubirchUtilJsonAutoConvert,
