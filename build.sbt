@@ -152,7 +152,7 @@ lazy val scalaLogging = Seq(
 
 lazy val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaV
 
-lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "3.4.1"
+lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.22"
 
 lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll(
   ExclusionRule(organization = "com.typesafe.akka")
