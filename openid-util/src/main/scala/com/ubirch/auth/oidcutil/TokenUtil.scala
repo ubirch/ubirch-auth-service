@@ -20,11 +20,9 @@ import scala.util.Random
   */
 object TokenUtil extends StrictLogging {
 
-  def requestToken(provider: String,
-                   authCode: String,
-                   redirectUri: URI
-                  ): Option[TokenUserId] = {
+  def requestToken(provider: String, authCode: String): Option[TokenUserId] = {
 
+    val redirectUri = new URI(Config.oidcProviderCallbackUrl(provider))
     val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
     val tokenReq: TokenRequest = tokenRequest(provider, grant)
 
