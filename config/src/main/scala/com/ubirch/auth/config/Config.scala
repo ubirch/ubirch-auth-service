@@ -66,6 +66,8 @@ object Config extends ConfigBase {
 
   def oidcProviderTokenEndpoint(provider: String): String = config.getString(ConfigKeys.oidcProviderTokenEndpoint(provider))
 
+  def oidcProviderJwksUri(provider: String): String = config.getString(ConfigKeys.oidcProviderJwksUri(provider))
+
   def oidcProviderCallbackUrl(provider: String): String = config.getString(ConfigKeys.oidcProviderCallbackUrl(provider))
 
   /**

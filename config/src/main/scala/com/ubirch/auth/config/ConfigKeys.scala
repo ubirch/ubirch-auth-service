@@ -51,6 +51,8 @@ object ConfigKeys {
 
   final def oidcProviderTokenEndpoint(provider: String) = s"${oidcEndpointsPrefix(provider)}.token"
 
+  final def oidcProviderJwksUri(provider: String) = s"${oidcEndpointsPrefix(provider)}.jwks"
+
   final def oidcProviderCallbackUrl(provider: String) = s"$oidcProvidersPrefix.$provider.callbackUrl"
 
   final val OIDC_STATE_TTL = s"$oidcProvidersPrefix.state.ttl"
