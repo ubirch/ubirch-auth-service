@@ -64,7 +64,7 @@ object TokenUtil extends StrictLogging {
 
   private def tokenRequest(provider: String, grant: AuthorizationCodeGrant): TokenRequest = {
 
-    val tokenEndpoint = new URI(Config.oidcProviderEndpointConfig(provider))
+    val tokenEndpoint = new URI(Config.oidcProviderTokenEndpoint(provider))
     logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
 
     val clientId = new ClientID(Config.oidcProviderClientId(provider))
