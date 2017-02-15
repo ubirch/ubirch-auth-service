@@ -65,6 +65,7 @@ class StateAndCodeActor extends Actor
 
             val token = tokenUserId.token
             val userId = tokenUserId.userId
+            log.debug(s"token=$token, userId=$userId")
             self ! RememberToken(provider, token, userId)
             self ! DeleteState(provider, state)
 
@@ -156,7 +157,7 @@ class StateAndCodeActor extends Actor
 
       case Success(result) =>
         result match {
-          case true => log.debug(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds)")
+          case true => log.info(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds)")
           case false => log.error(s"failed to remember token for provider=$provider (ttl: ${ttl.get} seconds)")
         }
 

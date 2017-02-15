@@ -43,8 +43,9 @@ object TokenUtil extends StrictLogging {
             case accessTokenResponse: OIDCTokenResponse =>
 
               val accessToken = accessTokenResponse.getOIDCTokens.getAccessToken
-              val idToken = accessTokenResponse.getOIDCTokens.getIDToken
+              val idToken = accessTokenResponse.getOIDCTokens.getIDToken // TODO extract from JWT
               val userId = s"$provider-$authCode-${Random.nextInt}" // TODO extract from idToken
+              logger.debug(s"accessToken=$accessToken, idToken=${idToken.getParsedString}, userId=$userId")
 
               // TODO validate idToken (should be signed)
 
