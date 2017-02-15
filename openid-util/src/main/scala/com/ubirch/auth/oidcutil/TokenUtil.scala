@@ -37,7 +37,7 @@ object TokenUtil extends StrictLogging {
           OIDCTokenResponseParser.parse(tokenHTTPResp) match {
 
             case error: TokenErrorResponse =>
-              logger.error(s"oidc code verification failed (provider replied with an error): ${tokenHTTPResp.getStatusCode} - ${error.toJSONObject.toJSONString}")
+              logger.error(s"oidc code verification failed (provider replied with an error): ${tokenHTTPResp.getStatusCode} - ${tokenHTTPResp.getContent} - ${error.toJSONObject.toJSONString}")
               None
 
             case accessTokenResponse: OIDCTokenResponse =>
@@ -65,6 +65,7 @@ object TokenUtil extends StrictLogging {
   private def tokenRequest(provider: String, grant: AuthorizationCodeGrant): TokenRequest = {
 
     val tokenEndpoint = new URI(Config.oidcProviderEndpointConfig(provider))
+    logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
 
     val clientId = new ClientID(Config.oidcProviderClientId(provider))
     val secret = new Secret(Config.oidcProviderClientSecret(provider))
