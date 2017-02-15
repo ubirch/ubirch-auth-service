@@ -37,14 +37,15 @@ object TokenUtil extends StrictLogging {
           OIDCTokenResponseParser.parse(tokenHTTPResp) match {
 
             case error: TokenErrorResponse =>
-              logger.error(s"oidc code verification failed (provider replied with an error): ${tokenHTTPResp.getStatusCode} - ${error.toJSONObject.toJSONString}")
+              logger.error(s"oidc code verification failed (provider replied with an error): ${tokenHTTPResp.getStatusCode} - ${tokenHTTPResp.getContent} - ${error.toJSONObject.toJSONString}")
               None
 
             case accessTokenResponse: OIDCTokenResponse =>
 
               val accessToken = accessTokenResponse.getOIDCTokens.getAccessToken
-              val idToken = accessTokenResponse.getOIDCTokens.getIDToken
+              val idToken = accessTokenResponse.getOIDCTokens.getIDToken // TODO extract from JWT
               val userId = s"$provider-$authCode-${Random.nextInt}" // TODO extract from idToken
+              logger.debug(s"accessToken=$accessToken, idToken=${idToken.getParsedString}, userId=$userId")
 
               // TODO validate idToken (should be signed)
 
@@ -64,7 +65,8 @@ object TokenUtil extends StrictLogging {
 
   private def tokenRequest(provider: String, grant: AuthorizationCodeGrant): TokenRequest = {
 
-    val tokenEndpoint = new URI(Config.oidcProviderEndpointConfig(provider))
+    val tokenEndpoint = new URI(Config.oidcProviderTokenEndpoint(provider))
+    logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
 
     val clientId = new ClientID(Config.oidcProviderClientId(provider))
     val secret = new Secret(Config.oidcProviderClientSecret(provider))
