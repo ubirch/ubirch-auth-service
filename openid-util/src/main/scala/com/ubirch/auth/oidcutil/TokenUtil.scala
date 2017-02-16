@@ -53,7 +53,7 @@ object TokenUtil extends StrictLogging {
 
                 case Some(claims) =>
                   val userId = claims.getSubject
-                  logger.debug(s"provider=$provider, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
+                  logger.debug(s"provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
                   logger.info(s"got verified token from provider=$provider")
                   Some(TokenUserId(accessToken.getValue, userId))
 
