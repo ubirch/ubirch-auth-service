@@ -33,7 +33,7 @@ object ProviderInfoManager {
 
       ProviderInfo(
         id = Config.oidcProviderId(provider),
-        name = Config.oidcProviderName(provider),
+        name = Config.oidcName(provider),
         redirectUrl = redirectUrl
       )
 

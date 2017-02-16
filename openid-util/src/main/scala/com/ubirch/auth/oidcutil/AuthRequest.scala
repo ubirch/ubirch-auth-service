@@ -16,15 +16,15 @@ object AuthRequest {
 
   def create(provider: String): AuthenticationRequest = {
 
-    val clientID = new ClientID(Config.oidcProviderClientId(provider))
-    val callback: URI = new URL(Config.oidcProviderCallbackUrl(provider)).toURI
+    val clientID = new ClientID(Config.oidcClientId(provider))
+    val callback: URI = new URL(Config.oidcCallbackUrl(provider)).toURI
     val state = new State()
     val nonce = null
 
     new AuthenticationRequest(
-      new URL(Config.oidcProviderAuthorizationEndpoint(provider)).toURI,
+      new URL(Config.oidcAuthorizationEndpoint(provider)).toURI,
       new ResponseType(ResponseType.Value.CODE),
-      Scope.parse(Config.oidcProviderScope(provider)),
+      Scope.parse(Config.oidcScope(provider)),
       clientID,
       callback,
       state,
