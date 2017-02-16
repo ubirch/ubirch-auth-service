@@ -47,13 +47,14 @@ object TokenUtil extends StrictLogging {
               verifyIdToken(provider, idToken) match {
 
                 case None =>
-                  logger.error(s"failed to extract userId from JWT: provider=$provider")
+                  logger.error(s"failed to get verified token: provider=$provider")
                   logger.debug(s"accessToken=$accessToken, userId=$None, idToken=${idToken.getParsedString}")
                   None
 
                 case Some(claims) =>
                   val userId = claims.getSubject
-                  logger.debug(s"accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
+                  logger.debug(s"provider=$provider, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
+                  logger.info(s"got verified token from provider=$provider")
                   Some(TokenUserId(accessToken.getValue, userId))
 
               }
