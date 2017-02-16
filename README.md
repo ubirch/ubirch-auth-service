@@ -142,7 +142,7 @@ To invalidate a token (logout) please call:
         "token": "$TOKEN"
     }'
 
-In case of a successful logout the endpoint responds with:
+If the logout is successful (or the token already expired) the response is:
 
     200 OK
 
