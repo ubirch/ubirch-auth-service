@@ -2,7 +2,7 @@ package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.manager.TokenManager
-import com.ubirch.auth.core.util.OidcUtil
+import com.ubirch.auth.util.oidc.OidcUtil
 
 import akka.actor.{Actor, ActorLogging, ActorSystem}
 import redis.RedisClient

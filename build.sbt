@@ -44,8 +44,7 @@ lazy val server = project
     libraryDependencies ++= depServer,
     fork in run := true,
     resolvers ++= Seq(
-      resolverSeebergerJson,
-      roundeightsHasher
+      resolverSeebergerJson
     ),
     mainClass in(Compile, run) := Some("com.ubirch.auth.server.Boot"),
     resourceGenerators in Compile += Def.task {
@@ -62,7 +61,7 @@ lazy val config = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, openIdUtil)
+  .dependsOn(model, util, openIdUtil)
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -86,7 +85,11 @@ lazy val model = project
 lazy val util = project
   .settings(commonSettings: _*)
   .settings(
-    description := "utils"
+    description := "utils",
+    resolvers ++= Seq(
+      roundeightsHasher
+    ),
+    libraryDependencies ++= depUtils
   )
 
 /*
@@ -109,7 +112,6 @@ lazy val depCore = Seq(
   akkaActor,
   rediscala,
   ubirchUtilResponse,
-  ubirchUtilCrypto,
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -120,6 +122,10 @@ lazy val depOpenIdUtil = Seq(
 lazy val depModel = Seq(
   ubirchUtilJsonAutoConvert,
   json4sNative
+)
+
+lazy val depUtils = Seq(
+  ubirchUtilCrypto
 )
 
 /*
