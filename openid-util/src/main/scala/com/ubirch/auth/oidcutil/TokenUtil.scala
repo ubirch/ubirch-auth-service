@@ -3,9 +3,9 @@ package com.ubirch.auth.oidcutil
 import java.io.IOException
 import java.net.{URI, URL}
 
-import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.source.RemoteJWKSet
-import com.nimbusds.jose.proc.{JWSVerificationKeySelector, SimpleSecurityContext}
+import com.nimbusds.jose.proc.{BadJOSEException, JWSVerificationKeySelector, SimpleSecurityContext}
+import com.nimbusds.jose.{JOSEException, JWSAlgorithm}
 import com.nimbusds.jwt.proc.DefaultJWTProcessor
 import com.nimbusds.jwt.{JWT, JWTClaimsSet}
 import com.nimbusds.oauth2.sdk.auth.{ClientSecretPost, Secret}
@@ -108,7 +108,6 @@ object TokenUtil extends StrictLogging {
 
   private def verifyIdToken(provider: String, idToken: JWT): Option[JWTClaimsSet] = {
 
-    // TODO handle exceptions
     jwtProcessor(provider, idToken) match {
 
       case None =>
@@ -116,8 +115,20 @@ object TokenUtil extends StrictLogging {
         None
 
       case Some(jwtProcessor) =>
-        val ctx: SimpleSecurityContext = new SimpleSecurityContext()
-        Some(jwtProcessor.process(idToken, ctx))
+
+        try {
+
+          val ctx: SimpleSecurityContext = new SimpleSecurityContext()
+          Some(jwtProcessor.process(idToken, ctx))
+
+        } catch {
+          case e: BadJOSEException =>
+            logger.error("verifyIdToken() failed with a BadJOSEException", e)
+            None
+          case e: JOSEException =>
+            logger.error("verifyIdToken() failed with a JOSEException", e)
+            None
+        }
 
     }
 
@@ -125,20 +136,27 @@ object TokenUtil extends StrictLogging {
 
   private def jwtProcessor(provider: String, idToken: JWT): Option[DefaultJWTProcessor[SimpleSecurityContext]] = {
 
-    // TODO handle exceptions
     val jwtProcessor = new DefaultJWTProcessor[SimpleSecurityContext]()
     val keySource = new RemoteJWKSet[SimpleSecurityContext](new URL(Config.oidcJwksUri(provider)))
     val algorithm = idToken.getHeader.getAlgorithm
 
     if (Config.oidcTokenSigningAlgorithms(provider) contains algorithm.getName) {
 
-      val requirement = algorithm.getRequirement
-      val jwsAlg: JWSAlgorithm = new JWSAlgorithm(algorithm.getName, requirement)
-      val keySelector: JWSVerificationKeySelector[SimpleSecurityContext] =
-        new JWSVerificationKeySelector[SimpleSecurityContext](jwsAlg, keySource)
-      jwtProcessor.setJWSKeySelector(keySelector)
+      try {
 
-      Some(jwtProcessor)
+        val requirement = algorithm.getRequirement
+        val jwsAlg: JWSAlgorithm = new JWSAlgorithm(algorithm.getName, requirement)
+        val keySelector: JWSVerificationKeySelector[SimpleSecurityContext] =
+          new JWSVerificationKeySelector[SimpleSecurityContext](jwsAlg, keySource)
+        jwtProcessor.setJWSKeySelector(keySelector)
+
+        Some(jwtProcessor)
+
+      } catch {
+        case iae: IllegalArgumentException =>
+          logger.error("jwtProcessor() failed with an IllegalArgumentException", iae)
+          None
+      }
 
     } else {
 
