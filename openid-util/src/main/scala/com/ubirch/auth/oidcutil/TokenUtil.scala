@@ -25,7 +25,7 @@ object TokenUtil extends StrictLogging {
 
   def requestToken(provider: String, authCode: String): Option[TokenUserId] = {
 
-    sendTokenRequest(provider, authCode) match {
+    sendTokenRequest(provider = provider, authCode = authCode) match {
 
       case None => None
 
@@ -44,7 +44,7 @@ object TokenUtil extends StrictLogging {
               val accessToken = accessTokenResponse.getOIDCTokens.getAccessToken
               val idToken = accessTokenResponse.getOIDCTokens.getIDToken
 
-              verifyIdToken(provider, idToken) match {
+              verifyIdToken(provider = provider, idToken = idToken) match {
 
                 case None =>
                   logger.error(s"failed to get verified token: provider=$provider")
@@ -75,7 +75,7 @@ object TokenUtil extends StrictLogging {
 
     try {
 
-      val tokenReq = tokenRequest(provider, authCode)
+      val tokenReq = tokenRequest(provider = provider, authCode = authCode)
       Some(tokenReq.toHTTPRequest.send())
 
     } catch {
