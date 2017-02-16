@@ -185,7 +185,7 @@ lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.1" excludeAll(
+lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.2" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
