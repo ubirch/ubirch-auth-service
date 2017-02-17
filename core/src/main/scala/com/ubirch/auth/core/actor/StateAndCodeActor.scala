@@ -2,7 +2,7 @@ package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.manager.TokenManager
-import com.ubirch.auth.core.util.OidcUtil
+import com.ubirch.auth.util.oidc.OidcUtil
 
 import akka.actor.{Actor, ActorLogging, ActorSystem}
 import redis.RedisClient
@@ -28,7 +28,9 @@ class StateAndCodeActor extends Actor
 
     case rs: RememberState => rememberState(rs)
 
-    case ds: DeleteState => deleteState(ds)
+    case ds: DeleteState =>
+      val sender = context.sender()
+      deleteState(ds) map (sender ! _)
 
     case vse: VerifyStateExists =>
       val sender = context.sender()
@@ -36,7 +38,9 @@ class StateAndCodeActor extends Actor
 
     case rt: RememberToken => rememberToken(rt)
 
-    case dt: DeleteToken => deleteToken(dt)
+    case dt: DeleteToken =>
+      val sender = context.sender()
+      deleteToken(dt) map (sender ! _)
 
     case vte: VerifyTokenExists =>
       val sender = context.sender()
@@ -94,9 +98,15 @@ class StateAndCodeActor extends Actor
     redis.set(key, "1", ttl) onComplete {
 
       case Success(result) =>
+
         result match {
-          case true => log.debug(s"remembered state: $state (ttl: ${ttl.get} seconds)")
+
+          case true =>
+            log.debug(s"remembered state: $state (ttl: ${ttl.get} seconds), provider=$provider, key=$key")
+            log.info(s"remembered state: $state (ttl: ${ttl.get} seconds), provider=$provider")
+
           case false => log.error(s"failed to remember state: $state (ttl: ${ttl.get} seconds)")
+
         }
 
       case Failure(e) => log.error(s"failed to remember state: $state (ttl: ${ttl.get} seconds)", e)
@@ -116,15 +126,16 @@ class StateAndCodeActor extends Actor
     redis.del(key) map {
 
       case 1 =>
-        log.debug(s"deleted state: $provider:$state ")
+        log.debug(s"deleted state: $provider::$state (key=$key)")
+        log.debug(s"deleted state: provider=$provider")
         true
 
       case 0 =>
-        log.error(s"failed to delete state: $provider:$state")
+        log.error(s"failed to delete state: provider=$provider (key=$key)")
         false
 
       case _ =>
-        log.error(s"unexpected error while deleting state: $provider:$state")
+        log.error(s"unexpected error while deleting state: provider=$provider (key=$key)")
         false
 
     }
@@ -156,9 +167,15 @@ class StateAndCodeActor extends Actor
     redis.set(key, userId, ttl) onComplete {
 
       case Success(result) =>
+
         result match {
-          case true => log.info(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds)")
+
+          case true =>
+            log.debug(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds), key=$key, userId=$userId, token=$token")
+            log.info(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds)")
+
           case false => log.error(s"failed to remember token for provider=$provider (ttl: ${ttl.get} seconds)")
+
         }
 
       case Failure(e) => log.error(s"failed to remember token for provider=$provider (ttl: ${ttl.get} seconds)", e)
@@ -190,15 +207,16 @@ class StateAndCodeActor extends Actor
     redis.del(key) map {
 
       case 1 =>
-        log.debug(s"deleted token: $provider:$token")
+        log.debug(s"deleted token: $provider:$token (key=$key)")
+        log.info(s"deleted token: provider=$provider")
         true
 
       case 0 =>
-        log.error(s"failed to delete token: $provider:$token")
+        log.error(s"failed to delete token: provider=$provider (key=$key)")
         false
 
       case _ =>
-        log.error(s"unexpected error while deleting token: $provider:$token")
+        log.error(s"unexpected error while deleting token: provider=$provider (key=$key)")
         false
 
     }

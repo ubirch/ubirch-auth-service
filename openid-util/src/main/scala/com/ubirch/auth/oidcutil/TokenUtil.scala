@@ -1,8 +1,13 @@
 package com.ubirch.auth.oidcutil
 
 import java.io.IOException
-import java.net.URI
+import java.net.{URI, URL}
 
+import com.nimbusds.jose.jwk.source.RemoteJWKSet
+import com.nimbusds.jose.proc.{BadJOSEException, JWSVerificationKeySelector, SimpleSecurityContext}
+import com.nimbusds.jose.{JOSEException, JWSAlgorithm}
+import com.nimbusds.jwt.proc.DefaultJWTProcessor
+import com.nimbusds.jwt.{JWT, JWTClaimsSet}
 import com.nimbusds.oauth2.sdk.auth.{ClientSecretPost, Secret}
 import com.nimbusds.oauth2.sdk.http.HTTPResponse
 import com.nimbusds.oauth2.sdk.id.ClientID
@@ -12,8 +17,6 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
 
-import scala.util.Random
-
 /**
   * author: cvandrei
   * since: 2017-02-14
@@ -22,11 +25,7 @@ object TokenUtil extends StrictLogging {
 
   def requestToken(provider: String, authCode: String): Option[TokenUserId] = {
 
-    val redirectUri = new URI(Config.oidcProviderCallbackUrl(provider))
-    val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
-    val tokenReq: TokenRequest = tokenRequest(provider, grant)
-
-    sendTokenRequest(tokenReq) match {
+    sendTokenRequest(provider = provider, authCode = authCode) match {
 
       case None => None
 
@@ -43,13 +42,22 @@ object TokenUtil extends StrictLogging {
             case accessTokenResponse: OIDCTokenResponse =>
 
               val accessToken = accessTokenResponse.getOIDCTokens.getAccessToken
-              val idToken = accessTokenResponse.getOIDCTokens.getIDToken // TODO extract from JWT
-              val userId = s"$provider-$authCode-${Random.nextInt}" // TODO extract from idToken
-              logger.debug(s"accessToken=$accessToken, idToken=${idToken.getParsedString}, userId=$userId")
+              val idToken = accessTokenResponse.getOIDCTokens.getIDToken
 
-              // TODO validate idToken (should be signed)
+              verifyIdToken(provider = provider, idToken = idToken) match {
 
-              Some(TokenUserId(accessToken.getValue, userId))
+                case None =>
+                  logger.error(s"failed to get verified token: provider=$provider")
+                  logger.debug(s"accessToken=$accessToken, userId=$None, idToken=${idToken.getParsedString}")
+                  None
+
+                case Some(claims) =>
+                  val userId = claims.getSubject
+                  logger.debug(s"provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
+                  logger.info(s"got verified token from provider=$provider")
+                  Some(TokenUserId(accessToken.getValue, userId))
+
+              }
 
           }
 
@@ -63,23 +71,11 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def tokenRequest(provider: String, grant: AuthorizationCodeGrant): TokenRequest = {
-
-    val tokenEndpoint = new URI(Config.oidcProviderTokenEndpoint(provider))
-    logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
-
-    val clientId = new ClientID(Config.oidcProviderClientId(provider))
-    val secret = new Secret(Config.oidcProviderClientSecret(provider))
-    val auth = new ClientSecretPost(clientId, secret)
-
-    new TokenRequest(tokenEndpoint, auth, grant)
-
-  }
-
-  private def sendTokenRequest(tokenReq: TokenRequest): Option[HTTPResponse] = {
+  private def sendTokenRequest(provider: String, authCode: String): Option[HTTPResponse] = {
 
     try {
 
+      val tokenReq = tokenRequest(provider = provider, authCode = authCode)
       Some(tokenReq.toHTTPRequest.send())
 
     } catch {
@@ -91,6 +87,83 @@ object TokenUtil extends StrictLogging {
       case e: IOException =>
         logger.error(s"failed to send oidc code verification request (SerializeException)", e)
         None
+    }
+
+  }
+
+  private def tokenRequest(provider: String, authCode: String): TokenRequest = {
+
+    val redirectUri = new URI(Config.oidcCallbackUrl(provider))
+    val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
+
+    val tokenEndpoint = new URI(Config.oidcTokenEndpoint(provider))
+    logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
+
+    val clientId = new ClientID(Config.oidcClientId(provider))
+    val secret = new Secret(Config.oidcClientSecret(provider))
+    val auth = new ClientSecretPost(clientId, secret)
+
+    new TokenRequest(tokenEndpoint, auth, grant)
+
+  }
+
+  private def verifyIdToken(provider: String, idToken: JWT): Option[JWTClaimsSet] = {
+
+    jwtProcessor(provider, idToken) match {
+
+      case None =>
+        logger.error(s"failed to load jwtProcessor: provider=$provider")
+        None
+
+      case Some(jwtProcessor) =>
+
+        try {
+
+          val ctx: SimpleSecurityContext = new SimpleSecurityContext()
+          Some(jwtProcessor.process(idToken, ctx))
+
+        } catch {
+          case e: BadJOSEException =>
+            logger.error("verifyIdToken() failed with a BadJOSEException", e)
+            None
+          case e: JOSEException =>
+            logger.error("verifyIdToken() failed with a JOSEException", e)
+            None
+        }
+
+    }
+
+  }
+
+  private def jwtProcessor(provider: String, idToken: JWT): Option[DefaultJWTProcessor[SimpleSecurityContext]] = {
+
+    val jwtProcessor = new DefaultJWTProcessor[SimpleSecurityContext]()
+    val keySource = new RemoteJWKSet[SimpleSecurityContext](new URL(Config.oidcJwksUri(provider)))
+    val algorithm = idToken.getHeader.getAlgorithm
+
+    if (Config.oidcTokenSigningAlgorithms(provider) contains algorithm.getName) {
+
+      try {
+
+        val requirement = algorithm.getRequirement
+        val jwsAlg: JWSAlgorithm = new JWSAlgorithm(algorithm.getName, requirement)
+        val keySelector: JWSVerificationKeySelector[SimpleSecurityContext] =
+          new JWSVerificationKeySelector[SimpleSecurityContext](jwsAlg, keySource)
+        jwtProcessor.setJWSKeySelector(keySelector)
+
+        Some(jwtProcessor)
+
+      } catch {
+        case iae: IllegalArgumentException =>
+          logger.error("jwtProcessor() failed with an IllegalArgumentException", iae)
+          None
+      }
+
+    } else {
+
+      logger.error(s"signing algorithm does not match those allowed by our configuration: provider=$provider, algorithm=$algorithm")
+      None
+
     }
 
   }

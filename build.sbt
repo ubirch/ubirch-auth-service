@@ -44,8 +44,7 @@ lazy val server = project
     libraryDependencies ++= depServer,
     fork in run := true,
     resolvers ++= Seq(
-      resolverSeebergerJson,
-      roundeightsHasher
+      resolverSeebergerJson
     ),
     mainClass in(Compile, run) := Some("com.ubirch.auth.server.Boot"),
     resourceGenerators in Compile += Def.task {
@@ -62,7 +61,7 @@ lazy val config = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, openIdUtil)
+  .dependsOn(model, util, openIdUtil)
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -86,7 +85,11 @@ lazy val model = project
 lazy val util = project
   .settings(commonSettings: _*)
   .settings(
-    description := "utils"
+    description := "utils",
+    resolvers ++= Seq(
+      roundeightsHasher
+    ),
+    libraryDependencies ++= depUtils
   )
 
 /*
@@ -96,7 +99,7 @@ lazy val util = project
 lazy val depServer = Seq(
 
   "com.typesafe.akka" %% "akka-slf4j" % akkaV,
-  "com.typesafe.akka" %% "akka-http-experimental" % akkaHttpV,
+  "com.typesafe.akka" %% "akka-http" % akkaHttpV,
   ubirchUtilRestAkkaHttp,
   ubirchUtilRestAkkaHttpTest % "test",
 
@@ -109,7 +112,6 @@ lazy val depCore = Seq(
   akkaActor,
   rediscala,
   ubirchUtilResponse,
-  ubirchUtilCrypto,
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -122,20 +124,24 @@ lazy val depModel = Seq(
   json4sNative
 )
 
+lazy val depUtils = Seq(
+  ubirchUtilCrypto
+)
+
 /*
  * DEPENDENCIES
  ********************************************************/
 
 // VERSIONS
-lazy val akkaV = "2.4.16"
-lazy val akkaHttpV = "2.4.11.1"
-lazy val json4sV = "3.4.2"
+val akkaV = "2.4.17"
+val akkaHttpV = "10.0.3"
+val json4sV = "3.4.2"
 
-lazy val scalaTestV = "3.0.0"
+val scalaTestV = "3.0.0"
 
 // GROUP NAMES
-lazy val ubirchUtilG = "com.ubirch.util"
-lazy val json4sG = "org.json4s"
+val ubirchUtilG = "com.ubirch.util"
+val json4sG = "org.json4s"
 
 lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
 
@@ -169,17 +175,17 @@ lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3" excludeAll(
+lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.2" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.1" excludeAll(
+lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.2" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3" excludeAll(
+lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.2" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")

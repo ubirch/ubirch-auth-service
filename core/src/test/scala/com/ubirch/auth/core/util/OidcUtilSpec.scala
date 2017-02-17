@@ -1,5 +1,6 @@
 package com.ubirch.auth.core.util
 
+import com.ubirch.auth.util.oidc.OidcUtil
 import com.ubirch.crypto.hash.HashUtil
 
 import org.scalatest.{FeatureSpec, Matchers}
