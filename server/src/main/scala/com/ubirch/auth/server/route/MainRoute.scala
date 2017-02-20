@@ -1,6 +1,5 @@
 package com.ubirch.auth.server.route
 
-import com.ubirch.auth.server.LogoutRoute
 import com.ubirch.auth.util.server.RouteConstants
 
 import akka.http.scaladsl.server.Directives._
