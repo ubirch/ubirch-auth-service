@@ -1,4 +1,4 @@
-package com.ubirch.auth.server
+package com.ubirch.auth.server.route
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.LogoutActor
