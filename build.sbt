@@ -137,7 +137,7 @@ val akkaV = "2.4.17"
 val akkaHttpV = "10.0.3"
 val json4sV = "3.4.2"
 
-val scalaTestV = "3.0.0"
+val scalaTestV = "3.0.1"
 
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
