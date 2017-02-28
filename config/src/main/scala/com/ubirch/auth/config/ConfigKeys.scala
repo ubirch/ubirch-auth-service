@@ -63,5 +63,34 @@ object ConfigKeys {
 
   final val OIDC_TOKEN_TTL = s"$oidcPrefix.token.ttl"
 
+  /*
+   * OpenID Connect (= oidc) Providers
+   *********************************************************************************************/
+
+  // TODO shorten all method and variable names once we got rid of most of those in the above section
+
+  private val oidcProviderDetailsPrefix = s"$oidcPrefix.details"
+
+  final val OIDC_PROVIDERS_ACTIVE = s"$oidcProviderDetailsPrefix.active"
+
+  private def oidcProviderDetailsProviderPrefix(provider: String) = s"$oidcProviderDetailsPrefix.$provider"
+
+  final def oidcActiveProviderId(provider: String) = s"${oidcProviderDetailsProviderPrefix(provider)}.id"
+
+  final def oidcActiveProviderName(provider: String) = s"${oidcProviderDetailsProviderPrefix(provider)}.name"
+
+  final def oidcActiveProviderScope(provider: String) = s"${oidcProviderDetailsProviderPrefix(provider)}.scope"
+
+  final def oidcActiveProviderEndpointConfig(provider: String): String = s"${oidcProviderDetailsProviderPrefix(provider)}.endpointConfig"
+
+  final def oidcActiveProviderTokenSigningAlgorithms(provider: String) = s"${oidcProviderDetailsProviderPrefix(provider)}.tokenSigningAlgorithms"
+
+  private def oidcActiveProviderEndpointsPrefix(provider: String): String = s"${oidcProviderDetailsProviderPrefix(provider)}.endpoints"
+
+  final def oidcActiveProviderAuthorizationEndpoint(provider: String) = s"${oidcActiveProviderEndpointsPrefix(provider)}.authorization"
+
+  final def oidcActiveProviderTokenEndpoint(provider: String) = s"${oidcActiveProviderEndpointsPrefix(provider)}.token"
+
+  final def oidcActiveProviderJwksUri(provider: String) = s"${oidcActiveProviderEndpointsPrefix(provider)}.jwks"
 
 }

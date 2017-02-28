@@ -87,4 +87,56 @@ object Config extends ConfigBase {
     */
   def oidcTokenTtl(): Long = config.getLong(ConfigKeys.OIDC_TOKEN_TTL)
 
+  /*
+   * General OpenID Connect Provider Configs
+   ************************************************************************************************/
+
+  def oidcProvidersActive: Seq[String] = config.getStringList(ConfigKeys.OIDC_PROVIDERS_ACTIVE).toList
+
+  def oidcProviderConfig(provider: String): OidcProviderConfig = {
+
+    OidcProviderConfig(
+      id = oidcActiveProviderId(provider),
+      name = oidcActiveProviderName(provider),
+      scope = oidcActiveProviderScope(provider),
+      endpointConfig = oidcActiveProviderEndpointConfig(provider),
+      tokenSigningAlgorithms = oidcActiveProviderTokenSigningAlgorithms(provider),
+      endpoints = OidcProviderEndpoints(
+        authorization = oidcActiveProviderAuthorizationEndpoint(provider),
+        token = oidcActiveProviderTokenEndpoint(provider),
+        jwks = oidcActiveProviderJwksUri(provider)
+      )
+    )
+
+  }
+
+  private def oidcActiveProviderId(provider: String): String = config.getString(ConfigKeys.oidcId(provider))
+
+  private def oidcActiveProviderName(provider: String): String = config.getString(ConfigKeys.oidcName(provider))
+
+  private def oidcActiveProviderScope(provider: String): String = config.getString(ConfigKeys.oidcScope(provider))
+
+  private def oidcActiveProviderEndpointConfig(provider: String): String = config.getString(ConfigKeys.oidcEndpointConfig(provider))
+
+  private def oidcActiveProviderTokenSigningAlgorithms(provider: String): Seq[String] = config.getStringList(ConfigKeys.oidcTokenSigningAlgorithms(provider))
+
+  private def oidcActiveProviderAuthorizationEndpoint(provider: String): String = config.getString(ConfigKeys.oidcAuthorizationEndpoint(provider))
+
+  private def oidcActiveProviderTokenEndpoint(provider: String): String = config.getString(ConfigKeys.oidcTokenEndpoint(provider))
+
+  private def oidcActiveProviderJwksUri(provider: String): String = config.getString(ConfigKeys.oidcJwksUri(provider))
+
 }
+
+case class OidcProviderConfig(id: String,
+                              name: String,
+                              scope: String,
+                              endpointConfig: String,
+                              tokenSigningAlgorithms: Seq[String],
+                              endpoints: OidcProviderEndpoints
+                             )
+
+case class OidcProviderEndpoints(authorization: String,
+                                 token: String,
+                                 jwks: String
+                                )
