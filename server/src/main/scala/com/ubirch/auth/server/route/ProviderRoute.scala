@@ -4,8 +4,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{ProviderInfoActor, ProviderInfoList}
-import com.ubirch.auth.model.ProviderInfo
+import com.ubirch.auth.core.actor.{GetProviderInfoList, ProviderInfoActor, ProviderInfoList}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
@@ -44,7 +43,7 @@ trait ProviderRoute extends MyJsonProtocol
       respondWithCORS {
 
         get {
-          onComplete(providerInfoActor ? ProviderInfoList()) {
+          onComplete(providerInfoActor ? GetProviderInfoList()) {
 
             case Failure(t) =>
               logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")
@@ -53,7 +52,7 @@ trait ProviderRoute extends MyJsonProtocol
             case Success(resp) =>
 
               resp match {
-                case seq: Seq[ProviderInfo] => complete(seq)
+                case providerInfos: ProviderInfoList => complete(providerInfos.seq)
                 case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
               }
 

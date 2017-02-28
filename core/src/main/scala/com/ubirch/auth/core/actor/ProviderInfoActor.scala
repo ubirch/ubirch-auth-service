@@ -1,6 +1,7 @@
 package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.core.manager.ProviderInfoManager
+import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.util.model.JsonErrorResponse
 
 import akka.actor.{Actor, ActorLogging}
@@ -18,7 +19,7 @@ class ProviderInfoActor extends Actor
 
   override def receive: Receive = {
 
-    case _: ProviderInfoList => sender ! ProviderInfoManager.providerInfoList()
+    case _: GetProviderInfoList => sender ! ProviderInfoList(ProviderInfoManager.providerInfoList())
 
     case _ =>
       log.error("unknown message")
@@ -28,4 +29,6 @@ class ProviderInfoActor extends Actor
 
 }
 
-case class ProviderInfoList()
+case class GetProviderInfoList()
+
+case class ProviderInfoList(seq: Seq[ProviderInfo])
