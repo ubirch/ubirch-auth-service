@@ -48,29 +48,15 @@ object Config extends ConfigBase {
    * OpenID Connect Related
    ************************************************************************************************/
 
-  def oidcProviders: Seq[String] = config.getStringList(ConfigKeys.OIDC_PROVIDERS_LIST).toList
+  def oidcContextList: Seq[String] = config.getStringList(ConfigKeys.OIDC_CONTEXT_ACTIVE_LIST).toList
 
-  def oidcProviderId(provider: String): String = config.getString(ConfigKeys.oidcId(provider))
+  def oidcContextProviderId(context: String): String = config.getString(ConfigKeys.oidcContextProviderId(context))
 
-  def oidcName(provider: String): String = config.getString(ConfigKeys.oidcName(provider))
+  def oidcClientId(context: String): String = config.getString(ConfigKeys.oidcContextClientId(context))
 
-  def oidcScope(provider: String): String = config.getString(ConfigKeys.oidcScope(provider))
+  def oidcClientSecret(context: String): String = config.getString(ConfigKeys.oidcContextClientSecret(context))
 
-  def oidcClientId(provider: String): String = config.getString(ConfigKeys.oidcClientId(provider))
-
-  def oidcClientSecret(provider: String): String = config.getString(ConfigKeys.oidcClientSecret(provider))
-
-  def oidcEndpointConfig(provider: String): String = config.getString(ConfigKeys.oidcEndpointConfig(provider))
-
-  def oidcTokenSigningAlgorithms(provider: String): Seq[String] = config.getStringList(ConfigKeys.oidcTokenSigningAlgorithms(provider))
-
-  def oidcAuthorizationEndpoint(provider: String): String = config.getString(ConfigKeys.oidcAuthorizationEndpoint(provider))
-
-  def oidcTokenEndpoint(provider: String): String = config.getString(ConfigKeys.oidcTokenEndpoint(provider))
-
-  def oidcJwksUri(provider: String): String = config.getString(ConfigKeys.oidcJwksUri(provider))
-
-  def oidcCallbackUrl(provider: String): String = config.getString(ConfigKeys.oidcCallbackUrl(provider))
+  def oidcCallbackUrl(context: String): String = config.getString(ConfigKeys.oidcContextCallbackUrl(context))
 
   /**
     * States are an additional OpenID Connect security feature. We create them when provider infos are queried and not
@@ -91,12 +77,10 @@ object Config extends ConfigBase {
    * General OpenID Connect Provider Configs
    ************************************************************************************************/
 
-  def oidcProvidersActive: Seq[String] = config.getStringList(ConfigKeys.OIDC_PROVIDERS_ACTIVE).toList
-
   def oidcProviderConfig(provider: String): OidcProviderConfig = {
 
     OidcProviderConfig(
-      id = oidcActiveProviderId(provider),
+      id = provider,
       name = oidcActiveProviderName(provider),
       scope = oidcActiveProviderScope(provider),
       endpointConfig = oidcActiveProviderEndpointConfig(provider),
@@ -110,9 +94,7 @@ object Config extends ConfigBase {
 
   }
 
-  private def oidcActiveProviderId(provider: String): String = config.getString(ConfigKeys.oidcId(provider))
-
-  private def oidcActiveProviderName(provider: String): String = config.getString(ConfigKeys.oidcName(provider))
+  private def oidcActiveProviderName(provider: String): String = config.getString(ConfigKeys.oidcProviderName(provider))
 
   private def oidcActiveProviderScope(provider: String): String = config.getString(ConfigKeys.oidcScope(provider))
 
@@ -120,11 +102,11 @@ object Config extends ConfigBase {
 
   private def oidcActiveProviderTokenSigningAlgorithms(provider: String): Seq[String] = config.getStringList(ConfigKeys.oidcTokenSigningAlgorithms(provider))
 
-  private def oidcActiveProviderAuthorizationEndpoint(provider: String): String = config.getString(ConfigKeys.oidcAuthorizationEndpoint(provider))
+  private def oidcActiveProviderAuthorizationEndpoint(provider: String): String = config.getString(ConfigKeys.oidcEndpointAuthorization(provider))
 
-  private def oidcActiveProviderTokenEndpoint(provider: String): String = config.getString(ConfigKeys.oidcTokenEndpoint(provider))
+  private def oidcActiveProviderTokenEndpoint(provider: String): String = config.getString(ConfigKeys.oidcEndpointToken(provider))
 
-  private def oidcActiveProviderJwksUri(provider: String): String = config.getString(ConfigKeys.oidcJwksUri(provider))
+  private def oidcActiveProviderJwksUri(provider: String): String = config.getString(ConfigKeys.oidcEndpointJwks(provider))
 
 }
 

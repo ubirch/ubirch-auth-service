@@ -23,9 +23,10 @@ import com.ubirch.auth.config.Config
   */
 object TokenUtil extends StrictLogging {
 
-  def requestToken(provider: String, authCode: String): Option[TokenUserId] = {
+  def requestToken(context: String, authCode: String): Option[TokenUserId] = {
 
-    sendTokenRequest(provider = provider, authCode = authCode) match {
+    val provider = Config.oidcContextProviderId(context)
+    sendTokenRequest(context = context, authCode = authCode) match {
 
       case None => None
 
@@ -47,14 +48,14 @@ object TokenUtil extends StrictLogging {
               verifyIdToken(provider = provider, idToken = idToken) match {
 
                 case None =>
-                  logger.error(s"failed to get verified token: provider=$provider")
+                  logger.error(s"failed to get verified token: context=$context, provider=$provider")
                   logger.debug(s"accessToken=$accessToken, userId=$None, idToken=${idToken.getParsedString}")
                   None
 
                 case Some(claims) =>
                   val userId = claims.getSubject
-                  logger.debug(s"provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
-                  logger.info(s"got verified token from provider=$provider")
+                  logger.debug(s"context=$context, provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
+                  logger.info(s"got verified token from provider=$provider (context=$context)")
                   Some(TokenUserId(accessToken.getValue, userId))
 
               }
@@ -71,11 +72,11 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def sendTokenRequest(provider: String, authCode: String): Option[HTTPResponse] = {
+  private def sendTokenRequest(context: String, authCode: String): Option[HTTPResponse] = {
 
     try {
 
-      val tokenReq = tokenRequest(provider = provider, authCode = authCode)
+      val tokenReq = tokenRequest(context = context, authCode = authCode)
       Some(tokenReq.toHTTPRequest.send())
 
     } catch {
@@ -91,16 +92,19 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def tokenRequest(provider: String, authCode: String): TokenRequest = {
+  private def tokenRequest(context: String, authCode: String): TokenRequest = {
 
-    val redirectUri = new URI(Config.oidcCallbackUrl(provider))
+//    val contextConfig = Config.oidcContextConfig(context) // TODO implement .oidcContextConfig(context)
+    val provider = Config.oidcContextProviderId(context)
+    val providerConf = Config.oidcProviderConfig(provider)
+    val redirectUri = new URI(Config.oidcCallbackUrl(context))
     val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
 
-    val tokenEndpoint = new URI(Config.oidcTokenEndpoint(provider))
+    val tokenEndpoint = new URI(providerConf.endpoints.token)
     logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
 
-    val clientId = new ClientID(Config.oidcClientId(provider))
-    val secret = new Secret(Config.oidcClientSecret(provider))
+    val clientId = new ClientID(Config.oidcClientId(context))
+    val secret = new Secret(Config.oidcClientSecret(context))
     val auth = new ClientSecretPost(clientId, secret)
 
     new TokenRequest(tokenEndpoint, auth, grant)
@@ -137,11 +141,12 @@ object TokenUtil extends StrictLogging {
 
   private def jwtProcessor(provider: String, idToken: JWT): Option[DefaultJWTProcessor[SimpleSecurityContext]] = {
 
+    val providerConf = Config.oidcProviderConfig(provider)
     val jwtProcessor = new DefaultJWTProcessor[SimpleSecurityContext]()
-    val keySource = new RemoteJWKSet[SimpleSecurityContext](new URL(Config.oidcJwksUri(provider)))
+    val keySource = new RemoteJWKSet[SimpleSecurityContext](new URL(providerConf.endpoints.jwks))
     val algorithm = idToken.getHeader.getAlgorithm
 
-    if (Config.oidcTokenSigningAlgorithms(provider) contains algorithm.getName) {
+    if (providerConf.tokenSigningAlgorithms contains algorithm.getName) {
 
       try {
 

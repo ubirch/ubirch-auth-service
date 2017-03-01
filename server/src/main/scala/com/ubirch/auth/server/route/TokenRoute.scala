@@ -47,7 +47,14 @@ trait TokenRoute extends MyJsonProtocol
 
         post {
           entity(as[AfterLogin]) { afterLogin =>
-            onComplete(stateAndCodeActor ? VerifyCode(afterLogin.providerId, afterLogin.code, afterLogin.state)) {
+
+            val verifyCode = VerifyCode(
+              context = afterLogin.context,
+              provider = afterLogin.providerId,
+              code = afterLogin.code,
+              state = afterLogin.state
+            )
+            onComplete(stateAndCodeActor ? verifyCode) {
 
               case Failure(t) =>
                 logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")
@@ -56,6 +63,7 @@ trait TokenRoute extends MyJsonProtocol
               case Success(resp) => handleVerifyCodeResult(resp)
 
             }
+
           }
         }
 

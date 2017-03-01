@@ -53,6 +53,7 @@ class StateAndCodeActor extends Actor
   private def verifyCodeGetToken(vc: VerifyCode): Future[VerifyCodeResult] = {
 
     // TODO refactor to be idempotent?
+    val context = vc.context
     val provider = vc.provider
     val code = vc.code
     val state = vc.state
@@ -61,7 +62,7 @@ class StateAndCodeActor extends Actor
 
       case true =>
 
-        TokenManager.verifyCodeWith3rdParty(provider, code) match {
+        TokenManager.verifyCodeWith3rdParty(context, code) match {
 
           case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
 
@@ -127,7 +128,7 @@ class StateAndCodeActor extends Actor
 
       case 1 =>
         log.debug(s"deleted state: $provider::$state (key=$key)")
-        log.debug(s"deleted state: provider=$provider")
+        log.info(s"deleted state: provider=$provider")
         true
 
       case 0 =>
@@ -225,7 +226,8 @@ class StateAndCodeActor extends Actor
 
 }
 
-case class VerifyCode(provider: String,
+case class VerifyCode(context: String,
+                      provider: String,
                       code: String,
                       state: String
                      )

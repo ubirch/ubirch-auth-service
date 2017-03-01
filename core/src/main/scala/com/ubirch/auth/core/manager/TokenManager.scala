@@ -12,9 +12,9 @@ import scala.language.postfixOps
   */
 object TokenManager extends StrictLogging {
 
-  def verifyCodeWith3rdParty(provider: String, code: String): Option[TokenUserId] = {
+  def verifyCodeWith3rdParty(context: String, code: String): Option[TokenUserId] = {
 
-    TokenUtil.requestToken(provider = provider, authCode = code) match {
+    TokenUtil.requestToken(context = context, authCode = code) match {
       case None => None
       case Some(tokenResponse) => Some(TokenUserId(tokenResponse.token, tokenResponse.userId))
     }

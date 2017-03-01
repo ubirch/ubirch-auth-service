@@ -14,17 +14,19 @@ import com.ubirch.auth.config.Config
   */
 object AuthRequest {
 
-  def create(provider: String): AuthenticationRequest = {
+  def create(context: String): AuthenticationRequest = {
 
-    val clientID = new ClientID(Config.oidcClientId(provider))
-    val callback: URI = new URL(Config.oidcCallbackUrl(provider)).toURI
+    val provider = Config.oidcContextProviderId(context)
+    val providerConf = Config.oidcProviderConfig(provider)
+    val clientID = new ClientID(Config.oidcClientId(context))
+    val callback: URI = new URL(Config.oidcCallbackUrl(context)).toURI
     val state = new State()
     val nonce = null
 
     new AuthenticationRequest(
-      new URL(Config.oidcAuthorizationEndpoint(provider)).toURI,
+      new URL(providerConf.endpoints.authorization).toURI,
       new ResponseType(ResponseType.Value.CODE),
-      Scope.parse(Config.oidcScope(provider)),
+      Scope.parse(providerConf.scope),
       clientID,
       callback,
       state,
@@ -33,9 +35,9 @@ object AuthRequest {
 
   }
 
-  def redirectUrl(provider: String): (String, State) = {
+  def redirectUrl(context: String): (String, State) = {
 
-    val authReq = create(provider)
+    val authReq = create(context)
     authReq.toHTTPRequest.send()
     val redirectHost = URLDecoder.decode(authReq.toHTTPRequest.getURL.toString, "UTF-8")
     val redirectParams = authReq.toHTTPRequest().getQuery

@@ -26,14 +26,17 @@ object ProviderInfoManager {
 
   def providerInfoList(): Seq[ProviderInfo] = {
 
-    Config.oidcProviders map { provider =>
+    Config.oidcContextList map { context =>
 
-      val (redirectUrl, state) = AuthRequest.redirectUrl(provider)
+      val provider = Config.oidcContextProviderId(context)
+      val (redirectUrl, state) = AuthRequest.redirectUrl(context)
       stateAndCodeActor ! RememberState(provider, state.toString)
 
+      val providerConf = Config.oidcProviderConfig(provider)
       ProviderInfo(
-        id = Config.oidcProviderId(provider),
-        name = Config.oidcName(provider),
+        context = context,
+        providerId = providerConf.id,
+        name = providerConf.name,
         redirectUrl = redirectUrl
       )
 

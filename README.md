@@ -114,11 +114,12 @@ Gives us a list of configured providers.
 
 ### Verify Code
 
-After a successful login users are being redirect to the Frontend. That call includes a _code_ and _state_. Calling this
-method has the effect that our system verifies the code and responds with the resulting token. This token can then be
-used to request protected resources in other backend services.
+After a successful login users are being redirect to the Frontend. That call includes a _context_, _providerId_, _code_
+and _state_. Calling this method has the effect that our system verifies the code and responds with the resulting token.
+This token can then be used to request protected resources in other backend services.
 
     curl -XPOST localhost:8091/api/authService/v1/verify/code -d'{
+      "context": "$CONTEXT",
       "providerId": "$PROVIDER_ID",
       "code": "$CODE",
       "state": "$STATE"
@@ -155,39 +156,66 @@ In case of an error the response is:
 
 ### OpenID Connect Providers
 
-We can configure as many OpenID Connect providers as we want by using the following pattern:
+Configuring OpenID Connect providers requires two parts:
+
+* generic provider config
+* context specific config
+
+A context can be `trackle` or `trackle-dev` for example. Here's an example for a config with one provider used for three
+different contexts out of which only two are activated:
 
     ubirchAuthService {
 
-      openIdConnectProviders {
+      openIdConnect {
 
-        providerList = ["generic1", "generic2"]
+        provider {
 
-        openIdConnectProviders {
-
-          gemeric {
-            name = "Generic1"
+          google { # referenced later in `ubirchAuthService.openIdConnect.context.$CONTEXT_NAME.providerId`
+            name = "Google"
             scope = "openid"
-            clientId = "12341234"
-            clientSecret = "asdfölkjasdf"
-            endpointConfig = "https://login.example.com/.well-known/openid-configuration"
+            endpointConfig = "https://accounts.google.com/.well-known/openid-configuration"
+            tokenSigningAlgorithms = ["RS256"]
             endpoints {
-              // TODO query dynamically from endpointConfig
-              authorization = "https://login.example.com/oidc/auth"
-              token = "https://login.example.com/oidctoken"
-              userInfo = "https://login.example.com/oidc/userinfo"
+              authorization = "https://accounts.google.com/o/oauth2/v2/auth"
+              token = "https://www.googleapis.com/oauth2/v4/token"
+              jwks = "https://www.googleapis.com/oauth2/v3/certs"
             }
-            callbackUrl = "http://client.com/callback-generic1"
           }
+
+        }
+
+        context {
+
+          activeList = ["trackle", "trackle-dev"] # querying `/providerInfo/list` only the contexts in this list are returned
+
+          trackle { # same key is in `ubirchAuthService.openIdConnect.context.activeList`
+            providerId = "google" # provider with this name has to exist in: `ubirchAuthService.openIdConnect.provider`
+            clientId = "clientId_for_context_trackle"
+            clientSecret = "secret_for_context_trackle"
+            callbackUrl = "https://trackle.ubirch.com:9000/oidc-callback-trackle"
+          }
+
+          trackle-dev { # same key is in `ubirchAuthService.openIdConnect.context.activeList`
+            providerId = "google" # provider with this name has to exist in: `ubirchAuthService.openIdConnect.provider`
+            clientId = "clientId_for_context_trackle-dev"
+            clientSecret = "secret_for_context_trackle-dev"
+            callbackUrl = "http://localhost:10000/oidc-callback-trackle-dev"
+          }
+
+          projectX-dev { # key is not in `ubirchAuthService.openIdConnect.context.activeList` --> not returned by `/providerInfo/list`
+            providerId = "google" # provider with this name has to exist in: `ubirchAuthService.openIdConnect.provider`
+            clientId = "clientId_for_context_projectX"
+            clientSecret = "secret_for_context_projectX"
+            callbackUrl = "http://localhost:10000/oidc-callback-projectX-dev"
+          }
+
         }
 
       }
 
     }
 
-Provider configs are read dynamically based on the list defined in
-_ubirchauthService.openIdConnectProviders.providerList_. When adding a new one please don't forget to add it's name to
-that list, too. In the above example _generic2_ has no configuration which will result in runtime errors.
+The example includes comments serving as further explanation. 
 
 
 ### Redis
