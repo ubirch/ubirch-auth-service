@@ -1,5 +1,7 @@
 package com.ubirch.auth.config
 
+import java.net.URI
+
 import com.ubirch.util.config.ConfigBase
 
 import scala.collection.JavaConversions._
@@ -48,15 +50,25 @@ object Config extends ConfigBase {
    * OpenID Connect Related
    ************************************************************************************************/
 
-  def oidcContextList: Seq[String] = config.getStringList(ConfigKeys.OIDC_CONTEXT_ACTIVE_LIST).toList
+  def oidcActiveContextList: Seq[String] = config.getStringList(ConfigKeys.OIDC_CONTEXT_ACTIVE_LIST).toList
 
-  def oidcContextProviderId(context: String): String = config.getString(ConfigKeys.oidcContextProviderId(context))
+  def oidcContextProvidersList(context: String): Seq[String] = config.getStringList(ConfigKeys.oidcContextProvidersList(context))
 
-  def oidcClientId(context: String): String = config.getString(ConfigKeys.oidcContextClientId(context))
+  def oidcContextProviderConfig(context: String, provider: String): ContextProviderConfig = {
+    ContextProviderConfig(
+      context = context,
+      provider = provider,
+      clientId = oidcClientId(context = context, provider = provider),
+      clientSecret = oidcClientSecret(context = context, provider = provider),
+      callbackUrl = new URI(oidcCallbackUrl(context = context, provider = provider))
+    )
+  }
 
-  def oidcClientSecret(context: String): String = config.getString(ConfigKeys.oidcContextClientSecret(context))
+  private def oidcClientId(context: String, provider: String): String = config.getString(ConfigKeys.oidcClientId(context, provider))
 
-  def oidcCallbackUrl(context: String): String = config.getString(ConfigKeys.oidcContextCallbackUrl(context))
+  private def oidcClientSecret(context: String, provider: String): String = config.getString(ConfigKeys.oidcClientSecret(context, provider))
+
+  private def oidcCallbackUrl(context: String, provider: String): String = config.getString(ConfigKeys.oidcCallbackUrl(context, provider))
 
   /**
     * States are an additional OpenID Connect security feature. We create them when provider infos are queried and not
@@ -109,6 +121,13 @@ object Config extends ConfigBase {
   private def oidcActiveProviderJwksUri(provider: String): String = config.getString(ConfigKeys.oidcEndpointJwks(provider))
 
 }
+
+case class ContextProviderConfig(context: String,
+                                 provider: String,
+                                 clientId: String,
+                                 clientSecret: String,
+                                 callbackUrl: URI
+                                )
 
 case class OidcProviderConfig(id: String,
                               name: String,

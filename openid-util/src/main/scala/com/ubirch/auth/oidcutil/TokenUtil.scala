@@ -23,10 +23,9 @@ import com.ubirch.auth.config.Config
   */
 object TokenUtil extends StrictLogging {
 
-  def requestToken(context: String, authCode: String): Option[TokenUserId] = {
+  def requestToken(context: String, provider: String, authCode: String): Option[TokenUserId] = {
 
-    val provider = Config.oidcContextProviderId(context)
-    sendTokenRequest(context = context, authCode = authCode) match {
+    sendTokenRequest(context = context, provider = provider, authCode = authCode) match {
 
       case None => None
 
@@ -72,11 +71,11 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def sendTokenRequest(context: String, authCode: String): Option[HTTPResponse] = {
+  private def sendTokenRequest(context: String, provider: String, authCode: String): Option[HTTPResponse] = {
 
     try {
 
-      val tokenReq = tokenRequest(context = context, authCode = authCode)
+      val tokenReq = tokenRequest(context = context, provider = provider, authCode = authCode)
       Some(tokenReq.toHTTPRequest.send())
 
     } catch {
@@ -92,19 +91,18 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def tokenRequest(context: String, authCode: String): TokenRequest = {
+  private def tokenRequest(context: String, provider: String, authCode: String): TokenRequest = {
 
-//    val contextConfig = Config.oidcContextConfig(context) // TODO implement .oidcContextConfig(context)
-    val provider = Config.oidcContextProviderId(context)
+    val contextProviderConfig = Config.oidcContextProviderConfig(context, provider)
     val providerConf = Config.oidcProviderConfig(provider)
-    val redirectUri = new URI(Config.oidcCallbackUrl(context))
+    val redirectUri = contextProviderConfig.callbackUrl
     val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
 
     val tokenEndpoint = new URI(providerConf.endpoints.token)
     logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
 
-    val clientId = new ClientID(Config.oidcClientId(context))
-    val secret = new Secret(Config.oidcClientSecret(context))
+    val clientId = new ClientID(contextProviderConfig.clientId)
+    val secret = new Secret(contextProviderConfig.clientSecret)
     val auth = new ClientSecretPost(clientId, secret)
 
     new TokenRequest(tokenEndpoint, auth, grant)

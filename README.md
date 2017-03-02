@@ -107,9 +107,10 @@ If not healthy the server response is:
 
 ### Provider Infos
 
-Gives us a list of configured providers.
+Gives us a list of providers configured for a specific context (e.g. `trackle`, `trackle-dev`, `ubirch`, `ubirch-dev`,
+...).
 
-    curl localhost:8091/api/authService/v1/providerInfo/list
+    curl localhost:8091/api/authService/v1/providerInfo/list/$CONTEXT
 
 
 ### Verify Code
@@ -161,8 +162,8 @@ Configuring OpenID Connect providers requires two parts:
 * generic provider config
 * context specific config
 
-A context can be `trackle` or `trackle-dev` for example. Here's an example for a config with one provider used for three
-different contexts out of which only two are activated:
+A context can be `trackle` or `trackle-dev` for example. Here's an example for a config with one provider used in three
+different contexts with only two activate ones (including comments with further explanations):
 
     ubirchAuthService {
 
@@ -170,7 +171,7 @@ different contexts out of which only two are activated:
 
         provider {
 
-          google { # referenced later in `ubirchAuthService.openIdConnect.context.$CONTEXT_NAME.providerId`
+          google { # referenced later in `ubirchAuthService.openIdConnect.context.$CONTEXT_NAME.providers`
             name = "Google"
             scope = "openid"
             endpointConfig = "https://accounts.google.com/.well-known/openid-configuration"
@@ -189,24 +190,39 @@ different contexts out of which only two are activated:
           activeList = ["trackle", "trackle-dev"] # querying `/providerInfo/list` only the contexts in this list are returned
 
           trackle { # same key is in `ubirchAuthService.openIdConnect.context.activeList`
-            providerId = "google" # provider with this name has to exist in: `ubirchAuthService.openIdConnect.provider`
-            clientId = "clientId_for_context_trackle"
-            clientSecret = "secret_for_context_trackle"
-            callbackUrl = "https://trackle.ubirch.com:9000/oidc-callback-trackle"
+
+            providers = ["google"] # list of providers activated for this context (same keys as in `ubirchAuthService.openIdConnect.provider`)
+
+            google { # provider as configured in `ubirchAuthService.openIdConnect.context.trackle.providers`
+              clientId = "clientId_for_context_trackle"
+              clientSecret = "secret_for_context_trackle"
+              callbackUrl = "https://trackle.ubirch.com:9000/oidc-callback-trackle"
+            }
+
           }
 
           trackle-dev { # same key is in `ubirchAuthService.openIdConnect.context.activeList`
-            providerId = "google" # provider with this name has to exist in: `ubirchAuthService.openIdConnect.provider`
-            clientId = "clientId_for_context_trackle-dev"
-            clientSecret = "secret_for_context_trackle-dev"
-            callbackUrl = "http://localhost:10000/oidc-callback-trackle-dev"
+
+          providers = ["google"] # list of providers activated for this context (same keys as in `ubirchAuthService.openIdConnect.provider`)
+
+            google { # provider as configured in `ubirchAuthService.openIdConnect.context.trackle-dev.providers`
+              clientId = "clientId_for_context_trackle-dev"
+              clientSecret = "secret_for_context_trackle-dev"
+              callbackUrl = "http://localhost:10000/oidc-callback-trackle-dev"
+            }
+
           }
 
           projectX-dev { # key is not in `ubirchAuthService.openIdConnect.context.activeList` --> not returned by `/providerInfo/list`
-            providerId = "google" # provider with this name has to exist in: `ubirchAuthService.openIdConnect.provider`
-            clientId = "clientId_for_context_projectX"
-            clientSecret = "secret_for_context_projectX"
-            callbackUrl = "http://localhost:10000/oidc-callback-projectX-dev"
+
+            providers = ["google"] # list of providers activated for this context (same keys as in `ubirchAuthService.openIdConnect.provider`)
+
+            google { # provider as configured in `ubirchAuthService.openIdConnect.context.projectX-dev.providers`
+              clientId = "clientId_for_context_projectX"
+              clientSecret = "secret_for_context_projectX"
+              callbackUrl = "http://localhost:10000/oidc-callback-projectX-dev"
+            }
+
           }
 
         }
@@ -214,8 +230,6 @@ different contexts out of which only two are activated:
       }
 
     }
-
-The example includes comments serving as further explanation. 
 
 
 ### Redis

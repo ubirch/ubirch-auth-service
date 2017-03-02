@@ -37,13 +37,15 @@ object ConfigKeys {
 
   private def oidcContextPrefix(context: String): String = s"$oidcContextPrefix.$context"
 
-  final def oidcContextProviderId(context: String) = s"${oidcContextPrefix(context)}.providerId"
+  def oidcContextProvidersList(context: String): String = s"${oidcContextPrefix(context)}.providers"
 
-  final def oidcContextClientId(context: String) = s"${oidcContextPrefix(context)}.clientId"
+  private def oidcContextProviderPrefix(context: String, provider: String) = s"${oidcContextPrefix(context)}.$provider"
 
-  final def oidcContextClientSecret(context: String) = s"${oidcContextPrefix(context)}.clientSecret"
+  final def oidcClientId(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.clientId"
 
-  final def oidcContextCallbackUrl(context: String) = s"${oidcContextPrefix(context)}.callbackUrl"
+  final def oidcClientSecret(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.clientSecret"
+
+  final def oidcCallbackUrl(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.callbackUrl"
 
   final val OIDC_STATE_TTL = s"$oidc.state.ttl"
 

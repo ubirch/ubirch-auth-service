@@ -62,7 +62,7 @@ class StateAndCodeActor extends Actor
 
       case true =>
 
-        TokenManager.verifyCodeWith3rdParty(context, code) match {
+        TokenManager.verifyCodeWith3rdParty(context = context, provider = provider, code = code) match {
 
           case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
 
@@ -96,7 +96,7 @@ class StateAndCodeActor extends Actor
     val key = OidcUtil.stateToHashedKey(provider, state)
     val ttl = Some(Config.oidcStateTtl())
 
-    redis.set(key, "1", ttl) onComplete {
+    redis.set(key, "1", exSeconds = ttl) onComplete {
 
       case Success(result) =>
 
@@ -165,7 +165,7 @@ class StateAndCodeActor extends Actor
     val key = OidcUtil.tokenToHashedKey(provider, token)
     val ttl = Some(Config.oidcTokenTtl())
 
-    redis.set(key, userId, ttl) onComplete {
+    redis.set(key, userId, exSeconds = ttl) onComplete {
 
       case Success(result) =>
 

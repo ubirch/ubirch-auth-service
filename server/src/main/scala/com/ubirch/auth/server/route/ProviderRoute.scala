@@ -39,11 +39,11 @@ trait ProviderRoute extends MyJsonProtocol
 
   val route: Route = {
 
-    path(RouteConstants.providerInfo / RouteConstants.list) {
+    path(RouteConstants.providerInfo / RouteConstants.list / Segment) { context =>
       respondWithCORS {
 
         get {
-          onComplete(providerInfoActor ? GetProviderInfoList()) {
+          onComplete(providerInfoActor ? GetProviderInfoList(context)) {
 
             case Failure(t) =>
               logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")

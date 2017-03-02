@@ -1,8 +1,10 @@
 package com.ubirch.auth.core.manager
 
+import com.typesafe.scalalogging.slf4j.StrictLogging
+
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{StateAndCodeActor, RememberState}
+import com.ubirch.auth.core.actor.{RememberState, StateAndCodeActor}
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
 
@@ -17,29 +19,35 @@ import scala.language.postfixOps
   * author: cvandrei
   * since: 2017-01-26
   */
-object ProviderInfoManager {
+object ProviderInfoManager extends StrictLogging {
 
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
   private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.REDIS)
 
-  def providerInfoList(): Seq[ProviderInfo] = {
+  def providerInfoList(context: String): Seq[ProviderInfo] = {
 
-    Config.oidcContextList map { context =>
+    if (Config.oidcActiveContextList contains context) {
 
-      val provider = Config.oidcContextProviderId(context)
-      val (redirectUrl, state) = AuthRequest.redirectUrl(context)
-      stateAndCodeActor ! RememberState(provider, state.toString)
+      Config.oidcContextProvidersList(context) map { provider =>
 
-      val providerConf = Config.oidcProviderConfig(provider)
-      ProviderInfo(
-        context = context,
-        providerId = providerConf.id,
-        name = providerConf.name,
-        redirectUrl = redirectUrl
-      )
+        val (redirectUrl, state) = AuthRequest.redirectUrl(context, provider)
+        stateAndCodeActor ! RememberState(provider, state.toString)
 
+        val providerConf = Config.oidcProviderConfig(provider)
+        ProviderInfo(
+          context = context,
+          providerId = providerConf.id,
+          name = providerConf.name,
+          redirectUrl = redirectUrl
+        )
+
+      }
+
+    } else {
+      logger.error(s"context not active: $context")
+      Seq.empty
     }
 
   }
