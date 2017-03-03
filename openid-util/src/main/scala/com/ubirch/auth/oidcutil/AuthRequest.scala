@@ -6,7 +6,7 @@ import com.nimbusds.oauth2.sdk.id.{ClientID, State}
 import com.nimbusds.oauth2.sdk.{ResponseType, Scope}
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest
 
-import com.ubirch.auth.config.Config
+import com.ubirch.auth.config.{Config, OidcProviderConfig}
 
 /**
   * author: cvandrei
@@ -14,10 +14,9 @@ import com.ubirch.auth.config.Config
   */
 object AuthRequest {
 
-  def create(context: String, provider: String): AuthenticationRequest = {
+  def create(context: String, providerConf: OidcProviderConfig): AuthenticationRequest = {
 
-    val providerConf = Config.oidcProviderConfig(provider)
-    val contextProviderConfig = Config.oidcContextProviderConfig(context = context, provider = provider)
+    val contextProviderConfig = Config.oidcContextProviderConfig(context = context, provider = providerConf.id)
     val clientID = new ClientID(contextProviderConfig.clientId)
     val callback: URI = contextProviderConfig.callbackUrl
     val state = new State()
@@ -35,9 +34,9 @@ object AuthRequest {
 
   }
 
-  def redirectUrl(context: String, provider: String): (String, State) = {
+  def redirectUrl(context: String, providerConf: OidcProviderConfig): (String, State) = {
 
-    val authReq = create(context, provider)
+    val authReq = create(context, providerConf)
     authReq.toHTTPRequest.send()
     val redirectHost = URLDecoder.decode(authReq.toHTTPRequest.getURL.toString, "UTF-8")
     val redirectParams = authReq.toHTTPRequest().getQuery

@@ -37,10 +37,11 @@ object ProviderInfoManager extends StrictLogging {
 
       val futureProviders: Seq[Future[ProviderInfo]] = Config.oidcContextProvidersList(context) map { provider =>
 
-        val (redirectUrl, state) = AuthRequest.redirectUrl(context, provider)
-        stateAndCodeActor ! RememberState(provider, state.toString)
-
         (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig].map { providerConf =>
+
+          val (redirectUrl, state) = AuthRequest.redirectUrl(context, providerConf)
+          stateAndCodeActor ! RememberState(provider, state.toString)
+
           ProviderInfo(
             context = context,
             providerId = providerConf.id,
