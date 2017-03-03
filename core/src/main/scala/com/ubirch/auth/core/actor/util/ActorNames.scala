@@ -10,5 +10,6 @@ object ActorNames {
   final val TOKEN = "token-actor"
   final val LOGOUT = "logout-actor"
   final val REDIS = "redis-actor"
+  final val OIDC_CONFIG = "oicd-config-actor"
 
 }

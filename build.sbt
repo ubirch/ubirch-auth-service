@@ -32,7 +32,7 @@ lazy val commonSettings = Seq(
 
 lazy val authService = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, config, core, openIdUtil, model, util)
+  .aggregate(server, cmdtools, config, core, openIdUtil, model, util)
 
 lazy val server = project
   .settings(commonSettings: _*)
@@ -57,6 +57,14 @@ lazy val config = project
   .settings(
     description := "trackle specific config and config tools",
     libraryDependencies += ubirchUtilConfig
+  )
+
+lazy val cmdtools = project
+  .settings(commonSettings: _*)
+  .dependsOn(config)
+  .settings(
+    description := "command line tools",
+    libraryDependencies ++= depCmdtools
   )
 
 lazy val core = project
@@ -98,8 +106,8 @@ lazy val util = project
 
 lazy val depServer = Seq(
 
-  "com.typesafe.akka" %% "akka-slf4j" % akkaV,
-  "com.typesafe.akka" %% "akka-http" % akkaHttpV,
+  akkaSlf4j,
+  akkaHttp,
   ubirchUtilRestAkkaHttp,
   ubirchUtilRestAkkaHttpTest % "test",
 
@@ -108,10 +116,21 @@ lazy val depServer = Seq(
 
 )
 
+lazy val depCmdtools = Seq(
+  rediscala,
+  akkaActor,
+  akkaSlf4j,
+  json4sNative,
+  ubirchUtilJsonAutoConvert
+) ++ scalaLogging
+
 lazy val depCore = Seq(
   akkaActor,
   rediscala,
   ubirchUtilResponse,
+  json4sNative,
+  ubirchUtilJson,
+  ubirchUtilFutures,
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -157,6 +176,8 @@ lazy val scalaLogging = Seq(
 )
 
 lazy val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaV
+lazy val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpV
+lazy val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % akkaV
 
 lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.22"
 
@@ -190,7 +211,17 @@ lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.2" excludeAl
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
+lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.3.2" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
 lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.0" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")

@@ -20,8 +20,8 @@ class ProviderInfoActor extends Actor
   override def receive: Receive = {
 
     case getProviderInfoList: GetProviderInfoList =>
-      val providerList = ProviderInfoManager.providerInfoList(getProviderInfoList.context)
-      sender ! ProviderInfoList(providerList)
+      val sender = context.sender
+      ProviderInfoManager.providerInfoList(getProviderInfoList.context) map(sender ! ProviderInfoList(_))
 
     case _ =>
       log.error("unknown message")
