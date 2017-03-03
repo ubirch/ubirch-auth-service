@@ -89,6 +89,9 @@ object Config extends ConfigBase {
    * General OpenID Connect Provider Configs
    ************************************************************************************************/
 
+  /**
+    * @deprecated call "OidcConfigActor ? GetProviderBaseConfig(provider)" instead
+    */
   def oidcProviderConfig(provider: String): OidcProviderConfig = {
 
     OidcProviderConfig(
