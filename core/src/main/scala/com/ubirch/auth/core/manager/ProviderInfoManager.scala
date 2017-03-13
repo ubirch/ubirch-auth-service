@@ -2,9 +2,9 @@ package com.ubirch.auth.core.manager
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{Config, OidcProviderConfig}
+import com.ubirch.auth.config.{Config, ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{ContextProviderIds, GetProviderBaseConfig, IsContextActive, OidcConfigActor, RememberState, StateAndCodeActor}
+import com.ubirch.auth.core.actor.{ContextProviderIds, GetContextProvider, GetProviderBaseConfig, IsContextActive, OidcConfigActor, RememberState, StateAndCodeActor}
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
 import com.ubirch.util.futures.FutureUtil
@@ -41,9 +41,12 @@ object ProviderInfoManager extends StrictLogging {
 
           val futureProviders: Seq[Future[ProviderInfo]] = providerIdList map { provider =>
 
-            (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig].map { providerConf =>
+            for {
+              providerConf <- (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig]
+              contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
+            } yield {
 
-              val (redirectUrl, state) = AuthRequest.redirectUrl(context, providerConf)
+              val (redirectUrl, state) = AuthRequest.redirectUrl(contextProviderConf, providerConf)
               stateAndCodeActor ! RememberState(provider, state.toString)
 
               ProviderInfo(
@@ -52,6 +55,7 @@ object ProviderInfoManager extends StrictLogging {
                 name = providerConf.name,
                 redirectUrl = redirectUrl
               )
+
             }
 
           }

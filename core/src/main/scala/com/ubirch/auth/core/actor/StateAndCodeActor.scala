@@ -1,6 +1,6 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.{Config, OidcProviderConfig}
+import com.ubirch.auth.config.{Config, ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.util.oidc.OidcUtil
@@ -73,9 +73,12 @@ class StateAndCodeActor extends Actor
 
       case true =>
 
-        (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig].map { providerConf =>
+        for {
+          providerConf <- (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig]
+          contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
+        } yield {
 
-          TokenManager.verifyCodeWith3rdParty(context = context, provider = provider, providerConf = providerConf, code = code) match {
+          TokenManager.verifyCodeWith3rdParty(contextProvider = contextProviderConf, providerConf = providerConf, code = code) match {
 
             case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
 

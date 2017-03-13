@@ -15,7 +15,7 @@ import com.nimbusds.oauth2.sdk.{AuthorizationCode, AuthorizationCodeGrant, Parse
 import com.nimbusds.openid.connect.sdk.{OIDCTokenResponse, OIDCTokenResponseParser}
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{Config, OidcProviderConfig}
+import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig}
 
 /**
   * author: cvandrei
@@ -23,13 +23,12 @@ import com.ubirch.auth.config.{Config, OidcProviderConfig}
   */
 object TokenUtil extends StrictLogging {
 
-  def requestToken(context: String,
-                   provider: String,
+  def requestToken(contextProvider: ContextProviderConfig,
                    providerConf: OidcProviderConfig,
                    authCode: String
                   ): Option[TokenUserId] = {
 
-    sendTokenRequest(context = context, provider = provider, providerConf = providerConf, authCode = authCode) match {
+    sendTokenRequest(contextProvider = contextProvider, providerConf = providerConf, authCode = authCode) match {
 
       case None => None
 
@@ -47,6 +46,8 @@ object TokenUtil extends StrictLogging {
 
               val accessToken = accessTokenResponse.getOIDCTokens.getAccessToken
               val idToken = accessTokenResponse.getOIDCTokens.getIDToken
+              val context = contextProvider.context
+              val provider = contextProvider.provider
 
               verifyIdToken(providerConf = providerConf, idToken = idToken) match {
 
@@ -75,15 +76,14 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def sendTokenRequest(context: String,
-                               provider: String,
+  private def sendTokenRequest(contextProvider: ContextProviderConfig,
                                providerConf: OidcProviderConfig,
                                authCode: String
                               ): Option[HTTPResponse] = {
 
     try {
 
-      val tokenReq = tokenRequest(context = context, provider = provider, providerConf = providerConf, authCode = authCode)
+      val tokenReq = tokenRequest(contextProviderConf = contextProvider, providerConf = providerConf, authCode = authCode)
       Some(tokenReq.toHTTPRequest.send())
 
     } catch {
@@ -99,21 +99,19 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def tokenRequest(context: String,
-                           provider: String,
+  private def tokenRequest(contextProviderConf: ContextProviderConfig,
                            providerConf: OidcProviderConfig,
                            authCode: String
                           ): TokenRequest = {
 
-    val contextProviderConfig = Config.oidcContextProviderConfig(context, provider)
-    val redirectUri = contextProviderConfig.callbackUrl
+    val redirectUri = contextProviderConf.callbackUrl
     val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
 
     val tokenEndpoint = new URI(providerConf.endpoints.token)
-    logger.debug(s"token endpoint: provider=$provider, url=$tokenEndpoint")
+    logger.debug(s"token endpoint: provider=${providerConf.id}, url=$tokenEndpoint")
 
-    val clientId = new ClientID(contextProviderConfig.clientId)
-    val secret = new Secret(contextProviderConfig.clientSecret)
+    val clientId = new ClientID(contextProviderConf.clientId)
+    val secret = new Secret(contextProviderConf.clientSecret)
     val auth = new ClientSecretPost(clientId, secret)
 
     new TokenRequest(tokenEndpoint, auth, grant)

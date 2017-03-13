@@ -48,22 +48,6 @@ object Config extends ConfigBase {
    * OpenID Connect Related
    ************************************************************************************************/
 
-  def oidcContextProviderConfig(context: String, provider: String): ContextProviderConfig = {
-    ContextProviderConfig(
-      context = context,
-      provider = provider,
-      clientId = oidcClientId(context = context, provider = provider),
-      clientSecret = oidcClientSecret(context = context, provider = provider),
-      callbackUrl = new URI(oidcCallbackUrl(context = context, provider = provider))
-    )
-  }
-
-  private def oidcClientId(context: String, provider: String): String = config.getString(ConfigKeys.oidcClientId(context, provider))
-
-  private def oidcClientSecret(context: String, provider: String): String = config.getString(ConfigKeys.oidcClientSecret(context, provider))
-
-  private def oidcCallbackUrl(context: String, provider: String): String = config.getString(ConfigKeys.oidcCallbackUrl(context, provider))
-
   /**
     * States are an additional OpenID Connect security feature. We create them when provider infos are queried and not
     * all of them will be used. Hence we want them the have a time-to-live (TTL).

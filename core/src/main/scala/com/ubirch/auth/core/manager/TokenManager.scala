@@ -2,7 +2,7 @@ package com.ubirch.auth.core.manager
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.OidcProviderConfig
+import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.oidcutil.{TokenUserId, TokenUtil}
 
 /**
@@ -11,12 +11,10 @@ import com.ubirch.auth.oidcutil.{TokenUserId, TokenUtil}
   */
 object TokenManager extends StrictLogging {
 
-  def verifyCodeWith3rdParty(context: String,
-                             provider: String,
+  def verifyCodeWith3rdParty(contextProvider: ContextProviderConfig,
                              providerConf: OidcProviderConfig,
                              code: String): Option[TokenUserId] = {
-
-    TokenUtil.requestToken(context = context, provider = provider, providerConf = providerConf, authCode = code) match {
+    TokenUtil.requestToken(contextProvider = contextProvider, providerConf = providerConf, authCode = code) match {
       case None => None
       case Some(tokenResponse) => Some(TokenUserId(tokenResponse.token, tokenResponse.userId))
     }

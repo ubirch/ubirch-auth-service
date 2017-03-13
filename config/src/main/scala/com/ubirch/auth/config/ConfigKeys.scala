@@ -31,18 +31,6 @@ object ConfigKeys {
 
   private val oidc = s"$prefix.openIdConnect"
 
-  private val oidcContextPrefix = s"$oidc.context"
-
-  private def oidcContextPrefix(context: String): String = s"$oidcContextPrefix.$context"
-
-  private def oidcContextProviderPrefix(context: String, provider: String) = s"${oidcContextPrefix(context)}.$provider"
-
-  final def oidcClientId(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.clientId"
-
-  final def oidcClientSecret(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.clientSecret"
-
-  final def oidcCallbackUrl(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.callbackUrl"
-
   final val OIDC_STATE_TTL = s"$oidc.state.ttl"
 
   final val OIDC_TOKEN_TTL = s"$oidc.token.ttl"
