@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.{Config, OidcProviderConfig}
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{GetActiveContexts, GetProviderBaseConfig, OidcConfigActor, RememberState, StateAndCodeActor}
+import com.ubirch.auth.core.actor.{ContextProviderIds, GetProviderBaseConfig, IsContextActive, OidcConfigActor, RememberState, StateAndCodeActor}
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.oidcutil.AuthRequest
 import com.ubirch.util.futures.FutureUtil
@@ -33,32 +33,36 @@ object ProviderInfoManager extends StrictLogging {
 
   def providerInfoList(context: String): Future[Seq[ProviderInfo]] = {
 
-    (oidcConfigActor ? GetActiveContexts()).mapTo[Seq[String]].flatMap { activeContextList =>
+    (oidcConfigActor ? IsContextActive(context)).mapTo[Boolean].flatMap {
 
-      if (activeContextList contains context) {
+      case true =>
 
-        val futureProviders: Seq[Future[ProviderInfo]] = Config.oidcContextProvidersList(context) map { provider =>
+        (oidcConfigActor ? ContextProviderIds(context)).mapTo[Seq[String]].flatMap { providerIdList =>
 
-          (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig].map { providerConf =>
+          val futureProviders: Seq[Future[ProviderInfo]] = providerIdList map { provider =>
 
-            val (redirectUrl, state) = AuthRequest.redirectUrl(context, providerConf)
-            stateAndCodeActor ! RememberState(provider, state.toString)
+            (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig].map { providerConf =>
 
-            ProviderInfo(
-              context = context,
-              providerId = providerConf.id,
-              name = providerConf.name,
-              redirectUrl = redirectUrl
-            )
+              val (redirectUrl, state) = AuthRequest.redirectUrl(context, providerConf)
+              stateAndCodeActor ! RememberState(provider, state.toString)
+
+              ProviderInfo(
+                context = context,
+                providerId = providerConf.id,
+                name = providerConf.name,
+                redirectUrl = redirectUrl
+              )
+            }
+
           }
+          FutureUtil.unfoldInnerFutures(futureProviders.toList)
 
         }
-        FutureUtil.unfoldInnerFutures(futureProviders.toList)
 
-      } else {
+      case false =>
+
         logger.error(s"context not active: $context")
         Future(Seq.empty)
-      }
 
     }
 

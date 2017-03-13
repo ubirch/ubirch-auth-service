@@ -4,8 +4,6 @@ import java.net.URI
 
 import com.ubirch.util.config.ConfigBase
 
-import scala.collection.JavaConversions._
-
 /**
   * author: cvandrei
   * since: 2017-01-19
@@ -50,8 +48,6 @@ object Config extends ConfigBase {
    * OpenID Connect Related
    ************************************************************************************************/
 
-  def oidcContextProvidersList(context: String): Seq[String] = config.getStringList(ConfigKeys.oidcContextProvidersList(context))
-
   def oidcContextProviderConfig(context: String, provider: String): ContextProviderConfig = {
     ContextProviderConfig(
       context = context,
@@ -85,6 +81,7 @@ object Config extends ConfigBase {
 
 }
 
+// TODO extract to new module "model-redis"
 case class ContextProviderConfig(context: String,
                                  provider: String,
                                  clientId: String,
@@ -92,6 +89,7 @@ case class ContextProviderConfig(context: String,
                                  callbackUrl: URI
                                 )
 
+// TODO extract to new module "model-redis"
 case class OidcProviderConfig(id: String,
                               name: String,
                               scope: String,
@@ -100,6 +98,7 @@ case class OidcProviderConfig(id: String,
                               endpoints: OidcProviderEndpoints
                              )
 
+// TODO extract to new module "model-redis"
 case class OidcProviderEndpoints(authorization: String,
                                  token: String,
                                  jwks: String

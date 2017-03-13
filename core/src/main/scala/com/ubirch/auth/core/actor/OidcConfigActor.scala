@@ -1,6 +1,6 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.{OidcProviderConfig, RedisKeys}
+import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig, RedisKeys}
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.JsonFormats
 
@@ -41,23 +41,32 @@ class OidcConfigActor extends Actor
       val sender = context.sender()
       activeContexts() map(sender ! _)
 
+    case msg: IsContextActive =>
+      val sender = context.sender()
+      isContextActive(msg.context) map(sender ! _)
+
+    case msg: ContextProviderIds =>
+      val sender = context.sender()
+      contextProviderIds(msg.context) map(sender ! _)
+
+    case msg: GetContextProviders =>
+      val sender = context.sender()
+      contextProviders(msg.context) map(sender ! _)
+
     case _ => log.error("unknown message")
 
   }
 
   private def activeProviderIds(): Future[Seq[String]] = {
-    val redis = RedisClient()
-    redis.lrange[String](RedisKeys.OIDC_PROVIDER_LIST, 0, -1)
+    RedisClient().lrange[String](RedisKeys.OIDC_PROVIDER_LIST, 0, -1)
   }
 
 
   private def providerBaseConfig(providerId: String): Future[OidcProviderConfig] = {
 
-    val redis = RedisClient()
-
     val providerKey = RedisKeys.providerKey(providerId)
     log.debug(s"Redis key: providerKey=$providerKey")
-    val redisResult = redis.get[String](providerKey)
+    val redisResult = RedisClient().get[String](providerKey)
     redisResult map {
 
       case None =>
@@ -82,8 +91,45 @@ class OidcConfigActor extends Actor
   }
 
   private def activeContexts(): Future[Seq[String]] = {
-    val redis = RedisClient()
-    redis.lrange[String](RedisKeys.OIDC_CONTEXT_LIST, 0, -1)
+    RedisClient().lrange[String](RedisKeys.OIDC_CONTEXT_LIST, 0, -1)
+  }
+
+  private def isContextActive(context: String): Future[Boolean] = {
+      RedisClient().sismember(RedisKeys.OIDC_CONTEXT_LIST, context)
+  }
+
+  private def contextProviderIds(context: String): Future[Seq[String]] = {
+    val prefix = RedisKeys.oidcContextPrefix(context)
+    val pattern = s"$prefix.*"
+    RedisClient().keys(pattern) map { foo=>
+      foo map(_.replaceAll(prefix + ".", ""))
+    }
+  }
+
+  private def contextProviders(context: String): Future[Seq[ContextProviderConfig]] = {
+
+    val pattern = s"${RedisKeys.oidcContextPrefix(context)}.*"
+    RedisClient().keys(pattern) flatMap { providerList =>
+
+      val ctxProviderList = providerList map { provider =>
+
+        val key = RedisKeys.oidcContextProviderKey(context, provider)
+        val redisResult = RedisClient().get[String](key)
+        redisResult map {
+
+          case None =>
+            log.error(s"failed to load context provider: context=$context, provider=$provider")
+            throw new Exception(s"failed to load context provider: context=$context, provider=$provider")
+
+          case Some(json) => read[ContextProviderConfig](json.toString)
+
+        }
+
+      }
+      FutureUtil.unfoldInnerFutures(ctxProviderList.toList)
+
+    }
+
   }
 
 }
@@ -95,3 +141,9 @@ case class GetProviderBaseConfig(providerId: String)
 case class GetProviderBaseConfigs()
 
 case class GetActiveContexts()
+
+case class IsContextActive(context: String)
+
+case class ContextProviderIds(context: String)
+
+case class GetContextProviders(context: String)

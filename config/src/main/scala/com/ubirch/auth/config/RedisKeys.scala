@@ -18,4 +18,8 @@ object RedisKeys {
 
   val OIDC_CONTEXT_LIST = s"$OIDC_CONTEXT_PREFIX.list"
 
+  def oidcContextPrefix(context: String): String = s"$OIDC_CONTEXT_PREFIX.$context"
+
+  def oidcContextProviderKey(context: String, provider: String): String = s"$OIDC_CONTEXT_PREFIX.$context.$provider"
+
 }

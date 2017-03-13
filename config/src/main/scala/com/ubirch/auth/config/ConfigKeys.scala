@@ -35,8 +35,6 @@ object ConfigKeys {
 
   private def oidcContextPrefix(context: String): String = s"$oidcContextPrefix.$context"
 
-  def oidcContextProvidersList(context: String): String = s"${oidcContextPrefix(context)}.providers"
-
   private def oidcContextProviderPrefix(context: String, provider: String) = s"${oidcContextPrefix(context)}.$provider"
 
   final def oidcClientId(context: String, provider: String) = s"${oidcContextProviderPrefix(context, provider)}.clientId"
