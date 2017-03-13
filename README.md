@@ -157,79 +157,62 @@ In case of an error the response is:
 
 ### OpenID Connect Providers
 
-Configuring OpenID Connect providers requires two parts:
+OpenID Connect providers are configured in a Redis database requiring two parts:
 
 * generic provider config
 * context specific config
 
-A context can be `trackle` or `trackle-dev` for example. Here's an example for a config with one provider used in three
-different contexts with only two activate ones (including comments with further explanations):
+For a programmatic example please refer to the class `InitData`.
 
-    ubirchAuthService {
+#### Generic Provider Config
 
-      openIdConnect {
+To configure a provider we have to create an Redis record with the key `oidc.provider.$PROVIDER`. It's value is a JSON
+with all context independent information.
 
-        provider {
+    set oidc.provider.google "{\"id\":\"google\",\"name\":\"Google\",\"scope\":\"openid\",\"endpointConfig\":\"https://accounts.google.com/.well-known/openid-configuration\",\"tokenSigningAlgorithms\":[\"RS256\"],\"endpoints\":{\"authorization\":\"https://accounts.google.com/o/oauth2/v2/auth\",\"token\":\"https://www.googleapis.com/oauth2/v4/token\",\"jwks\":\"https://www.googleapis.com/oauth2/v3/certs\"}}"
 
-          google { # referenced later in `ubirchAuthService.openIdConnect.context.$CONTEXT_NAME.providers`
-            name = "Google"
-            scope = "openid"
-            endpointConfig = "https://accounts.google.com/.well-known/openid-configuration"
-            tokenSigningAlgorithms = ["RS256"]
-            endpoints {
-              authorization = "https://accounts.google.com/o/oauth2/v2/auth"
-              token = "https://www.googleapis.com/oauth2/v4/token"
-              jwks = "https://www.googleapis.com/oauth2/v3/certs"
-            }
-          }
+More human readable the JSON looks as follows:
 
-        }
-
-        context {
-
-          activeList = ["trackle", "trackle-dev"] # querying `/providerInfo/list` only the contexts in this list are returned
-
-          trackle { # same key is in `ubirchAuthService.openIdConnect.context.activeList`
-
-            providers = ["google"] # list of providers activated for this context (same keys as in `ubirchAuthService.openIdConnect.provider`)
-
-            google { # provider as configured in `ubirchAuthService.openIdConnect.context.trackle.providers`
-              clientId = "clientId_for_context_trackle"
-              clientSecret = "secret_for_context_trackle"
-              callbackUrl = "https://trackle.ubirch.com:9000/oidc-callback-trackle"
-            }
-
-          }
-
-          trackle-dev { # same key is in `ubirchAuthService.openIdConnect.context.activeList`
-
-          providers = ["google"] # list of providers activated for this context (same keys as in `ubirchAuthService.openIdConnect.provider`)
-
-            google { # provider as configured in `ubirchAuthService.openIdConnect.context.trackle-dev.providers`
-              clientId = "clientId_for_context_trackle-dev"
-              clientSecret = "secret_for_context_trackle-dev"
-              callbackUrl = "http://localhost:10000/oidc-callback-trackle-dev"
-            }
-
-          }
-
-          projectX-dev { # key is not in `ubirchAuthService.openIdConnect.context.activeList` --> not returned by `/providerInfo/list`
-
-            providers = ["google"] # list of providers activated for this context (same keys as in `ubirchAuthService.openIdConnect.provider`)
-
-            google { # provider as configured in `ubirchAuthService.openIdConnect.context.projectX-dev.providers`
-              clientId = "clientId_for_context_projectX"
-              clientSecret = "secret_for_context_projectX"
-              callbackUrl = "http://localhost:10000/oidc-callback-projectX-dev"
-            }
-
-          }
-
-        }
-
+    {
+      id = "google", # the $PROVIDER from the key
+      name = "Google",
+      scope = "openid",
+      endpointConfig = "https://accounts.google.com/.well-known/openid-configuration",
+      tokenSigningAlgorithms = ["RS256"],
+      endpoints {
+        authorization = "https://accounts.google.com/o/oauth2/v2/auth",
+        token = "https://www.googleapis.com/oauth2/v4/token",
+        jwks = "https://www.googleapis.com/oauth2/v3/certs"
       }
-
     }
+
+We can enable a provider by adding it to the list stored in the key `oidc.provider.list` (using the `id` from the
+above JSON).
+
+    lpush oidc.provider.list google
+
+#### Context Specific Config
+
+A context can be `trackle-dev` for example and requires it's own `clientId`, `clientSecret` and `callbackUrl`.
+
+To add the config we create a record with the key `oidc.context.$CONTEXT.$PROVIDER`. It's value is a JSON, too.
+
+    set oidc.context.trackle-dev.google "{\"context\":\"trackle-dev\",\"provider\":\"google\",\"clientId\":\"370115332091-kqf5hu698s4sodrvv03ka3bule530rp5.apps.googleusercontent.com\",\"clientSecret\":\"M86oj4LxV-CcEDd3ougKSbsV\",\"callbackUrl\":\"https://localhost:10000/oidc-callback-google\"}"
+
+More human-readable the JSON looks as follows:
+
+    {
+      "context": "trackle-dev", # the $CONTEXT from the key
+      "provider": "google", # the $PROVIDER from the key which also has to exist in `oidc.provider.$PROVIDER`
+      "clientId": "370115332091-kqf5hu698s4sodrvv03ka3bule530rp5.apps.googleusercontent.com",
+      "clientSecret": "M86oj4LxV-CcEDd3ougKSbsV",
+      "callbackUrl": "https://localhost:10000/oidc-callback-google"
+    }
+
+We can enable a context wby adding it to the set stored in the key `oidc.context.list` (using the `context` from the
+above JSON).
+
+    sadd oidc.context.list trackle-dev
 
 
 ### Redis
@@ -258,7 +241,7 @@ TODO (if necessary)
 
     ./sbt "cmdtools/runMain com.ubirch.auth.cmd.InitData"
 
-3) Start AuthService by running:
+3) Start AuthService
 
     ./sbt server/run
 
