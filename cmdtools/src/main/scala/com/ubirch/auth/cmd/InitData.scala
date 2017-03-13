@@ -27,19 +27,15 @@ object InitData extends App
   val defaultSleep = 1000
 
   val redis = RedisClient()
+  cleanup()
   initProviders()
   initContexts()
   akkaSystem.terminate()
 
-  private def initProviders(): Unit = {
-    logger.info("=== init (clean up and create): providers")
-    cleanupProviders()
-    createProviders()
-  }
+  private def cleanup(): Unit = {
 
-  private def cleanupProviders(): Unit = {
-
-    val pattern = s"${RedisKeys.OIDC_PROVIDER_PREFIX}.*"
+    logger.info("====== clean up")
+    val pattern = s"${RedisKeys.OIDC}.*"
     redis.keys(pattern) map { keyList =>
 
       keyList foreach { key =>
@@ -53,8 +49,9 @@ object InitData extends App
 
   }
 
-  private def createProviders(): Unit = {
+  private def initProviders(): Unit = {
 
+    logger.info("====== create: providers")
     providerBaseConfigs foreach { providerConf =>
 
       storeProvider(providerConf) map { stored =>
@@ -89,29 +86,8 @@ object InitData extends App
   }
 
   private def initContexts(): Unit = {
-    logger.info("=== init (clean up and create): contexts")
-    cleanupContexts()
-    createContexts()
-  }
 
-  private def cleanupContexts(): Unit = {
-
-    val pattern = s"${RedisKeys.OIDC_CONTEXT_PREFIX}.*"
-    redis.keys(pattern) map { keyList =>
-
-      keyList foreach { key =>
-        logger.info(s"cleanup(): key=$key")
-        redis.del(key)
-      }
-
-    }
-
-    Thread.sleep(defaultSleep)
-
-  }
-
-  private def createContexts(): Unit = {
-
+    logger.info("====== create: contexts")
     contextProviderList foreach { ctxProviderConf =>
 
       storeContextProvider(ctxProviderConf) map { stored =>

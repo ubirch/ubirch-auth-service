@@ -6,13 +6,13 @@ package com.ubirch.auth.config
   */
 object RedisKeys {
 
-  private val oidc = "oidc"
+  val OIDC = "oidc"
 
   /*
    * provider
    ******************************************************************/
 
-  val OIDC_PROVIDER_PREFIX = s"$oidc.provider"
+  val OIDC_PROVIDER_PREFIX = s"$OIDC.provider"
 
   final val OIDC_PROVIDER_LIST = s"$OIDC_PROVIDER_PREFIX.list"
 
@@ -22,7 +22,7 @@ object RedisKeys {
    * context
    ******************************************************************/
 
-  val OIDC_CONTEXT_PREFIX = s"$oidc.context"
+  val OIDC_CONTEXT_PREFIX = s"$OIDC.context"
 
   val OIDC_CONTEXT_LIST = s"$OIDC_CONTEXT_PREFIX.list"
 
