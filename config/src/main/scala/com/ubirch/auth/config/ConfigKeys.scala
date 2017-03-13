@@ -51,28 +51,4 @@ object ConfigKeys {
 
   final val OIDC_TOKEN_TTL = s"$oidc.token.ttl"
 
-  /*
-   * OpenID Connect (= oidc) Providers
-   *********************************************************************************************/
-
-  private val oidcProviderPrefix = s"$oidc.provider"
-
-  private def oidcProviderPrefix(provider: String): String = s"$oidcProviderPrefix.$provider"
-
-  final def oidcProviderName(provider: String) = s"${oidcProviderPrefix(provider)}.name"
-
-  final def oidcScope(provider: String) = s"${oidcProviderPrefix(provider)}.scope"
-
-  final def oidcEndpointConfig(provider: String) = s"${oidcProviderPrefix(provider)}.endpointConfig"
-
-  final def oidcTokenSigningAlgorithms(provider: String) = s"${oidcProviderPrefix(provider)}.tokenSigningAlgorithms"
-
-  private def oidcEndpointsPrefix(provider: String) = s"${oidcProviderPrefix(provider)}.endpoints"
-
-  final def oidcEndpointAuthorization(provider: String) = s"${oidcEndpointsPrefix(provider)}.authorization"
-
-  final def oidcEndpointToken(provider: String) = s"${oidcEndpointsPrefix(provider)}.token"
-
-  final def oidcEndpointJwks(provider: String) = s"${oidcEndpointsPrefix(provider)}.jwks"
-
 }

@@ -1,13 +1,19 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.Config
+import com.ubirch.auth.config.{Config, OidcProviderConfig}
+import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.util.oidc.OidcUtil
 
-import akka.actor.{Actor, ActorLogging, ActorSystem}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.pattern.ask
+import akka.routing.RoundRobinPool
+import akka.util.Timeout
 import redis.RedisClient
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 /**
@@ -19,6 +25,11 @@ class StateAndCodeActor extends Actor
 
   implicit val executionContext: ExecutionContextExecutor = context.dispatcher
   implicit val akkaSystem: ActorSystem = context.system
+  implicit val timeout = Timeout(Config.actorTimeout seconds)
+
+
+  private val oidcConfigActor = context.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor]), ActorNames.OIDC_CONFIG)
+
 
   override def receive: Receive = {
 
@@ -58,30 +69,34 @@ class StateAndCodeActor extends Actor
     val code = vc.code
     val state = vc.state
 
-    stateExists(VerifyStateExists(provider, state)) map {
+    stateExists(VerifyStateExists(provider, state)) flatMap {
 
       case true =>
 
-        TokenManager.verifyCodeWith3rdParty(context = context, provider = provider, code = code) match {
+        (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig].map { providerConf =>
 
-          case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
+          TokenManager.verifyCodeWith3rdParty(context = context, provider = provider, providerConf = providerConf, code = code) match {
 
-          case Some(tokenUserId) =>
+            case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
 
-            val token = tokenUserId.token
-            val userId = tokenUserId.userId
-            log.debug(s"token=$token, userId=$userId")
-            self ! RememberToken(provider, token, userId)
-            self ! DeleteState(provider, state)
+            case Some(tokenUserId) =>
 
-            VerifyCodeResult(token = Some(token))
+              val token = tokenUserId.token
+              val userId = tokenUserId.userId
+              log.debug(s"token=$token, userId=$userId")
+              self ! RememberToken(provider, token, userId)
+              self ! DeleteState(provider, state)
+
+              VerifyCodeResult(token = Some(token))
+
+          }
 
         }
 
       case false =>
 
         log.info(s"unknown state: $vc")
-        VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState))
+        Future(VerifyCodeResult(errorType = Some(VerifyCodeError.UnknownState)))
 
     }
 

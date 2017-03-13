@@ -254,7 +254,11 @@ TODO (if necessary)
 
 1) Start [Redis|https://redis.io/] on the default port (tested with version 3.2.7 and 3.2.8)
 
-2) Start AuthService by running:
+2) Configure OpenConnectID Providers
+
+    ./sbt "cmdtools/runMain com.ubirch.auth.cmd.InitData"
+
+3) Start AuthService by running:
 
     ./sbt server/run
 

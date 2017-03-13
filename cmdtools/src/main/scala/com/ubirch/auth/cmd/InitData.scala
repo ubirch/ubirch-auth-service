@@ -1,4 +1,4 @@
-package com.ubirch.auth.cmdtools
+package com.ubirch.auth.cmd
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
@@ -46,7 +46,7 @@ object InitData extends App
 
   private def create(): Unit = {
 
-    providerBaseConfigs() foreach { providerConf =>
+    providerBaseConfigs foreach { providerConf =>
 
       store(providerConf) map { stored =>
 
@@ -67,9 +67,10 @@ object InitData extends App
   private def store(conf: OidcProviderConfig): Future[Boolean] = {
 
     val id = conf.id
+    val json = write(conf)
     for {
 
-      conf <- redis.set(RedisKeys.providerKey(id), write(conf))
+      conf <- redis.set(RedisKeys.providerKey(id), json)
       activeList <- redis.lpush[String](RedisKeys.OIDC_PROVIDER_LIST, id)
 
     } yield {
@@ -104,6 +105,6 @@ object InitData extends App
     )
   )
 
-  private def providerBaseConfigs(): Seq[OidcProviderConfig] = Seq(google, yahoo)
+  private val providerBaseConfigs: Seq[OidcProviderConfig] = Seq(google, yahoo)
 
 }

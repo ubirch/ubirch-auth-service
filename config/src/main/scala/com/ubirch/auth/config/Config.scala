@@ -85,44 +85,6 @@ object Config extends ConfigBase {
     */
   def oidcTokenTtl(): Long = config.getLong(ConfigKeys.OIDC_TOKEN_TTL)
 
-  /*
-   * General OpenID Connect Provider Configs
-   ************************************************************************************************/
-
-  /**
-    * @deprecated call "OidcConfigActor ? GetProviderBaseConfig(provider)" instead
-    */
-  def oidcProviderConfig(provider: String): OidcProviderConfig = {
-
-    OidcProviderConfig(
-      id = provider,
-      name = oidcActiveProviderName(provider),
-      scope = oidcActiveProviderScope(provider),
-      endpointConfig = oidcActiveProviderEndpointConfig(provider),
-      tokenSigningAlgorithms = oidcActiveProviderTokenSigningAlgorithms(provider),
-      endpoints = OidcProviderEndpoints(
-        authorization = oidcActiveProviderAuthorizationEndpoint(provider),
-        token = oidcActiveProviderTokenEndpoint(provider),
-        jwks = oidcActiveProviderJwksUri(provider)
-      )
-    )
-
-  }
-
-  private def oidcActiveProviderName(provider: String): String = config.getString(ConfigKeys.oidcProviderName(provider))
-
-  private def oidcActiveProviderScope(provider: String): String = config.getString(ConfigKeys.oidcScope(provider))
-
-  private def oidcActiveProviderEndpointConfig(provider: String): String = config.getString(ConfigKeys.oidcEndpointConfig(provider))
-
-  private def oidcActiveProviderTokenSigningAlgorithms(provider: String): Seq[String] = config.getStringList(ConfigKeys.oidcTokenSigningAlgorithms(provider))
-
-  private def oidcActiveProviderAuthorizationEndpoint(provider: String): String = config.getString(ConfigKeys.oidcEndpointAuthorization(provider))
-
-  private def oidcActiveProviderTokenEndpoint(provider: String): String = config.getString(ConfigKeys.oidcEndpointToken(provider))
-
-  private def oidcActiveProviderJwksUri(provider: String): String = config.getString(ConfigKeys.oidcEndpointJwks(provider))
-
 }
 
 case class ContextProviderConfig(context: String,

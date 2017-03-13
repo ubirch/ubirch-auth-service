@@ -15,7 +15,7 @@ import com.nimbusds.oauth2.sdk.{AuthorizationCode, AuthorizationCodeGrant, Parse
 import com.nimbusds.openid.connect.sdk.{OIDCTokenResponse, OIDCTokenResponseParser}
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.Config
+import com.ubirch.auth.config.{Config, OidcProviderConfig}
 
 /**
   * author: cvandrei
@@ -23,9 +23,13 @@ import com.ubirch.auth.config.Config
   */
 object TokenUtil extends StrictLogging {
 
-  def requestToken(context: String, provider: String, authCode: String): Option[TokenUserId] = {
+  def requestToken(context: String,
+                   provider: String,
+                   providerConf: OidcProviderConfig,
+                   authCode: String
+                  ): Option[TokenUserId] = {
 
-    sendTokenRequest(context = context, provider = provider, authCode = authCode) match {
+    sendTokenRequest(context = context, provider = provider, providerConf = providerConf, authCode = authCode) match {
 
       case None => None
 
@@ -44,7 +48,7 @@ object TokenUtil extends StrictLogging {
               val accessToken = accessTokenResponse.getOIDCTokens.getAccessToken
               val idToken = accessTokenResponse.getOIDCTokens.getIDToken
 
-              verifyIdToken(provider = provider, idToken = idToken) match {
+              verifyIdToken(providerConf = providerConf, idToken = idToken) match {
 
                 case None =>
                   logger.error(s"failed to get verified token: context=$context, provider=$provider")
@@ -71,11 +75,15 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def sendTokenRequest(context: String, provider: String, authCode: String): Option[HTTPResponse] = {
+  private def sendTokenRequest(context: String,
+                               provider: String,
+                               providerConf: OidcProviderConfig,
+                               authCode: String
+                              ): Option[HTTPResponse] = {
 
     try {
 
-      val tokenReq = tokenRequest(context = context, provider = provider, authCode = authCode)
+      val tokenReq = tokenRequest(context = context, provider = provider, providerConf = providerConf, authCode = authCode)
       Some(tokenReq.toHTTPRequest.send())
 
     } catch {
@@ -91,10 +99,13 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def tokenRequest(context: String, provider: String, authCode: String): TokenRequest = {
+  private def tokenRequest(context: String,
+                           provider: String,
+                           providerConf: OidcProviderConfig,
+                           authCode: String
+                          ): TokenRequest = {
 
     val contextProviderConfig = Config.oidcContextProviderConfig(context, provider)
-    val providerConf = Config.oidcProviderConfig(provider)
     val redirectUri = contextProviderConfig.callbackUrl
     val grant = new AuthorizationCodeGrant(new AuthorizationCode(authCode), redirectUri)
 
@@ -109,12 +120,12 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def verifyIdToken(provider: String, idToken: JWT): Option[JWTClaimsSet] = {
+  private def verifyIdToken(providerConf: OidcProviderConfig, idToken: JWT): Option[JWTClaimsSet] = {
 
-    jwtProcessor(provider, idToken) match {
+    jwtProcessor(providerConf, idToken) match {
 
       case None =>
-        logger.error(s"failed to load jwtProcessor: provider=$provider")
+        logger.error(s"failed to load jwtProcessor: provider=${providerConf.id}")
         None
 
       case Some(jwtProcessor) =>
@@ -137,9 +148,8 @@ object TokenUtil extends StrictLogging {
 
   }
 
-  private def jwtProcessor(provider: String, idToken: JWT): Option[DefaultJWTProcessor[SimpleSecurityContext]] = {
+  private def jwtProcessor(providerConf: OidcProviderConfig, idToken: JWT): Option[DefaultJWTProcessor[SimpleSecurityContext]] = {
 
-    val providerConf = Config.oidcProviderConfig(provider)
     val jwtProcessor = new DefaultJWTProcessor[SimpleSecurityContext]()
     val keySource = new RemoteJWKSet[SimpleSecurityContext](new URL(providerConf.endpoints.jwks))
     val algorithm = idToken.getHeader.getAlgorithm
@@ -164,7 +174,7 @@ object TokenUtil extends StrictLogging {
 
     } else {
 
-      logger.error(s"signing algorithm does not match those allowed by our configuration: provider=$provider, algorithm=$algorithm")
+      logger.error(s"signing algorithm does not match those allowed by our configuration: provider=${providerConf.id}, algorithm=$algorithm")
       None
 
     }

@@ -2,9 +2,8 @@ package com.ubirch.auth.core.manager
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
+import com.ubirch.auth.config.OidcProviderConfig
 import com.ubirch.auth.oidcutil.{TokenUserId, TokenUtil}
-
-import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -12,9 +11,12 @@ import scala.language.postfixOps
   */
 object TokenManager extends StrictLogging {
 
-  def verifyCodeWith3rdParty(context: String, provider: String, code: String): Option[TokenUserId] = {
+  def verifyCodeWith3rdParty(context: String,
+                             provider: String,
+                             providerConf: OidcProviderConfig,
+                             code: String): Option[TokenUserId] = {
 
-    TokenUtil.requestToken(context = context, provider = provider, authCode = code) match {
+    TokenUtil.requestToken(context = context, provider = provider, providerConf = providerConf, authCode = code) match {
       case None => None
       case Some(tokenResponse) => Some(TokenUserId(tokenResponse.token, tokenResponse.userId))
     }
