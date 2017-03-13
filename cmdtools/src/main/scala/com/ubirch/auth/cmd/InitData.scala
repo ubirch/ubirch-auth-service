@@ -4,7 +4,8 @@ import java.net.URI
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig, OidcProviderEndpoints, RedisKeys}
+import com.ubirch.auth.config.RedisKeys
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig, OidcProviderEndpoints}
 import com.ubirch.util.json.MyJsonProtocol
 
 import org.json4s.native.Serialization.write

@@ -8,11 +8,19 @@ object RedisKeys {
 
   private val oidc = "oidc"
 
+  /*
+   * provider
+   ******************************************************************/
+
   val OIDC_PROVIDER_PREFIX = s"$oidc.provider"
 
   final val OIDC_PROVIDER_LIST = s"$OIDC_PROVIDER_PREFIX.list"
 
   final def providerKey(provider: String) = s"$OIDC_PROVIDER_PREFIX.$provider"
+
+  /*
+   * context
+   ******************************************************************/
 
   val OIDC_CONTEXT_PREFIX = s"$oidc.context"
 

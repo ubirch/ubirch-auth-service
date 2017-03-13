@@ -6,7 +6,7 @@ import com.nimbusds.oauth2.sdk.id.{ClientID, State}
 import com.nimbusds.oauth2.sdk.{ResponseType, Scope}
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest
 
-import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 
 /**
   * author: cvandrei

@@ -2,7 +2,7 @@ package com.ubirch.auth.core.manager
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.oidcutil.{TokenUserId, TokenUtil}
 
 /**

@@ -1,8 +1,9 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.{Config, ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.util.oidc.OidcUtil
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}

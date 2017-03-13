@@ -1,6 +1,7 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig, RedisKeys}
+import com.ubirch.auth.config.RedisKeys
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.JsonFormats
 

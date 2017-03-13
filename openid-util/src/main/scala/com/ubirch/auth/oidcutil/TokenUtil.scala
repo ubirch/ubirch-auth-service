@@ -15,7 +15,7 @@ import com.nimbusds.oauth2.sdk.{AuthorizationCode, AuthorizationCodeGrant, Parse
 import com.nimbusds.openid.connect.sdk.{OIDCTokenResponse, OIDCTokenResponseParser}
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 
 /**
   * author: cvandrei

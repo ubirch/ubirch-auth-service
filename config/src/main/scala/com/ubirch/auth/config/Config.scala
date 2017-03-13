@@ -65,25 +65,8 @@ object Config extends ConfigBase {
 
 }
 
-// TODO extract to new module "model-redis"
-case class ContextProviderConfig(context: String,
-                                 provider: String,
-                                 clientId: String,
-                                 clientSecret: String,
-                                 callbackUrl: URI
-                                )
 
-// TODO extract to new module "model-redis"
-case class OidcProviderConfig(id: String,
-                              name: String,
-                              scope: String,
-                              endpointConfig: String,
-                              tokenSigningAlgorithms: Seq[String],
-                              endpoints: OidcProviderEndpoints
-                             )
 
-// TODO extract to new module "model-redis"
-case class OidcProviderEndpoints(authorization: String,
-                                 token: String,
-                                 jwks: String
-                                )
+
+
+

@@ -32,7 +32,7 @@ lazy val commonSettings = Seq(
 
 lazy val authService = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, cmdtools, config, core, openIdUtil, model, util)
+  .aggregate(server, cmdtools, config, core, openIdUtil, model, modelDb, util)
 
 lazy val server = project
   .settings(commonSettings: _*)
@@ -61,7 +61,7 @@ lazy val config = project
 
 lazy val cmdtools = project
   .settings(commonSettings: _*)
-  .dependsOn(config)
+  .dependsOn(config, modelDb)
   .settings(
     description := "command line tools",
     libraryDependencies ++= depCmdtools
@@ -69,7 +69,7 @@ lazy val cmdtools = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, util, openIdUtil)
+  .dependsOn(model, modelDb, util, openIdUtil)
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -77,7 +77,7 @@ lazy val core = project
 
 lazy val openIdUtil = (project in file("openid-util"))
   .settings(commonSettings: _*)
-  .dependsOn(config)
+  .dependsOn(config, modelDb)
   .settings(
     name := "openid-util",
     description := "OpenID Connect utils",
@@ -88,6 +88,13 @@ lazy val model = project
   .settings(commonSettings: _*)
   .settings(
     description := "JSON models"
+  )
+
+lazy val modelDb = (project in file("model-db"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "model-db",
+    description := "database models"
   )
 
 lazy val util = project

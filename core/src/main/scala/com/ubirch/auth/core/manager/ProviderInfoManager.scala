@@ -2,10 +2,11 @@ package com.ubirch.auth.core.manager
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{Config, ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{ContextProviderIds, GetContextProvider, GetProviderBaseConfig, IsContextActive, OidcConfigActor, RememberState, StateAndCodeActor}
 import com.ubirch.auth.model.ProviderInfo
+import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.oidcutil.AuthRequest
 import com.ubirch.util.futures.FutureUtil
 
