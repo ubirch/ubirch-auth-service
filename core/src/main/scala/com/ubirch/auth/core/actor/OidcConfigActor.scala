@@ -37,6 +37,10 @@ class OidcConfigActor extends Actor
       val sender = context.sender()
       providerBaseConfigs() map(sender ! _)
 
+    case _: GetActiveContexts =>
+      val sender = context.sender()
+      activeContexts() map(sender ! _)
+
     case _ => log.error("unknown message")
 
   }
@@ -77,6 +81,11 @@ class OidcConfigActor extends Actor
 
   }
 
+  private def activeContexts(): Future[Seq[String]] = {
+    val redis = RedisClient()
+    redis.lrange[String](RedisKeys.OIDC_CONTEXT_LIST, 0, -1)
+  }
+
 }
 
 case class GetActiveProviderIds()
@@ -84,3 +93,5 @@ case class GetActiveProviderIds()
 case class GetProviderBaseConfig(providerId: String)
 
 case class GetProviderBaseConfigs()
+
+case class GetActiveContexts()

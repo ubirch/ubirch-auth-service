@@ -24,11 +24,17 @@ object InitData extends App
   val defaultSleep = 1000
 
   val redis = RedisClient()
-  cleanup()
-  create()
+  initProviders()
+  initContexts()
   akkaSystem.terminate()
 
-  private def cleanup(): Unit = {
+  private def initProviders(): Unit = {
+    logger.info("=== init (clean up and create): providers")
+    cleanupProviders()
+    createProviders()
+  }
+
+  private def cleanupProviders(): Unit = {
 
     val pattern = s"${RedisKeys.OIDC_PROVIDER_PREFIX}.*"
     redis.keys(pattern) map { keyList =>
@@ -44,11 +50,11 @@ object InitData extends App
 
   }
 
-  private def create(): Unit = {
+  private def createProviders(): Unit = {
 
     providerBaseConfigs foreach { providerConf =>
 
-      store(providerConf) map { stored =>
+      storeProvider(providerConf) map { stored =>
 
         if (stored) {
           logger.info(s"created provider base conf: provider=${providerConf.id}")
@@ -64,7 +70,7 @@ object InitData extends App
 
   }
 
-  private def store(conf: OidcProviderConfig): Future[Boolean] = {
+  private def storeProvider(conf: OidcProviderConfig): Future[Boolean] = {
 
     val id = conf.id
     val json = write(conf)
@@ -79,7 +85,38 @@ object InitData extends App
 
   }
 
-  private val google = OidcProviderConfig(
+  private def initContexts(): Unit = {
+    logger.info("=== init (clean up and create): contexts")
+    cleanupContexts()
+    createContexts()
+  }
+
+  private def cleanupContexts(): Unit = {
+
+    val pattern = s"${RedisKeys.OIDC_CONTEXT_PREFIX}.*"
+    redis.keys(pattern) map { keyList =>
+
+      keyList foreach { key =>
+        logger.info(s"cleanup(): key=$key")
+        redis.del(key)
+      }
+
+    }
+
+    Thread.sleep(defaultSleep)
+
+  }
+
+  private def createContexts(): Unit = {
+
+    contextList foreach(redis.lpush[String](RedisKeys.OIDC_CONTEXT_LIST, _))
+    Thread.sleep(defaultSleep)
+
+  }
+
+  private lazy val providerBaseConfigs: Seq[OidcProviderConfig] = Seq(google, yahoo)
+
+  private lazy val google = OidcProviderConfig(
     id = "google",
     name = "Google",
     scope = "openid",
@@ -92,7 +129,7 @@ object InitData extends App
     )
   )
 
-  private val yahoo = OidcProviderConfig(
+  private lazy val yahoo = OidcProviderConfig(
     id = "yahoo",
     name = "Yahoo",
     scope = "openid",
@@ -105,6 +142,6 @@ object InitData extends App
     )
   )
 
-  private val providerBaseConfigs: Seq[OidcProviderConfig] = Seq(google, yahoo)
+  private lazy val contextList: Seq[String] = Seq("trackle-dev", "ubirch-admin-ui-dev", "trackle-admin-ui-dev")
 
 }

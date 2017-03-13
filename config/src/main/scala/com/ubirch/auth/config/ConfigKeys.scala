@@ -33,8 +33,6 @@ object ConfigKeys {
 
   private val oidcContextPrefix = s"$oidc.context"
 
-  final val OIDC_CONTEXT_ACTIVE_LIST = s"$oidcContextPrefix.activeList"
-
   private def oidcContextPrefix(context: String): String = s"$oidcContextPrefix.$context"
 
   def oidcContextProvidersList(context: String): String = s"${oidcContextPrefix(context)}.providers"

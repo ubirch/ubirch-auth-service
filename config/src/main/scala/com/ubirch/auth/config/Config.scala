@@ -50,8 +50,6 @@ object Config extends ConfigBase {
    * OpenID Connect Related
    ************************************************************************************************/
 
-  def oidcActiveContextList: Seq[String] = config.getStringList(ConfigKeys.OIDC_CONTEXT_ACTIVE_LIST).toList
-
   def oidcContextProvidersList(context: String): Seq[String] = config.getStringList(ConfigKeys.oidcContextProvidersList(context))
 
   def oidcContextProviderConfig(context: String, provider: String): ContextProviderConfig = {
