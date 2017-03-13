@@ -1,7 +1,5 @@
 package com.ubirch.auth.config
 
-import java.net.URI
-
 import com.ubirch.util.config.ConfigBase
 
 /**
@@ -64,9 +62,3 @@ object Config extends ConfigBase {
   def oidcTokenTtl(): Long = config.getLong(ConfigKeys.OIDC_TOKEN_TTL)
 
 }
-
-
-
-
-
-
