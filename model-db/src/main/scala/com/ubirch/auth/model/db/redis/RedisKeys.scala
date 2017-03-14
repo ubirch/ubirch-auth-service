@@ -1,4 +1,4 @@
-package com.ubirch.auth.config
+package com.ubirch.auth.model.db.redis
 
 /**
   * author: cvandrei
