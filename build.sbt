@@ -32,7 +32,7 @@ lazy val commonSettings = Seq(
 
 lazy val authService = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, cmdtools, config, core, openIdUtil, model, modelDb, util)
+  .aggregate(server, cmdtools, config, core, openIdUtil, model, modelDb, testTools, util)
 
 lazy val server = project
   .settings(commonSettings: _*)
@@ -61,15 +61,14 @@ lazy val config = project
 
 lazy val cmdtools = project
   .settings(commonSettings: _*)
-  .dependsOn(config, modelDb)
+  .dependsOn(config, modelDb, testTools)
   .settings(
-    description := "command line tools",
-    libraryDependencies ++= depCmdtools
+    description := "command line tools"
   )
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, modelDb, util, openIdUtil)
+  .dependsOn(model, modelDb, util, openIdUtil, testTools % "test")
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -95,6 +94,15 @@ lazy val modelDb = (project in file("model-db"))
   .settings(
     name := "model-db",
     description := "database models"
+  )
+
+lazy val testTools = (project in file("test-tools"))
+  .settings(commonSettings: _*)
+  .dependsOn(modelDb)
+  .settings(
+    name := "test-tools",
+    description := "tools useful in automated tests",
+    libraryDependencies ++= depTestTools
   )
 
 lazy val util = project
@@ -123,14 +131,6 @@ lazy val depServer = Seq(
 
 )
 
-lazy val depCmdtools = Seq(
-  rediscala,
-  akkaActor,
-  akkaSlf4j,
-  json4sNative,
-  ubirchUtilJsonAutoConvert
-) ++ scalaLogging
-
 lazy val depCore = Seq(
   akkaActor,
   rediscala,
@@ -149,6 +149,16 @@ lazy val depModel = Seq(
   ubirchUtilJsonAutoConvert,
   json4sNative
 )
+
+lazy val depTestTools = Seq(
+  akkaActor,
+  akkaSlf4j,
+  rediscala,
+  json4sNative,
+  ubirchUtilJsonAutoConvert,
+  ubirchUtilFutures,
+  scalatest
+) ++ scalaLogging
 
 lazy val depUtils = Seq(
   ubirchUtilCrypto
@@ -228,7 +238,7 @@ lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.0" excludeAll(
+lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")

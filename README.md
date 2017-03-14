@@ -162,7 +162,11 @@ OpenID Connect providers are configured in a Redis database requiring two parts:
 * generic provider config
 * context specific config
 
-For a programmatic example please refer to the class `InitData`.
+For a programmatic example please refer to the class `InitData`. Changes to the defaults used by `InitData` may be made
+in:
+
+* `OidcProviders`
+* `OidcContextProvider`
 
 #### Generic Provider Config
 

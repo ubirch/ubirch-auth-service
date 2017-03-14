@@ -1,14 +1,12 @@
 package com.ubirch.auth.core.manager
 
-import org.scalatest.{BeforeAndAfterEach, FeatureSpec, Matchers}
+import com.ubirch.auth.testTools.db.redis.RedisSpec
 
 /**
   * author: cvandrei
   * since: 2017-03-14
   */
-class ProviderInfoManagerSpec extends FeatureSpec
-  with Matchers
-  with BeforeAndAfterEach {
+class ProviderInfoManagerSpec extends RedisSpec {
 
   feature("providerInfoList()") {
 

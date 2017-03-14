@@ -88,7 +88,7 @@ class OidcConfigActor extends Actor
     activeProviderIds() flatMap { providerIdList =>
 
       val configList: Seq[Future[OidcProviderConfig]] = providerIdList map providerBaseConfig
-      FutureUtil.unfoldInnerFutures(configList.toList)
+      FutureUtil.unfoldInnerFutures(configList)
 
     }
 
@@ -115,7 +115,7 @@ class OidcConfigActor extends Actor
     val pattern = s"${RedisKeys.oidcContextPrefix(context)}.*"
     RedisClient().keys(pattern) flatMap { providerList =>
       FutureUtil.unfoldInnerFutures(
-        providerList.map(contextProvider(context, _)).toList
+        providerList.map(contextProvider(context, _))
       )
     }
 

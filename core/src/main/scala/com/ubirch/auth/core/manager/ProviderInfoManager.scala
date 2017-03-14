@@ -60,7 +60,7 @@ object ProviderInfoManager extends StrictLogging {
             }
 
           }
-          FutureUtil.unfoldInnerFutures(futureProviders.toList)
+          FutureUtil.unfoldInnerFutures(futureProviders)
 
         }
 
