@@ -68,7 +68,7 @@ lazy val cmdtools = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, modelDb, util, openIdUtil, redisUtil, testTools % "test")
+  .dependsOn(model, modelDb, util, openIdUtil, testTools % "test")
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -96,17 +96,9 @@ lazy val modelDb = (project in file("model-db"))
     description := "database models"
   )
 
-lazy val redisUtil = (project in file("redis-util"))
-  .settings(commonSettings: _*)
-  .settings(
-    name := "redis-util",
-    description := "Redis related utils",
-    libraryDependencies ++= depRedisUtil
-  )
-
 lazy val testTools = (project in file("test-tools"))
   .settings(commonSettings: _*)
-  .dependsOn(config, modelDb, redisUtil)
+  .dependsOn(config, modelDb)
   .settings(
     name := "test-tools",
     description := "tools useful in automated tests",
@@ -145,6 +137,7 @@ lazy val depCore = Seq(
   json4sNative,
   ubirchUtilJson,
   ubirchUtilFutures,
+  ubirchUtilRedisUtil,
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -157,17 +150,11 @@ lazy val depModel = Seq(
   json4sNative
 )
 
-lazy val depRedisUtil = Seq(
-  akkaActor,
-  akkaSlf4j,
-  rediscala,
-  ubirchUtilConfig
-) ++ scalaLogging
-
 lazy val depTestTools = Seq(
   json4sNative,
   ubirchUtilJsonAutoConvert,
   ubirchUtilFutures,
+  ubirchUtilRedisUtil,
   scalatest
 ) ++ scalaLogging
 
@@ -250,6 +237,11 @@ lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2
   ExclusionRule(organization = "ch.qos.logback")
 )
 lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.1.0" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
