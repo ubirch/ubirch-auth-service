@@ -2,11 +2,13 @@ package com.ubirch.auth.testTools.db.config
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
+import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.auth.model.db.ContextProviderConfig
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.testTools.db.config.defaults.OidcContextProvider
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.MyJsonProtocol
+import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.write
 
@@ -14,10 +16,10 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import redis.RedisClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * author: cvandrei
@@ -34,7 +36,7 @@ object OidcContextProviderUtil extends StrictLogging
 
     implicit val system = ActorSystem()
     implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
 
     logger.info("====== create: contexts")
     val contextsStored = OidcContextProvider.contextProviderList map { ctxProviderConf =>

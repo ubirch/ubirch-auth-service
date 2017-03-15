@@ -68,7 +68,7 @@ lazy val cmdtools = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, modelDb, util, openIdUtil, testTools % "test")
+  .dependsOn(model, modelDb, util, openIdUtil, redisUtil, testTools % "test")
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
@@ -96,9 +96,17 @@ lazy val modelDb = (project in file("model-db"))
     description := "database models"
   )
 
+lazy val redisUtil = (project in file("redis-util"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "redis-util",
+    description := "Redis related utils",
+    libraryDependencies ++= depRedisUtil
+  )
+
 lazy val testTools = (project in file("test-tools"))
   .settings(commonSettings: _*)
-  .dependsOn(modelDb)
+  .dependsOn(config, modelDb, redisUtil)
   .settings(
     name := "test-tools",
     description := "tools useful in automated tests",
@@ -133,7 +141,6 @@ lazy val depServer = Seq(
 
 lazy val depCore = Seq(
   akkaActor,
-  rediscala,
   ubirchUtilResponse,
   json4sNative,
   ubirchUtilJson,
@@ -150,10 +157,14 @@ lazy val depModel = Seq(
   json4sNative
 )
 
-lazy val depTestTools = Seq(
+lazy val depRedisUtil = Seq(
   akkaActor,
   akkaSlf4j,
   rediscala,
+  ubirchUtilConfig
+) ++ scalaLogging
+
+lazy val depTestTools = Seq(
   json4sNative,
   ubirchUtilJsonAutoConvert,
   ubirchUtilFutures,

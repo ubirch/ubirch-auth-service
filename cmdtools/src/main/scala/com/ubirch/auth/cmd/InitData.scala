@@ -1,6 +1,5 @@
 package com.ubirch.auth.cmd
 
-import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.testTools.db.config.{OidcContextProviderUtil, OidcProviderUtil}
 import com.ubirch.auth.testTools.db.redis.RedisCleanup
 
@@ -11,7 +10,6 @@ import com.ubirch.auth.testTools.db.redis.RedisCleanup
 object InitData extends App
   with RedisCleanup {
 
-  deleteAll(prefix = RedisKeys.OIDC)
   OidcProviderUtil.initProviders()
   OidcContextProviderUtil.initContexts()
 

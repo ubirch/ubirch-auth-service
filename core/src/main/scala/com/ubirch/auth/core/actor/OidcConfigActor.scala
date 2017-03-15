@@ -1,9 +1,11 @@
 package com.ubirch.auth.core.actor
 
+import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.JsonFormats
+import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.read
 
@@ -63,14 +65,16 @@ class OidcConfigActor extends Actor
   }
 
   private def activeProviderIds(): Future[Seq[String]] = {
-    RedisClient().lrange[String](RedisKeys.OIDC_PROVIDER_LIST, 0, -1)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    redis.lrange[String](RedisKeys.OIDC_PROVIDER_LIST, 0, -1)
   }
 
   private def providerBaseConfig(providerId: String): Future[OidcProviderConfig] = {
 
     val providerKey = RedisKeys.providerKey(providerId)
     log.debug(s"Redis key: providerKey=$providerKey")
-    val redisResult = RedisClient().get[String](providerKey)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    val redisResult = redis.get[String](providerKey)
     redisResult map {
 
       case None =>
@@ -95,17 +99,20 @@ class OidcConfigActor extends Actor
   }
 
   private def activeContexts(): Future[Seq[String]] = {
-    RedisClient().lrange[String](RedisKeys.OIDC_CONTEXT_LIST, 0, -1)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    redis.lrange[String](RedisKeys.OIDC_CONTEXT_LIST, 0, -1)
   }
 
   private def isContextActive(context: String): Future[Boolean] = {
-    RedisClient().sismember(RedisKeys.OIDC_CONTEXT_LIST, context)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    redis.sismember(RedisKeys.OIDC_CONTEXT_LIST, context)
   }
 
   private def contextProviderIds(context: String): Future[Seq[String]] = {
     val prefix = RedisKeys.oidcContextPrefix(context)
     val pattern = s"$prefix.*"
-    RedisClient().keys(pattern) map { foo =>
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    redis.keys(pattern) map { foo =>
       foo map (_.replaceAll(prefix + ".", ""))
     }
   }
@@ -113,7 +120,8 @@ class OidcConfigActor extends Actor
   private def contextProviders(context: String): Future[Seq[ContextProviderConfig]] = {
 
     val pattern = s"${RedisKeys.oidcContextPrefix(context)}.*"
-    RedisClient().keys(pattern) flatMap { providerList =>
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    redis.keys(pattern) flatMap { providerList =>
       FutureUtil.unfoldInnerFutures(
         providerList.map(contextProvider(context, _))
       )
@@ -124,7 +132,8 @@ class OidcConfigActor extends Actor
   private def contextProvider(context: String, provider: String): Future[ContextProviderConfig] = {
 
     val key = RedisKeys.oidcContextProviderKey(context, provider)
-    val redisResult = RedisClient().get[String](key)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+    val redisResult = redis.get[String](key)
     redisResult map {
 
       case None =>

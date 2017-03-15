@@ -2,9 +2,10 @@ package com.ubirch.auth.testTools.db.redis
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
+import com.ubirch.util.redis.RedisClientUtil
+
 import akka.actor.ActorSystem
 import akka.util.Timeout
-import redis.RedisClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -28,7 +29,7 @@ trait RedisCleanup extends StrictLogging {
     }
 
     logger.info(s"====== delete: prefix=$finalPrefix")
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance("")(system)
     redis.keys(finalPrefix) map { keysList =>
       keysList foreach { key =>
         logger.info(s"delete: key=$key")

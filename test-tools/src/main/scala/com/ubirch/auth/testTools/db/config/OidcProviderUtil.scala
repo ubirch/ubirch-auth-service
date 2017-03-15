@@ -2,11 +2,13 @@ package com.ubirch.auth.testTools.db.config
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
+import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.auth.model.db.OidcProviderConfig
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.testTools.db.config.defaults.OidcProviders
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.MyJsonProtocol
+import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.write
 
@@ -34,7 +36,7 @@ object OidcProviderUtil extends StrictLogging
 
     implicit val system = ActorSystem()
     implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
 
     logger.info("====== create: providers")
     val providersStored = OidcProviders.providers map { providerConf =>

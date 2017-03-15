@@ -243,6 +243,12 @@ TODO (if necessary)
 
 2) Configure OpenConnectID Providers
 
+If you still have old data you want to delete first please run
+
+    ./sbt "cmdtools/runMain com.ubirch.auth.cmd.RedisDelete"
+
+To init default providers and contexts for development please run
+
     ./sbt "cmdtools/runMain com.ubirch.auth.cmd.InitData"
 
 3) Start AuthService

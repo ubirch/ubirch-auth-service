@@ -1,10 +1,11 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.Config
+import com.ubirch.auth.config.{Config, ConfigKeys}
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.util.oidc.OidcUtil
+import com.ubirch.util.redis.RedisClientUtil
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.ask
@@ -108,7 +109,7 @@ class StateAndCodeActor extends Actor
 
   private def rememberState(rs: RememberState): Unit = {
 
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
 
     val provider = rs.provider
     val state = rs.state
@@ -137,7 +138,7 @@ class StateAndCodeActor extends Actor
 
   private def deleteState(ds: DeleteState): Future[Boolean] = {
 
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
 
     val provider = ds.provider
     val state = ds.state
@@ -164,7 +165,7 @@ class StateAndCodeActor extends Actor
 
   private def stateExists(vse: VerifyStateExists): Future[Boolean] = {
 
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
 
     val provider = vse.provider
     val state = vse.state
@@ -176,7 +177,7 @@ class StateAndCodeActor extends Actor
 
   private def rememberToken(rt: RememberToken): Unit = {
 
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
 
     val provider = rt.provider
     val token = rt.token
@@ -206,7 +207,7 @@ class StateAndCodeActor extends Actor
 
   private def tokenExists(vte: VerifyTokenExists): Future[Boolean] = {
 
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
 
     val provider = vte.provider
     val token = vte.token
@@ -218,7 +219,7 @@ class StateAndCodeActor extends Actor
 
   private def deleteToken(dt: DeleteToken): Future[Boolean] = {
 
-    val redis = RedisClient()
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
 
     val provider = dt.provider
     val token = dt.token
