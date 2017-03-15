@@ -8,8 +8,10 @@ object RedisConfigKeys {
 
   private val redis = s"redis"
 
-  final val REDIS_HOST = s"$redis.host"
+  final val HOST = s"$redis.host"
 
-  final val REDIS_PORT = s"$redis.port"
+  final val PORT = s"$redis.port"
+
+  final val PASSWORD = s"$redis.password"
 
 }

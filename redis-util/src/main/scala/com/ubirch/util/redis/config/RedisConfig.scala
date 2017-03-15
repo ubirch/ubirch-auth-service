@@ -8,14 +8,27 @@ import com.ubirch.util.config.ConfigBase
   */
 object RedisConfig extends ConfigBase {
 
-  def redisHostPort(configPrefix: String): (String, Int) = {
+  def hostAndPort(configPrefix: String): (String, Int) = {
 
     val finalPrefix = getFinalPrefix(configPrefix)
 
-    val host = config.getString(s"$finalPrefix${RedisConfigKeys.REDIS_HOST}")
-    val port = config.getInt(s"$finalPrefix${RedisConfigKeys.REDIS_PORT}")
+    val host = config.getString(s"$finalPrefix${RedisConfigKeys.HOST}")
+    val port = config.getInt(s"$finalPrefix${RedisConfigKeys.PORT}")
 
     (host, port)
+
+  }
+
+  def password(configPrefix: String): Option[String] = {
+
+    val finalPrefix = getFinalPrefix(configPrefix)
+    val key = s"$finalPrefix${RedisConfigKeys.PASSWORD}"
+
+    if (config.hasPath(key)) {
+      Some(key)
+    } else {
+      None
+    }
 
   }
 
