@@ -35,14 +35,4 @@ object ConfigKeys {
 
   final val OIDC_TOKEN_TTL = s"$oidc.token.ttl"
 
-  /*
-   * Redis
-   *********************************************************************************************/
-
-  private val redis = s"$CONFIG_PREFIX.redis"
-
-  final val REDIS_HOST = s"$redis.host"
-
-  final val REDIS_PORT = s"$redis.port"
-
 }

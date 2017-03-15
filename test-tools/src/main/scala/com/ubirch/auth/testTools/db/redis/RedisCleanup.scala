@@ -2,6 +2,7 @@ package com.ubirch.auth.testTools.db.redis
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
+import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.util.redis.RedisClientUtil
 
 import akka.actor.ActorSystem
@@ -29,7 +30,7 @@ trait RedisCleanup extends StrictLogging {
     }
 
     logger.info(s"====== delete: prefix=$finalPrefix")
-    val redis = RedisClientUtil.newInstance("")(system)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
     redis.keys(finalPrefix) map { keysList =>
       keysList foreach { key =>
         logger.info(s"delete: key=$key")
