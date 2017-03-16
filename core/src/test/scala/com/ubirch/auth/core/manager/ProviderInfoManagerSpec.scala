@@ -21,7 +21,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
 
     scenario("context does not exist") {
 
-      OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
+      OidcProviderUtil.initProviders() flatMap { _ =>
         OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
 
           val context = expectedContextList.head._1 + "foo"
@@ -38,6 +38,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
     }
 
     scenario("context exists and has providers --> return providers") {
+
       // prepare
       OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
         OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
@@ -56,19 +57,66 @@ class ProviderInfoManagerSpec extends RedisSpec {
 
         }
       }
+
     }
 
-    //    ignore("context exists but without providers (none configured) --> return no providers") {
-    //      // TODO
-    //    }
+    // TODO fix test! it fails with: Ask timed out
+    /*
+    scenario("context exists but without providers (none configured, but activated) --> return no providers") {
 
-    //    ignore("context exists but without providers (none activated) --> return no providers") {
-    //      // TODO
-    //    }
+      // prepare
+      OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
+        OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
 
-    //    ignore("context exists and has providers but context is not enabled --> return no providers") {
-    //      // TODO
-    //    }
+          expectedProviderList.values map(_.id) foreach(OidcProviderUtil.deleteProvider(_))
+
+          val context = expectedContextList.head._1
+
+          // test && verify
+          ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+
+        }
+      }
+
+    }
+    */
+
+    scenario("context exists but without providers (none activated) --> return no providers") {
+
+      // prepare
+      OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
+        OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
+
+          expectedProviderList.values map(_.id) foreach(OidcProviderUtil.disableProvider(_))
+
+          val context = expectedContextList.head._1
+
+          // test && verify
+          ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+
+        }
+      }
+
+    }
+
+    /*
+    scenario("context exists and has providers but context is not enabled --> return no providers") {
+
+      // prepare
+      OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
+        OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
+
+          // TODO deactivate context
+          val context = expectedContextList.head._1
+
+          // test && verify
+          ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+
+        }
+      }
+
+    }
+    */
 
   }
 

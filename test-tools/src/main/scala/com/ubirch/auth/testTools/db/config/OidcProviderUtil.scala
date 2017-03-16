@@ -57,7 +57,7 @@ object OidcProviderUtil extends StrictLogging
     Thread.sleep(sleepAfter)
     system.terminate()
 
-    FutureUtil.unfoldInnerFutures(providersStored) map{ seq =>
+    FutureUtil.unfoldInnerFutures(providersStored) map { seq =>
       seq.map(provider => provider.id -> provider).toMap
     }
 
@@ -86,6 +86,34 @@ object OidcProviderUtil extends StrictLogging
       }
 
     }
+
+  }
+
+  def deleteProvider(providerId: String, sleepAfter: Long = 100): Future[Boolean] = {
+
+    implicit val system = ActorSystem()
+    implicit val timeout = Timeout(15 seconds)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+
+    val result = redis.del(RedisKeys.providerKey(providerId)) map(_ > 0)
+
+    Thread.sleep(sleepAfter)
+    system.terminate()
+    result
+
+  }
+
+  def disableProvider(providerId: String, sleepAfter: Long = 100): Future[Boolean] = {
+
+    implicit val system = ActorSystem()
+    implicit val timeout = Timeout(15 seconds)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+
+    val result = redis.lrem(RedisKeys.OIDC_PROVIDER_LIST, 1, providerId) map(_ > 0)
+
+    Thread.sleep(sleepAfter)
+    system.terminate()
+    result
 
   }
 
