@@ -99,24 +99,26 @@ class ProviderInfoManagerSpec extends RedisSpec {
 
     }
 
-    /*
     scenario("context exists and has providers but context is not enabled --> return no providers") {
 
       // prepare
       OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
         OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
 
-          // TODO deactivate context
           val context = expectedContextList.head._1
+          OidcContextProviderUtil.disableContext(context) flatMap { contextDisabled =>
 
-          // test && verify
-          ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+            contextDisabled should be(true)
+
+            // test && verify
+            ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+
+          }
 
         }
       }
 
     }
-    */
 
   }
 

@@ -90,4 +90,19 @@ object OidcContextProviderUtil extends StrictLogging
 
   }
 
+  // TODO scaladoc
+  def disableContext(context: String, sleepAfter: Long = 100): Future[Boolean] = {
+
+    implicit val system = ActorSystem()
+    implicit val timeout = Timeout(15 seconds)
+    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+
+    val result = redis.srem(RedisKeys.OIDC_CONTEXT_LIST, context) map(_ > 0)
+
+    Thread.sleep(sleepAfter)
+    system.terminate()
+    result
+
+  }
+
 }
