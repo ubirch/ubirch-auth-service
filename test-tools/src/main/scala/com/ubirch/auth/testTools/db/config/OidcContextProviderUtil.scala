@@ -32,7 +32,7 @@ object OidcContextProviderUtil extends StrictLogging
   def initContexts(
                     activateContexts: Boolean = true,
                     sleepAfter: Long = 500
-                  ): Future[Seq[ContextProviderConfig]] = {
+                  ): Future[Map[String, Seq[ContextProviderConfig]]] = {
 
     implicit val system = ActorSystem()
     implicit val timeout = Timeout(15 seconds)
@@ -57,7 +57,9 @@ object OidcContextProviderUtil extends StrictLogging
     Thread.sleep(sleepAfter)
     system.terminate()
 
-    FutureUtil.unfoldInnerFutures(contextsStored)
+    FutureUtil.unfoldInnerFutures(contextsStored).map { seq =>
+      seq.groupBy(_.context)
+    }
 
   }
 

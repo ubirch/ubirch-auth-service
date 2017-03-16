@@ -32,7 +32,7 @@ object OidcProviderUtil extends StrictLogging
   final def initProviders(
                            activateProviders: Boolean = true,
                            sleepAfter: Long = 500
-                         ): Future[Seq[OidcProviderConfig]] = {
+                         ): Future[Map[String, OidcProviderConfig]] = {
 
     implicit val system = ActorSystem()
     implicit val timeout = Timeout(15 seconds)
@@ -57,7 +57,9 @@ object OidcProviderUtil extends StrictLogging
     Thread.sleep(sleepAfter)
     system.terminate()
 
-    FutureUtil.unfoldInnerFutures(providersStored)
+    FutureUtil.unfoldInnerFutures(providersStored) map{ seq =>
+      seq.map(provider => provider.id -> provider).toMap
+    }
 
   }
 
