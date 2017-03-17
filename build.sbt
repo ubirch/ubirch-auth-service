@@ -32,7 +32,7 @@ lazy val commonSettings = Seq(
 
 lazy val authService = (project in file("."))
   .settings(commonSettings: _*)
-  .aggregate(server, cmdtools, config, core, openIdUtil, model, modelDb, testTools, util)
+  .aggregate(server, cmdtools, config, core, oidcUtil, model, modelDb, testTools, util)
 
 lazy val server = project
   .settings(commonSettings: _*)
@@ -68,17 +68,17 @@ lazy val cmdtools = project
 
 lazy val core = project
   .settings(commonSettings: _*)
-  .dependsOn(model, modelDb, util, openIdUtil, testTools % "test")
+  .dependsOn(model, modelDb, util, oidcUtil, testTools % "test")
   .settings(
     description := "business logic",
     libraryDependencies ++= depCore
   )
 
-lazy val openIdUtil = (project in file("openid-util"))
+lazy val oidcUtil = (project in file("oidc-util"))
   .settings(commonSettings: _*)
   .dependsOn(config, modelDb)
   .settings(
-    name := "openid-util",
+    name := "oidc-util",
     description := "OpenID Connect utils",
     libraryDependencies ++= depOpenIdUtil
   )
