@@ -1,11 +1,10 @@
 package com.ubirch.auth.core.actor
 
-import com.ubirch.auth.config.ConfigKeys
+import com.ubirch.auth.core.redis.RedisConnection
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.JsonFormats
-import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.read
 
@@ -155,7 +154,7 @@ class OidcConfigActor extends Actor
 
   }
 
-  private def redisClient(): RedisClient = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(akkaSystem)
+  private def redisClient(): RedisClient = RedisConnection.client(akkaSystem)
 
 }
 
