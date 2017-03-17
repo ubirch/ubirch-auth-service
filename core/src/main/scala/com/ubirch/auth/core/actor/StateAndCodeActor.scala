@@ -5,7 +5,7 @@ import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.core.redis.RedisConnection
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
-import com.ubirch.auth.util.oidc.OidcUtil
+import com.ubirch.util.oidc.util.OidcUtil
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.ask

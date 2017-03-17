@@ -138,6 +138,7 @@ lazy val depCore = Seq(
   ubirchUtilJson,
   ubirchUtilFutures,
   ubirchUtilRedisUtil,
+  ubirchUtilOidcUtils,
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -196,9 +197,7 @@ lazy val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % akkaV
 
 lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.22"
 
-lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll(
-  ExclusionRule(organization = "com.typesafe.akka")
-)
+lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll ExclusionRule(organization = "com.typesafe.akka")
 
 lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
@@ -232,6 +231,11 @@ lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.3.2" excludeAll(
   ExclusionRule(organization = "ch.qos.logback")
 )
 lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.0.1-SNAPSHOT" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
