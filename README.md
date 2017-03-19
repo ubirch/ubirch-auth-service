@@ -230,12 +230,23 @@ Since we're using the [rediscala library|https://github.com/etaty/rediscala] we 
 This service has the following dependencies:
  
 * Redis 3.2.x (verification needed; definitely works with 3.2.7 and 3.2.8)
+  * download redis & extract *.tar.gz
+  * cd {redis-root}
+  * make
+  * ./src/redis-server
 
 
 ## Automated Tests
 
-TODO (if necessary)
+run all tests
 
+    ./sbt test
+
+### generate coverage report
+
+    ./sbt coverageReport
+
+more details here: https://github.com/scoverage/sbt-scoverage
 
 ## Local Setup
 
@@ -250,6 +261,11 @@ If you still have old data you want to delete first please run
 To init default providers and contexts for development please run
 
     ./sbt "cmdtools/runMain com.ubirch.auth.cmd.InitData"
+
+generated contexts
+
+* trackle-admin-ui-dev
+* ubirch-admin-ui-dev
 
 3) Start AuthService
 
