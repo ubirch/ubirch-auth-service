@@ -155,7 +155,7 @@ lazy val depTestTools = Seq(
   json4sNative,
   ubirchUtilJsonAutoConvert,
   ubirchUtilFutures,
-  ubirchUtilRedisUtil,
+  ubirchUtilRedisTestUtils,
   scalatest
 ) ++ scalaLogging
 
@@ -241,6 +241,11 @@ lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.0.1-SNAPSHOT" ex
   ExclusionRule(organization = "ch.qos.logback")
 )
 lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(
+  ExclusionRule(organization = "com.typesafe.scala-logging"),
+  ExclusionRule(organization = "org.slf4j"),
+  ExclusionRule(organization = "ch.qos.logback")
+)
+lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.1.0-SNAPSHOT" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
