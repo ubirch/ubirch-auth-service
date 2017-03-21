@@ -1,5 +1,8 @@
 package com.ubirch.auth.testTools.db.redis
 
+import com.ubirch.auth.config.ConfigKeys
+import com.ubirch.util.redis.test.RedisCleanup
+
 import org.scalatest.{AsyncFeatureSpec, BeforeAndAfterEach, Matchers}
 
 /**
@@ -12,7 +15,7 @@ trait RedisSpec extends AsyncFeatureSpec
   with RedisCleanup {
 
   override protected def beforeEach(): Unit = {
-    deleteAll()
+    deleteAll(configPrefix = ConfigKeys.CONFIG_PREFIX)
     Thread.sleep(100)
   }
 
