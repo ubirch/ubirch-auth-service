@@ -14,21 +14,30 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
-### Version 0.0.1 (tbd)
+### Version 0.1.0 (tbd)
 
-* tbd
+* initial release
 
 
 ## Scala Dependencies
 
-### `config`
+### `cmdtools`
 
 ```scala
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "config" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "cmdtools" % "0.1.0-SNAPSHOT"
+)
+```### `config`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("snapshots")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.auth" %% "config" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -39,7 +48,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "core" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "core" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -50,7 +59,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "model" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -61,7 +70,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "openid-util" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "openid-util" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -73,7 +82,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "server" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "server" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -84,7 +93,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "util" % "0.0.1-SNAPSHOT"
+  "com.ubirch.auth" %% "util" % "0.1.0-SNAPSHOT"
 )
 ```
 
