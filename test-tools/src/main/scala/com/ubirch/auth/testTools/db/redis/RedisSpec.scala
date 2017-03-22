@@ -1,9 +1,17 @@
 package com.ubirch.auth.testTools.db.redis
 
 import com.ubirch.auth.config.ConfigKeys
+import com.ubirch.util.redis.RedisClientUtil
 import com.ubirch.util.redis.test.RedisCleanup
 
-import org.scalatest.{AsyncFeatureSpec, BeforeAndAfterEach, Matchers}
+import org.scalatest.{AsyncFeatureSpec, BeforeAndAfterAll, BeforeAndAfterEach, Matchers}
+
+import akka.actor.ActorSystem
+import akka.util.Timeout
+import redis.RedisClient
+
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -12,11 +20,20 @@ import org.scalatest.{AsyncFeatureSpec, BeforeAndAfterEach, Matchers}
 trait RedisSpec extends AsyncFeatureSpec
   with Matchers
   with BeforeAndAfterEach
+  with BeforeAndAfterAll
   with RedisCleanup {
+
+  implicit protected val system = ActorSystem()
+  implicit protected val timeout = Timeout(15 seconds)
+  protected val configPrefix = ConfigKeys.CONFIG_PREFIX
+
+  protected val redis: RedisClient = RedisClientUtil.newInstance(configPrefix)
 
   override protected def beforeEach(): Unit = {
     deleteAll(configPrefix = ConfigKeys.CONFIG_PREFIX)
     Thread.sleep(100)
   }
+
+  override protected def afterAll(): Unit = system.terminate()
 
 }
