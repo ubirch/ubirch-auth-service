@@ -235,7 +235,7 @@ lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.1.0" excludeAll(
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.2.0-SNAPSHOT" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")

@@ -148,10 +148,7 @@ In case of an error the response will be:
 
 To invalidate a token (logout) please call:
 
-    curl -XPOST localhost:8091/api/authService/v1/logout -d'{
-        "providerId": "$PROVIDER_ID",
-        "token": "$TOKEN"
-    }'
+    curl localhost:8091/api/authService/v1/logout/$TOKEN
 
 If the logout is successful (or the token already expired) the response is:
 

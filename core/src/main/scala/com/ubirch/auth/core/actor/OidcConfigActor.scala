@@ -80,7 +80,7 @@ class OidcConfigActor extends Actor
         log.error(s"failed to load provider: $providerKey")
         throw new Exception(s"failed to load provider base config: providerKey=$providerKey")
 
-      case Some(json) => read[OidcProviderConfig](json.toString)
+      case Some(json) => read[OidcProviderConfig](json)
 
     }
 
@@ -148,7 +148,7 @@ class OidcConfigActor extends Actor
         log.error(s"failed to load context provider: context=$context, provider=$provider")
         throw new Exception(s"failed to load context provider: context=$context, provider=$provider")
 
-      case Some(json) => read[ContextProviderConfig](json.toString)
+      case Some(json) => read[ContextProviderConfig](json)
 
     }
 

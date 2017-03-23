@@ -1,7 +1,6 @@
 package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.core.manager.LogoutManager
-import com.ubirch.auth.model.Logout
 import com.ubirch.util.model.JsonErrorResponse
 
 import akka.actor.{Actor, ActorLogging}
@@ -23,7 +22,7 @@ class LogoutActor extends Actor
     case logout: Logout =>
 
       val sender = context.sender()
-      LogoutManager.logout(logout).onComplete {
+      LogoutManager.logout(logout.token).onComplete {
 
         case Success(status: Boolean) => sender ! status
 
@@ -40,3 +39,5 @@ class LogoutActor extends Actor
   }
 
 }
+
+case class Logout(token: String)

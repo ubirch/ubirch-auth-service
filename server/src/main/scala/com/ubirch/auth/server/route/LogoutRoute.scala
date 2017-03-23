@@ -1,9 +1,8 @@
 package com.ubirch.auth.server.route
 
 import com.ubirch.auth.config.Config
-import com.ubirch.auth.core.actor.LogoutActor
+import com.ubirch.auth.core.actor.{Logout, LogoutActor}
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.model.Logout
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
@@ -36,17 +35,15 @@ trait LogoutRoute extends MyJsonProtocol
 
   val route: Route = {
 
-    path(RouteConstants.logout) {
+    path(RouteConstants.logout / Segment) { token =>
       respondWithCORS {
 
-        post {
-          entity(as[Logout]) { logout =>
-            onSuccess(logoutActor ? logout) {
+        get {
+            onSuccess(logoutActor ? Logout(token)) {
               case status: Boolean if status => complete("OK")
               case status: Boolean if !status => complete(requestErrorResponse(errorType = "LogoutError", errorMessage = "logout failed"))
               case _ => complete(serverErrorResponse(errorType = "LogoutError", errorMessage = "logout failed"))
             }
-          }
         }
 
       }
