@@ -5,7 +5,6 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{DeleteToken, StateAndCodeActor, VerifyTokenExists}
-import com.ubirch.auth.model.Logout
 
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
@@ -28,23 +27,20 @@ object LogoutManager extends StrictLogging {
 
   private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.REDIS)
 
-  def logout(logout: Logout): Future[Boolean] = {
+  def logout(token: String): Future[Boolean] = {
 
-    val provider = logout.providerId
-    val token = logout.token
-
-    (stateAndCodeActor ? VerifyTokenExists(provider = provider, token = token)).mapTo[Boolean].flatMap {
+    (stateAndCodeActor ? VerifyTokenExists(token = token)).mapTo[Boolean].flatMap {
 
       case true =>
-        (stateAndCodeActor ? DeleteToken(provider = provider, token = token)).mapTo[Boolean].map { tokenDeleted =>
-          logger.debug(s"logout successful: provider=$provider, token=$token")
-          logger.info(s"logout successful: provider=$provider")
+        (stateAndCodeActor ? DeleteToken(token = token)).mapTo[Boolean].map { tokenDeleted =>
+          logger.debug(s"logout successful: token=$token")
+          logger.info(s"logout successful")
           tokenDeleted
         }
 
       case false =>
-        logger.debug(s"logout not needed since token already expired: provider=$provider, token=$token")
-        logger.info(s"logout not needed since token already expired: provider=$provider")
+        logger.debug(s"logout not needed since token already expired: token=$token")
+        logger.info(s"logout not needed since token already expired")
         Future(true)
 
     }

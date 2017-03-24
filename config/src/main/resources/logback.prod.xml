@@ -10,7 +10,7 @@
 
     <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
         <url>http://localhost:9200/_bulk</url>
-        <index>avatar-service-logs-%date{yyyy-MM-dd}</index>
+        <index>auth-service-logs-%date{yyyy-MM-dd}</index>
         <type>log</type>
         <loggerName>es-logger</loggerName> <!-- optional -->
         <errorLoggerName>es-error-logger</errorLoggerName> <!-- optional -->

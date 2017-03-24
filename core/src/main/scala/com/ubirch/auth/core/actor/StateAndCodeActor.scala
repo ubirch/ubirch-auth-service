@@ -5,7 +5,11 @@ import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.core.redis.RedisConnection
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.util.json.JsonFormats
+import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.oidc.util.OidcUtil
+
+import org.json4s.native.Serialization.write
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.ask
@@ -24,6 +28,8 @@ import scala.util.{Failure, Success}
   */
 class StateAndCodeActor extends Actor
   with ActorLogging {
+
+  implicit private val formatter = JsonFormats.default
 
   implicit val executionContext: ExecutionContextExecutor = context.dispatcher
   implicit val akkaSystem: ActorSystem = context.system
@@ -89,7 +95,7 @@ class StateAndCodeActor extends Actor
               val token = tokenUserId.token
               val userId = tokenUserId.userId
               log.debug(s"token=$token, userId=$userId")
-              self ! RememberToken(provider, token, userId)
+              self ! RememberToken(context = context, token = token, userId = userId)
               self ! DeleteState(provider, state)
 
               VerifyCodeResult(token = Some(token))
@@ -114,23 +120,23 @@ class StateAndCodeActor extends Actor
     val provider = rs.provider
     val state = rs.state
     val key = OidcUtil.stateToHashedKey(provider, state)
-    val ttl = Some(Config.oidcStateTtl())
+    val ttl = Config.oidcStateTtl()
 
-    redis.set(key, "1", exSeconds = ttl) onComplete {
+    redis.set(key, "1", exSeconds = Some(ttl)) onComplete {
 
       case Success(result) =>
 
         result match {
 
           case true =>
-            log.debug(s"remembered state: $state (ttl: ${ttl.get} seconds), provider=$provider, key=$key")
-            log.info(s"remembered state: $state (ttl: ${ttl.get} seconds), provider=$provider")
+            log.debug(s"remembered state: $state (ttl: $ttl seconds), provider=$provider, key=$key")
+            log.info(s"remembered state (ttl: $ttl seconds), provider=$provider")
 
-          case false => log.error(s"failed to remember state: $state (ttl: ${ttl.get} seconds)")
+          case false => log.error(s"failed to remember state: $state (ttl: $ttl seconds)")
 
         }
 
-      case Failure(e) => log.error(s"failed to remember state: $state (ttl: ${ttl.get} seconds)", e)
+      case Failure(e) => log.error(s"failed to remember state: $state (ttl: $ttl seconds)", e)
 
     }
 
@@ -179,27 +185,27 @@ class StateAndCodeActor extends Actor
 
     val redis = redisClient()
 
-    val provider = rt.provider
     val token = rt.token
-    val userId = rt.userId
-    val key = OidcUtil.tokenToHashedKey(provider, token)
-    val ttl = Some(Config.oidcTokenTtl())
+    val userContext = UserContext(context = rt.context, userId = rt.userId)
+    val userContextJson = write(userContext)
+    val key = OidcUtil.tokenToHashedKey(token)
+    val ttl = Config.oidcTokenTtl()
 
-    redis.set(key, userId, exSeconds = ttl) onComplete {
+    redis.set(key, userContextJson, exSeconds = Some(ttl)) onComplete {
 
       case Success(result) =>
 
         result match {
 
           case true =>
-            log.debug(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds), key=$key, userId=$userId, token=$token")
-            log.info(s"remembered token for provider=$provider (ttl: ${ttl.get} seconds)")
+            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, userId=${rt.userId}, token=$token")
+            log.info(s"remembered token (ttl: $ttl seconds)")
 
-          case false => log.error(s"failed to remember token for provider=$provider (ttl: ${ttl.get} seconds)")
+          case false => log.error(s"failed to remember token (ttl: $ttl seconds)")
 
         }
 
-      case Failure(e) => log.error(s"failed to remember token for provider=$provider (ttl: ${ttl.get} seconds)", e)
+      case Failure(e) => log.error(s"failed to remember token (ttl: $ttl seconds)", e)
 
     }
 
@@ -209,9 +215,8 @@ class StateAndCodeActor extends Actor
 
     val redis = redisClient()
 
-    val provider = vte.provider
     val token = vte.token
-    val key = OidcUtil.tokenToHashedKey(provider, token)
+    val key = OidcUtil.tokenToHashedKey(token)
 
     redis.exists(key)
 
@@ -221,23 +226,19 @@ class StateAndCodeActor extends Actor
 
     val redis = redisClient()
 
-    val provider = dt.provider
     val token = dt.token
-    val key = OidcUtil.tokenToHashedKey(provider, token)
+    val key = OidcUtil.tokenToHashedKey(token)
 
     redis.del(key) map {
 
-      case 1 =>
-        log.debug(s"deleted token: $provider:$token (key=$key)")
-        log.info(s"deleted token: provider=$provider")
-        true
+      case 1 => true
 
       case 0 =>
-        log.error(s"failed to delete token: provider=$provider (key=$key)")
+        log.error(s"failed to delete token: key=$key")
         false
 
       case _ =>
-        log.error(s"unexpected error while deleting token: provider=$provider (key=$key)")
+        log.error(s"unexpected error while deleting token: key=$key")
         false
 
     }
@@ -266,18 +267,14 @@ case class VerifyStateExists(provider: String,
                              state: String
                             )
 
-case class RememberToken(provider: String,
+case class RememberToken(context: String,
                          token: String,
                          userId: String
                         )
 
-case class VerifyTokenExists(provider: String,
-                             token: String
-                            )
+case class VerifyTokenExists(token: String)
 
-case class DeleteToken(provider: String,
-                       token: String
-                      )
+case class DeleteToken(token: String)
 
 case class VerifyCodeResult(token: Option[String] = None,
                             errorType: Option[VerifyCodeError.Value] = None

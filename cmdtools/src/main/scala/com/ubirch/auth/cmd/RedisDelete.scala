@@ -1,7 +1,8 @@
 package com.ubirch.auth.cmd
 
+import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.auth.model.db.redis.RedisKeys
-import com.ubirch.auth.testTools.db.redis.RedisCleanup
+import com.ubirch.util.redis.test.RedisCleanup
 
 /**
   * author: cvandrei
@@ -10,6 +11,6 @@ import com.ubirch.auth.testTools.db.redis.RedisCleanup
 object RedisDelete extends App
   with RedisCleanup {
 
-  deleteAll(prefix = RedisKeys.OIDC)
+  deleteAll(redisPrefix = RedisKeys.OIDC, configPrefix = ConfigKeys.CONFIG_PREFIX)
 
 }

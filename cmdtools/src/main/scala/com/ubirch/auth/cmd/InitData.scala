@@ -1,7 +1,7 @@
 package com.ubirch.auth.cmd
 
 import com.ubirch.auth.testTools.db.config.{OidcContextProviderUtil, OidcProviderUtil}
-import com.ubirch.auth.testTools.db.redis.RedisCleanup
+import com.ubirch.util.redis.test.RedisCleanup
 
 /**
   * author: cvandrei
