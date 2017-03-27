@@ -35,9 +35,7 @@ class StateAndCodeActor extends Actor
   implicit val akkaSystem: ActorSystem = context.system
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-
   private val oidcConfigActor = context.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor]), ActorNames.OIDC_CONFIG)
-
 
   override def receive: Receive = {
 
