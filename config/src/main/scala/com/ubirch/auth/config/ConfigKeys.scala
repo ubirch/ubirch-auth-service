@@ -35,4 +35,16 @@ object ConfigKeys {
 
   final val OIDC_TOKEN_TTL = s"$oidc.token.ttl"
 
+  /*
+   * Test User
+   *********************************************************************************************/
+
+  private val testUser = s"$CONFIG_PREFIX.testUser"
+
+  final val TEST_USER_TOKEN = s"$testUser.token"
+
+  final val TEST_USER_ID = s"$testUser.userId"
+
+  final val TEST_USER_CONTEXT = s"$testUser.context"
+
 }

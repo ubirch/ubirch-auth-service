@@ -86,6 +86,30 @@ libraryDependencies ++= Seq(
 )
 ```
 
+### `test-tools`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("snapshots"),
+  Resolver.bintrayRepo("hseeberger", "maven")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.auth" %% "test-tools" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `test-tools-ext`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("snapshots"),
+  Resolver.bintrayRepo("hseeberger", "maven")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.auth" %% "test-tools-ext" % "0.1.0-SNAPSHOT"
+)
+```
+
 ### `util`
 
 ```scala
@@ -277,6 +301,20 @@ generated contexts
 
     ./sbt server/run
 
+4) (optional) Create Test User Token
+
+This step saves us from having to login with any of the OpenID Connect providers. To get a valid test user token run:
+
+    ./sbt "cmdtools/runMain com.ubirch.auth.cmd.CreateDevToken"
+
+The token, userId and context are printed out and can be changed with the following configuration keys:
+
+* ubirchAuthService.testUser.token
+* ubirchAuthService.testUser.userId
+* ubirchAuthService.testUser.context
+
+All tokens expire at some point. This TTL (time-to-live) can be configured as well. Whenever you use the token
+successfully (calling a Bearer token protected REST resource) the expiry date will be reset.
 
 ## Create Docker Image
 

@@ -184,7 +184,9 @@ class StateAndCodeActor extends Actor
     val redis = redisClient()
 
     val token = rt.token
-    val userContext = UserContext(context = rt.context, userId = rt.userId)
+    val context = rt.context
+    val userId = rt.userId
+    val userContext = UserContext(context = context, userId = userId)
     val userContextJson = write(userContext)
     val key = OidcUtil.tokenToHashedKey(token)
     val ttl = Config.oidcTokenTtl()
@@ -196,7 +198,7 @@ class StateAndCodeActor extends Actor
         result match {
 
           case true =>
-            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, userId=${rt.userId}, token=$token")
+            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, userId=$userId, context=$context, token=$token")
             log.info(s"remembered token (ttl: $ttl seconds)")
 
           case false => log.error(s"failed to remember token (ttl: $ttl seconds)")

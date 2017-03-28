@@ -61,4 +61,14 @@ object Config extends ConfigBase {
     */
   def oidcTokenTtl(): Long = config.getLong(ConfigKeys.OIDC_TOKEN_TTL)
 
+  /*
+   * Test User
+   ************************************************************************************************/
+
+  def testUserToken(): String = config.getString(ConfigKeys.TEST_USER_TOKEN)
+
+  def testUserId(): String = config.getString(ConfigKeys.TEST_USER_ID)
+
+  def testUserContext(): String = config.getString(ConfigKeys.TEST_USER_CONTEXT)
+
 }
