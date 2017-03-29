@@ -35,9 +35,7 @@ class StateAndCodeActor extends Actor
   implicit val akkaSystem: ActorSystem = context.system
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-
   private val oidcConfigActor = context.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor]), ActorNames.OIDC_CONFIG)
-
 
   override def receive: Receive = {
 
@@ -45,23 +43,23 @@ class StateAndCodeActor extends Actor
       val sender = context.sender()
       verifyCodeGetToken(vc) map (sender ! _)
 
-    case rs: RememberState => rememberState(rs)
+    case rs: RememberState => rememberState(rs) // TODO integration tests
 
-    case ds: DeleteState =>
+    case ds: DeleteState => // TODO integration tests
       val sender = context.sender()
       deleteState(ds) map (sender ! _)
 
-    case vse: VerifyStateExists =>
+    case vse: VerifyStateExists => // TODO integration tests
       val sender = context.sender()
       stateExists(vse) map (sender ! _)
 
-    case rt: RememberToken => rememberToken(rt)
+    case rt: RememberToken => rememberToken(rt) // TODO integration tests
 
-    case dt: DeleteToken =>
+    case dt: DeleteToken => // TODO integration tests
       val sender = context.sender()
       deleteToken(dt) map (sender ! _)
 
-    case vte: VerifyTokenExists =>
+    case vte: VerifyTokenExists => // TODO integration tests
       val sender = context.sender()
       tokenExists(vte) map (sender ! _)
 
@@ -186,7 +184,9 @@ class StateAndCodeActor extends Actor
     val redis = redisClient()
 
     val token = rt.token
-    val userContext = UserContext(context = rt.context, userId = rt.userId)
+    val context = rt.context
+    val userId = rt.userId
+    val userContext = UserContext(context = context, userId = userId)
     val userContextJson = write(userContext)
     val key = OidcUtil.tokenToHashedKey(token)
     val ttl = Config.oidcTokenTtl()
@@ -198,7 +198,7 @@ class StateAndCodeActor extends Actor
         result match {
 
           case true =>
-            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, userId=${rt.userId}, token=$token")
+            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, userId=$userId, context=$context, token=$token")
             log.info(s"remembered token (ttl: $ttl seconds)")
 
           case false => log.error(s"failed to remember token (ttl: $ttl seconds)")

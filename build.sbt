@@ -17,7 +17,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-auth-service"),
     "scm:git:git@github.com:ubirch/ubirch-auth-service.git"
   )),
-  version := "0.0.1-SNAPSHOT",
+  version := "0.1.0-SNAPSHOT",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
@@ -61,7 +61,7 @@ lazy val config = project
 
 lazy val cmdtools = project
   .settings(commonSettings: _*)
-  .dependsOn(config, modelDb, testTools)
+  .dependsOn(config, modelDb, testTools, testToolsExt)
   .settings(
     description := "command line tools"
   )
@@ -103,6 +103,14 @@ lazy val testTools = (project in file("test-tools"))
     name := "test-tools",
     description := "tools useful in automated tests",
     libraryDependencies ++= depTestTools
+  )
+
+lazy val testToolsExt = (project in file("test-tools-ext"))
+  .settings(commonSettings: _*)
+  .dependsOn(core)
+  .settings(
+    name := "test-tools-ext",
+    description := "tools useful in automated tests (not in test-tools to avoid circular dependencies between _test-tools_ and _core_)"
   )
 
 lazy val util = project
@@ -235,7 +243,7 @@ lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.2.0-SNAPSHOT" excludeAll(
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.2.0" excludeAll(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
