@@ -207,62 +207,23 @@ lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.22"
 
 lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll ExclusionRule(organization = "com.typesafe.akka")
 
-lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(
+lazy val excludedLoggers = Seq(
   ExclusionRule(organization = "com.typesafe.scala-logging"),
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "ch.qos.logback")
 )
 
-lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.3" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.3" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.2" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.3.2" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.2.0" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.1.0" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
-lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.1.0" excludeAll(
-  ExclusionRule(organization = "com.typesafe.scala-logging"),
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "ch.qos.logback")
-)
+lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.3.2" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.2" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.2.0" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.1.0" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.1.0" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.3" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.3" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.2" excludeAll(excludedLoggers: _*)
 
 /*
  * RESOLVER
