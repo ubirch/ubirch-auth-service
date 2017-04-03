@@ -11,7 +11,9 @@ import com.ubirch.auth.testToolsExt.user.TestUserUtil
 object CreateDevToken extends App
   with StrictLogging {
 
-  TestUserUtil.persistTestUserToken()
-  logger.info("to remember another tuple of [token, userId, context] please modify the config (ubirchAuthService.testUser.*) and run this tool again")
+  val token = TestUserUtil.persistTestUserToken()
+  logger.info("====== CREATE DEV TOKEN")
+  logger.info("=== to remember another tuple of [token, userId, context] please modify the config (ubirchAuthService.testUser.*) and run this tool again")
+  logger.info(s"=== token: $token")
 
 }
