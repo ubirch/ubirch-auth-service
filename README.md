@@ -274,7 +274,7 @@ run all tests
 
 ### generate coverage report
 
-    ./sbt coverageReport
+    ./sbt clean coverage test coverageReport
 
 more details here: https://github.com/scoverage/sbt-scoverage
 
