@@ -3,11 +3,11 @@ package com.ubirch.auth.core.actor
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.manager.TokenManager
-import com.ubirch.auth.core.redis.RedisConnection
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.util.json.JsonFormats
 import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.oidc.util.OidcUtil
+import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.write
 
@@ -34,6 +34,7 @@ class StateAndCodeActor extends Actor
   implicit val executionContext: ExecutionContextExecutor = context.dispatcher
   implicit val akkaSystem: ActorSystem = context.system
   implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val redis: RedisClient = RedisClientUtil.getRedisClient()
 
   private val oidcConfigActor = context.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor]), ActorNames.OIDC_CONFIG)
 
@@ -113,8 +114,6 @@ class StateAndCodeActor extends Actor
 
   private def rememberState(rs: RememberState): Unit = {
 
-    val redis = redisClient()
-
     val provider = rs.provider
     val state = rs.state
     val key = OidcUtil.stateToHashedKey(provider, state)
@@ -142,8 +141,6 @@ class StateAndCodeActor extends Actor
 
   private def deleteState(ds: DeleteState): Future[Boolean] = {
 
-    val redis = redisClient()
-
     val provider = ds.provider
     val state = ds.state
     val key = OidcUtil.stateToHashedKey(provider, state)
@@ -169,8 +166,6 @@ class StateAndCodeActor extends Actor
 
   private def stateExists(vse: VerifyStateExists): Future[Boolean] = {
 
-    val redis = redisClient()
-
     val provider = vse.provider
     val state = vse.state
     val key = OidcUtil.stateToHashedKey(provider, state)
@@ -180,8 +175,6 @@ class StateAndCodeActor extends Actor
   }
 
   private def rememberToken(rt: RememberToken): Unit = {
-
-    val redis = redisClient()
 
     val token = rt.token
     val context = rt.context
@@ -213,8 +206,6 @@ class StateAndCodeActor extends Actor
 
   private def tokenExists(vte: VerifyTokenExists): Future[Boolean] = {
 
-    val redis = redisClient()
-
     val token = vte.token
     val key = OidcUtil.tokenToHashedKey(token)
 
@@ -223,8 +214,6 @@ class StateAndCodeActor extends Actor
   }
 
   private def deleteToken(dt: DeleteToken): Future[Boolean] = {
-
-    val redis = redisClient()
 
     val token = dt.token
     val key = OidcUtil.tokenToHashedKey(token)
@@ -244,8 +233,6 @@ class StateAndCodeActor extends Actor
     }
 
   }
-
-  private def redisClient(): RedisClient = RedisConnection.client(akkaSystem)
 
 }
 

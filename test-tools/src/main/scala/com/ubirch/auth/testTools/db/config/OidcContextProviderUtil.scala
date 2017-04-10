@@ -2,24 +2,18 @@ package com.ubirch.auth.testTools.db.config
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.auth.model.db.ContextProviderConfig
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.testTools.db.config.defaults.OidcContextProvider
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.MyJsonProtocol
-import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.write
 
-import akka.actor.ActorSystem
-import akka.util.Timeout
 import redis.RedisClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -29,19 +23,15 @@ object OidcContextProviderUtil extends StrictLogging
   with MyJsonProtocol {
 
   // TODO scaladoc
-  def initContexts(
-                    activateContexts: Boolean = true,
-                    sleepAfter: Long = 500
-                  ): Future[Map[String, Seq[ContextProviderConfig]]] = {
-
-    implicit val system = ActorSystem()
-    implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+  def initContexts(activateContexts: Boolean = true,
+                   sleepAfter: Long = 500
+                  )
+                  (implicit redis: RedisClient): Future[Map[String, Seq[ContextProviderConfig]]] = {
 
     logger.info("====== create: contexts")
     val contextsStored = OidcContextProvider.contextProviderList map { ctxProviderConf =>
 
-      storeContextProvider(ctxProviderConf, activateContexts, redis) map { stored =>
+      storeContextProvider(ctxProviderConf, activateContexts) map { stored =>
 
         if (stored) {
           logger.info(s"created context provider conf: context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
@@ -55,7 +45,6 @@ object OidcContextProviderUtil extends StrictLogging
     }
 
     Thread.sleep(sleepAfter)
-    system.terminate()
 
     FutureUtil.unfoldInnerFutures(contextsStored).map { seq =>
       seq.groupBy(_.context)
@@ -64,11 +53,10 @@ object OidcContextProviderUtil extends StrictLogging
   }
 
   // TODO scaladoc
-  def storeContextProvider(
-                            ctxProviderConf: ContextProviderConfig,
-                            activateContext: Boolean = true,
-                            redis: RedisClient
-                          ): Future[Boolean] = {
+  def storeContextProvider(ctxProviderConf: ContextProviderConfig,
+                           activateContext: Boolean = true
+                          )
+                          (implicit redis: RedisClient): Future[Boolean] = {
 
     val context = ctxProviderConf.context
     val key = RedisKeys.oidcContextProviderKey(context = context, provider = ctxProviderConf.provider)
@@ -91,16 +79,12 @@ object OidcContextProviderUtil extends StrictLogging
   }
 
   // TODO scaladoc
-  def disableContext(context: String, sleepAfter: Long = 100): Future[Boolean] = {
-
-    implicit val system = ActorSystem()
-    implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+  def disableContext(context: String, sleepAfter: Long = 100)
+                    (implicit redis: RedisClient): Future[Boolean] = {
 
     val result = redis.srem(RedisKeys.OIDC_CONTEXT_LIST, context) map(_ > 0)
 
     Thread.sleep(sleepAfter)
-    system.terminate()
     result
 
   }

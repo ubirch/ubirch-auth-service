@@ -2,24 +2,18 @@ package com.ubirch.auth.testTools.db.config
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.ConfigKeys
 import com.ubirch.auth.model.db.OidcProviderConfig
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.testTools.db.config.defaults.OidcProviders
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.MyJsonProtocol
-import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.write
 
-import akka.actor.ActorSystem
-import akka.util.Timeout
 import redis.RedisClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.language.postfixOps
 
 /**
   * author: cvandrei
@@ -29,19 +23,15 @@ object OidcProviderUtil extends StrictLogging
   with MyJsonProtocol {
 
   // TODO scaladoc
-  final def initProviders(
-                           activateProviders: Boolean = true,
-                           sleepAfter: Long = 500
-                         ): Future[Map[String, OidcProviderConfig]] = {
-
-    implicit val system = ActorSystem()
-    implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+  final def initProviders(activateProviders: Boolean = true,
+                          sleepAfter: Long = 500
+                         )
+                         (implicit redis: RedisClient): Future[Map[String, OidcProviderConfig]] = {
 
     logger.info("====== create: providers")
     val providersStored = OidcProviders.providers map { providerConf =>
 
-      storeProvider(providerConf, activateProviders, redis) map { stored =>
+      storeProvider(providerConf, activateProviders) map { stored =>
 
         if (stored) {
           logger.info(s"created provider base conf: provider=${providerConf.id}")
@@ -55,7 +45,6 @@ object OidcProviderUtil extends StrictLogging
     }
 
     Thread.sleep(sleepAfter)
-    system.terminate()
 
     FutureUtil.unfoldInnerFutures(providersStored) map { seq =>
       seq.map(provider => provider.id -> provider).toMap
@@ -64,11 +53,10 @@ object OidcProviderUtil extends StrictLogging
   }
 
   // TODO scaladoc
-  def storeProvider(
-                     provider: OidcProviderConfig,
-                     activateProvider: Boolean = true,
-                     redis: RedisClient
-                   ): Future[Boolean] = {
+  def storeProvider(provider: OidcProviderConfig,
+                    activateProvider: Boolean = true
+                   )
+                   (implicit redis: RedisClient): Future[Boolean] = {
 
     val id = provider.id
     val json = write(provider)
@@ -89,30 +77,26 @@ object OidcProviderUtil extends StrictLogging
 
   }
 
-  def deleteProvider(providerId: String, sleepAfter: Long = 100): Future[Boolean] = {
-
-    implicit val system = ActorSystem()
-    implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+  def deleteProvider(providerId: String,
+                     sleepAfter: Long = 100
+                    )
+                    (implicit redis: RedisClient): Future[Boolean] = {
 
     val result = redis.del(RedisKeys.providerKey(providerId)) map(_ > 0)
 
     Thread.sleep(sleepAfter)
-    system.terminate()
     result
 
   }
 
-  def disableProvider(providerId: String, sleepAfter: Long = 100): Future[Boolean] = {
-
-    implicit val system = ActorSystem()
-    implicit val timeout = Timeout(15 seconds)
-    val redis = RedisClientUtil.newInstance(ConfigKeys.CONFIG_PREFIX)(system)
+  def disableProvider(providerId: String,
+                      sleepAfter: Long = 100
+                     )
+                     (implicit redis: RedisClient): Future[Boolean] = {
 
     val result = redis.lrem(RedisKeys.OIDC_PROVIDER_LIST, 1, providerId) map(_ > 0)
 
     Thread.sleep(sleepAfter)
-    system.terminate()
     result
 
   }

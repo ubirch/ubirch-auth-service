@@ -25,9 +25,8 @@ trait RedisSpec extends AsyncFeatureSpec
 
   implicit protected val system = ActorSystem()
   implicit protected val timeout = Timeout(15 seconds)
-  protected val configPrefix = ConfigKeys.CONFIG_PREFIX
 
-  protected val redis: RedisClient = RedisClientUtil.newInstance(configPrefix)
+  implicit protected val redis: RedisClient = RedisClientUtil.getRedisClient()
 
   override protected def beforeEach(): Unit = {
     deleteAll(configPrefix = ConfigKeys.CONFIG_PREFIX)
