@@ -238,12 +238,12 @@ If the query is successful the response is:
       ],
       "allowedGroups": [
         {
-          "id": "32c5c928-97a0-49b7-9d71-0b0517b7d13e", // UUID
-          "displayName": "another-friends-ubirch-group"
-        },
-        {
           "id": "f2d4280d-336f-438d-9b2a-70337723a3e7", // UUID
           "displayName": "my-best-friends-ubirch-group"
+        },
+        {
+          "id": "32c5c928-97a0-49b7-9d71-0b0517b7d13e", // UUID
+          "displayName": "another-friends-ubirch-group"
         }
       ]
     }
@@ -279,12 +279,12 @@ If the query is successful the response is:
       ],
       "allowedGroups": [
         {
-          "id": "32c5c928-97a0-49b7-9d71-0b0517b7d13e", // UUID
-          "displayName": "another-friends-ubirch-group"
-        },
-        {
           "id": "f2d4280d-336f-438d-9b2a-70337723a3e7", // UUID
           "displayName": "my-best-friends-ubirch-group"
+        },
+        {
+          "id": "32c5c928-97a0-49b7-9d71-0b0517b7d13e", // UUID
+          "displayName": "another-friends-ubirch-group"
         }
       ]
     }
