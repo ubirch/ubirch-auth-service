@@ -57,7 +57,7 @@ trait TokenRoute extends MyJsonProtocol
             onComplete(stateAndCodeActor ? verifyCode) {
 
               case Failure(t) =>
-                logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)")
+                logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)", t)
                 complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
 
               case Success(resp) => handleVerifyCodeResult(resp)
