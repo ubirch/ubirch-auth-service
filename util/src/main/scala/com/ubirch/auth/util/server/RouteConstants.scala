@@ -9,12 +9,30 @@ object RouteConstants {
   final val apiPrefix = "api"
   final val serviceName = "authService"
   final val currentVersion = "v1"
+
+  // $prefix/providerInfo/*
   final val providerInfo = "providerInfo"
   final val list = "list"
-  final val verify = "verify"
+
+  // $prefix/code/*
   final val code = "code"
+  final val verify = "verify"
+
+  // $prefix/logout
   final val logout = "logout"
 
-  val pathPrefix = s"/$apiPrefix/$serviceName/$currentVersion"
+  // $prefix/register
+  final val register = "register"
+
+  // $prefix/userInfo
+  final val userInfo = "userInfo"
+
+  final val pathPrefix = s"/$apiPrefix/$serviceName/$currentVersion"
+
+  final val pathProviderInfoList = s"$pathPrefix/$providerInfo/$list"
+  final val pathCodeVerify = s"$pathPrefix/$code/$verify"
+  final val pathLogout = s"$pathPrefix/$logout"
+  final val pathRegister = s"$pathPrefix/$register"
+  final val pathUserInfo = s"$pathPrefix/$userInfo"
 
 }

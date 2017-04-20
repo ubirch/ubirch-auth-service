@@ -193,7 +193,7 @@ in two steps:
 
 To register a new user:
 
-    curl localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
+    curl -XPOST localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
       "displayName": "some string being displayed in frontend as my display name",
       "myGroup": "my-ubirch-group"
     }'
@@ -268,7 +268,7 @@ If the query fails the response is:
 
 #### Update
 
-    curl -XPOST localhost:8091/api/authService/v1/userInfo -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
+    curl -XPUT localhost:8091/api/authService/v1/userInfo -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
       "displayName": "my new display name"
     }'
 

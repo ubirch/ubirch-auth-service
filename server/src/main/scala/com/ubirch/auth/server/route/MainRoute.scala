@@ -15,6 +15,7 @@ class MainRoute {
   val provider = new ProviderRoute {}
   val token = new TokenRoute {}
   val logout = new LogoutRoute {}
+  val register = new RegisterRoute {}
 
   val myRoute: Route = {
 
@@ -25,6 +26,7 @@ class MainRoute {
           provider.route ~
             token.route ~
             logout.route ~
+            register.route ~
             pathEndOrSingleSlash {
               welcome.route
             }
