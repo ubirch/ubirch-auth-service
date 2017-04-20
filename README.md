@@ -185,6 +185,12 @@ In case of an error the response is:
 
 ### Registration
 
+The auth-service relies on external OpenID Connect providers for authentication.
+To be able to remember the connection between devices and users users need to be known in our system, too. This happens
+in two steps:
+1) login with external OpenID Connect provider (authentication)
+2) register in our system
+
 To register a new user:
 
     curl localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
