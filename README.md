@@ -189,7 +189,7 @@ To register a new user:
 
     curl localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
       "displayName": "some string being displayed in frontend as my display name",
-      "myGroup": "my-ubirch-group" // (optional)
+      "myGroup": "my-ubirch-group"
     }'
 
 If the registration is successful the response is:
@@ -197,8 +197,13 @@ If the registration is successful the response is:
     200
     {
       "displayName": "some string being displayed in frontend as my display name",
-      "myGroups": ["my-ubirch-group"],
-      "allowedGroups": ["by-best-friends-ubirch-group", "another-friends-ubirch-group"]
+      "myGroups": [
+        {
+          "id": "a4c08d88-7c43-4984-a568-0672b4431016", // UUID
+          "displayName": "my-ubirch-group"
+        }
+      ],
+      "allowedGroups": [] // being a new user it is impossible to have been added to another group
     }
 
 If the registration fails the response is:
@@ -225,8 +230,22 @@ If the query is successful the response is:
     200
     {
       "displayName": "some string being displayed in frontend as my display name",
-      "myGroups": ["my-ubirch-group"],
-      "allowedGroups": ["my-best-friends-ubirch-group", "another-friends-ubirch-group"]
+      "myGroups": [
+        {
+          "id": "a4c08d88-7c43-4984-a568-0672b4431016", // UUID
+          "displayName": "my-ubirch-group"
+        }
+      ],
+      "allowedGroups": [
+        {
+          "id": "32c5c928-97a0-49b7-9d71-0b0517b7d13e", // UUID
+          "displayName": "another-friends-ubirch-group"
+        },
+        {
+          "id": "f2d4280d-336f-438d-9b2a-70337723a3e7", // UUID
+          "displayName": "my-best-friends-ubirch-group"
+        }
+      ]
     }
 
 If the query fails the response is:
@@ -252,8 +271,22 @@ If the query is successful the response is:
     200
     {
       "displayName": "my new display name",
-      "myGroups": ["my-ubirch-group"],
-      "allowedGroups": ["by-best-friends-ubirch-group", "another-friends-ubirch-group"]
+      "myGroups": [
+        {
+          "id": "a4c08d88-7c43-4984-a568-0672b4431016", // UUID
+          "displayName": "my-ubirch-group"
+        }
+      ],
+      "allowedGroups": [
+        {
+          "id": "32c5c928-97a0-49b7-9d71-0b0517b7d13e", // UUID
+          "displayName": "another-friends-ubirch-group"
+        },
+        {
+          "id": "f2d4280d-336f-438d-9b2a-70337723a3e7", // UUID
+          "displayName": "my-best-friends-ubirch-group"
+        }
+      ]
     }
 
 If the query fails the response is:
@@ -267,6 +300,13 @@ If the query fails the response is:
         "errorMessage": "failed to update user" // errorMessage can be different
       }
     }
+
+### Group Info
+
+#### Update
+
+TODO: group management will follow at a later time
+
 
 ## Configuration
 
