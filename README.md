@@ -152,7 +152,7 @@ After a successful login users are being redirect to the Frontend. That call inc
 and _state_. Calling this method has the effect that our system verifies the code and responds with the resulting token.
 This token can then be used to request protected resources in other backend services.
 
-    curl -XPOST localhost:8091/api/authService/v1/verify/code -d'{
+    curl -XPOST localhost:8091/api/authService/v1/verify/code -H "Content-Type: application/json" -d'{
       "context": "$CONTEXT",
       "providerId": "$PROVIDER_ID",
       "code": "$CODE",
@@ -182,6 +182,91 @@ In case of an error the response is:
 
     400 {"version":"1.0","status":"NOK","errorType":"LogoutError","errorMessage":"logout failed"}
 
+
+### Registration
+
+To register a new user:
+
+    curl localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
+      "displayName": "some string being displayed in frontend as my display name",
+      "myGroup": "my-ubirch-group" // (optional)
+    }'
+
+If the registration is successful the response is:
+
+    200
+    {
+      "displayName": "some string being displayed in frontend as my display name",
+      "myGroups": ["my-ubirch-group"],
+      "allowedGroups": ["by-best-friends-ubirch-group", "another-friends-ubirch-group"]
+    }
+
+If the registration fails the response is:
+
+    400
+    {
+      "apiVersion": "1.0.0",
+      "status": "NOK",
+      "error": {
+        "errorId": "RegistrationError", // errorId can be different
+        "errorMessage": "failed to register new user" // errorMessage can be different
+      }
+    }
+
+
+### User Info
+
+#### Get
+
+    curl localhost:8091/api/authService/v1/userInfo -H "Authorization: Bearer $TOKEN"
+
+If the query is successful the response is:
+
+    200
+    {
+      "displayName": "some string being displayed in frontend as my display name",
+      "myGroups": ["my-ubirch-group"],
+      "allowedGroups": ["by-best-friends-ubirch-group", "another-friends-ubirch-group"]
+    }
+
+If the query fails the response is:
+
+    400
+    {
+      "apiVersion": "1.0.0",
+      "status": "NOK",
+      "error": {
+        "errorId": "QueryError", // errorId can be different
+        "errorMessage": "user does not exist" // errorMessage can be different
+      }
+    }
+
+#### Update
+
+    curl -XPOST localhost:8091/api/authService/v1/userInfo -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
+      "displayName": "my new display name"
+    }'
+
+If the query is successful the response is:
+
+    200
+    {
+      "displayName": "my new display name",
+      "myGroups": ["my-ubirch-group"],
+      "allowedGroups": ["by-best-friends-ubirch-group", "another-friends-ubirch-group"]
+    }
+
+If the query fails the response is:
+
+    400
+    {
+      "apiVersion": "1.0.0",
+      "status": "NOK",
+      "error": {
+        "errorId": "UpdateError", // errorId can be different
+        "errorMessage": "failed to update user" // errorMessage can be different
+      }
+    }
 
 ## Configuration
 
