@@ -226,7 +226,7 @@ If the query is successful the response is:
     {
       "displayName": "some string being displayed in frontend as my display name",
       "myGroups": ["my-ubirch-group"],
-      "allowedGroups": ["by-best-friends-ubirch-group", "another-friends-ubirch-group"]
+      "allowedGroups": ["my-best-friends-ubirch-group", "another-friends-ubirch-group"]
     }
 
 If the query fails the response is:
