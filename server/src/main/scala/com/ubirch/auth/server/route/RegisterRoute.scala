@@ -9,7 +9,9 @@ import com.ubirch.auth.model.{NewUser, UserInfo}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
+import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.directive.OidcDirective
+import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.redis.RedisClientUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
@@ -30,7 +32,7 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-04-20
   */
-trait RegisterRoute extends MyJsonProtocol
+class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
   with CORSDirective
   with ResponseUtil
   with StrictLogging {
@@ -39,7 +41,7 @@ trait RegisterRoute extends MyJsonProtocol
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val registrationActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[RegistrationActor]), ActorNames.REGISTRATION)
+  private val registrationActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props(new RegistrationActor)), ActorNames.REGISTRATION)
 
   implicit protected val redis: RedisClient = RedisClientUtil.getRedisClient()
   private val oidcDirective = new OidcDirective()
@@ -54,25 +56,36 @@ trait RegisterRoute extends MyJsonProtocol
 
           post {
             entity(as[NewUser]) { newUser =>
-              onComplete(registrationActor ? RegisterUser(userContext, newUser)) {
-
-                case Failure(t) =>
-                  logger.error("register user call responded with an unhandled message (check RegisterRoute for bugs!!!)", t)
-                  complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
-
-                case Success(resp) =>
-
-                  resp match {
-                    case userInfo: UserInfo => complete(userInfo)
-                    case _ => complete(serverErrorResponse(errorType = "CreateError", errorMessage = "failed to register user"))
-                  }
-
-              }
+              registerUser(userContext, newUser)
             }
           }
 
         }
       }
+    }
+
+  }
+
+  private def registerUser(userContext: UserContext, newUser: NewUser): _root_.akka.http.scaladsl.server.Route = {
+
+    onComplete(registrationActor ? RegisterUser(userContext, newUser)) {
+
+      case Failure(t) =>
+        logger.error("register user call responded with an unhandled message (check RegisterRoute for bugs!!!)", t)
+        complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+
+      case Success(resp) =>
+
+        resp match {
+
+          case Some(userInfo: UserInfo) => complete(userInfo)
+
+          case _ =>
+            logger.error("failed to register user")
+            complete(serverErrorResponse(errorType = "RegistrationError", errorMessage = "failed to register user"))
+
+        }
+
     }
 
   }

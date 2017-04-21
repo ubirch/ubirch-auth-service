@@ -39,7 +39,7 @@ class LogoutManagerSpec extends RedisSpec {
       val token1 = "some-token-1" // to logout with
       val token2 = "some-token-2" // exists in Redis
       val redisKey = OidcUtil.tokenToHashedKey(token2)
-      val redisValue = write(UserContext(context = "some-context", userId = "some-user-id"))
+      val redisValue = write(UserContext(context = "some-context", providerId = "some-provider-id", userId = "some-user-id"))
       redis.set(redisKey, redisValue) flatMap { token2Created =>
         token2Created should be(true)
 
@@ -65,7 +65,7 @@ class LogoutManagerSpec extends RedisSpec {
       // prepare
       val token = "some-token"
       val redisKey = OidcUtil.tokenToHashedKey(token)
-      val redisValue = write(UserContext(context = "some-context", userId = "some-user-id"))
+      val redisValue = write(UserContext(context = "some-context", providerId = "some-provider-id", userId = "some-user-id"))
       redis.set(redisKey, redisValue) flatMap { tokenCreated =>
         tokenCreated should be(true)
 

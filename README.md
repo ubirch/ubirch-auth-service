@@ -396,6 +396,8 @@ This service has the following dependencies:
   * make
   * ./src/redis-server
 
+* MongoDB as used by the `user-service` (through the dependency `com.ubich.user:core`)
+
 
 ## Automated Tests
 
@@ -441,6 +443,7 @@ This step saves us from having to login with any of the OpenID Connect providers
 The token, userId and context are printed out and can be changed with the following configuration keys:
 
 * ubirchAuthService.testUser.token
+* ubirchAuthService.testUser.providerId
 * ubirchAuthService.testUser.userId
 * ubirchAuthService.testUser.context
 

@@ -67,6 +67,8 @@ object Config extends ConfigBase {
 
   def testUserToken(): String = config.getString(ConfigKeys.TEST_USER_TOKEN)
 
+  def testProviderId(): String = config.getString(ConfigKeys.TEST_PROVIDER_ID)
+
   def testUserId(): String = config.getString(ConfigKeys.TEST_USER_ID)
 
   def testUserContext(): String = config.getString(ConfigKeys.TEST_USER_CONTEXT)

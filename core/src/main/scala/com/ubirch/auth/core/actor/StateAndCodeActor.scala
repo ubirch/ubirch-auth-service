@@ -94,7 +94,12 @@ class StateAndCodeActor extends Actor
               val token = tokenUserId.token
               val userId = tokenUserId.userId
               log.debug(s"token=$token, userId=$userId")
-              self ! RememberToken(context = context, token = token, userId = userId)
+              self ! RememberToken(
+                context = context,
+                token = token,
+                providerId = provider,
+                userId = userId
+              )
               self ! DeleteState(provider, state)
 
               VerifyCodeResult(token = Some(token))
@@ -178,10 +183,12 @@ class StateAndCodeActor extends Actor
 
     val token = rt.token
     val context = rt.context
+    val providerId = rt.providerId
     val userId = rt.userId
-    val userContext = UserContext(context = context, userId = userId)
-    val userContextJson = write(userContext)
+    val userContext = UserContext(context = context, providerId = providerId, userId = userId)
+
     val key = OidcUtil.tokenToHashedKey(token)
+    val userContextJson = write(userContext)
     val ttl = Config.oidcTokenTtl()
 
     redis.set(key, userContextJson, exSeconds = Some(ttl)) onComplete {
@@ -191,7 +198,7 @@ class StateAndCodeActor extends Actor
         result match {
 
           case true =>
-            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, userId=$userId, context=$context, token=$token")
+            log.debug(s"remembered token (ttl: $ttl seconds), key=$key, providerId= $providerId, userId=$userId, context=$context, token=$token")
             log.info(s"remembered token (ttl: $ttl seconds)")
 
           case false => log.error(s"failed to remember token (ttl: $ttl seconds)")
@@ -256,6 +263,7 @@ case class VerifyStateExists(provider: String,
 
 case class RememberToken(context: String,
                          token: String,
+                         providerId: String,
                          userId: String
                         )
 

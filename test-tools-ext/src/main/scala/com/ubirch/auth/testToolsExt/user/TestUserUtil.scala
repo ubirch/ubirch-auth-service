@@ -24,13 +24,20 @@ object TestUserUtil extends StrictLogging {
   private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.OIDC_CONFIG)
 
   def persistTestUserToken(token: String = Config.testUserToken(),
+                           providerId: String = Config.testProviderId(),
                            userId: String = Config.testUserId(),
                            context: String = Config.testUserContext(),
                            sleepAfter: Long = 500
                           ): String = {
 
     logger.info("====== create: test user token")
-    stateAndCodeActor ! RememberToken(context = context, token = token, userId = userId)
+
+    stateAndCodeActor ! RememberToken(
+      context = context,
+      token = token,
+      providerId = providerId,
+      userId = userId
+    )
 
     Thread.sleep(sleepAfter)
     system.terminate()
