@@ -24,6 +24,7 @@ object RegistrationManager extends StrictLogging {
               )
               (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
+    // TODO automated tests
     val context = userContext.context
     val providerId = userContext.providerId
     val externalUserId = userContext.userId
