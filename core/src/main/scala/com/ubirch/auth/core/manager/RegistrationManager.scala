@@ -9,7 +9,6 @@ import com.ubirch.user.core.manager.{ContextManager, GroupManager, GroupsManager
 import com.ubirch.user.model.db.{Context, Group, User}
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.model.UserContext
-import com.ubirch.util.uuid.UUIDUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -69,58 +68,97 @@ object RegistrationManager extends StrictLogging {
 
   }
 
+
   private def createUserAndOrGroup(userContext: UserContext,
                                    newUser: NewUser,
                                    userOpt: Option[User],
                                    contextOpt: Option[Context],
                                    groups: Set[Group]
                                   )
-                                  (implicit mongo: MongoUtil) : Future[Option[UserInfo]] = {
+                                  (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
-    val context = userContext.context
+    val contextName = userContext.context
 
     if (contextOpt.isEmpty) {
-      logger.error("unable to register user if context does not exist in database")
+
+      logger.error(s"unable to register user if context does not exist in database: context=$contextName")
       Future(None)
+
     } else if (groups.nonEmpty) {
-      logger.debug(s"user already has groups in this context and must have been registered before: context=$context, user=$userOpt, groups=$groups")
-      logger.error("user already has groups in this context and must have been registered before")
+
+      logger.debug(s"user has been registered before since they created groups: context=$contextName, user=$userOpt, groups=$groups")
+      logger.error("user has been registered before since they created groups")
       Future(None)
+
     } else {
+
+      val context = contextOpt.get
+      val groupDisplayName = newUser.myGroup
 
       if (userOpt.isDefined) {
 
-        logger.debug(s"user already exists: context=$context, newUser=$newUser")
-
-        // TODO check if newUser.displayName differs from current one --> update if it does
-        val userDisplayName = userOpt.get.displayName
-        val contextId = contextOpt.get.id
-        val ownerId = userOpt.get.id
-        val group = Group(
-          displayName = newUser.myGroup,
-          ownerId = ownerId,
-          contextId = contextId,
-          allowedUsers = Set.empty
-        )
-        GroupManager.create(group) map {
-
-          case None =>
-            logger.error(s"register: user already existed but group creation failed: user=$userDisplayName, group=$group")
-            None
-
-          case Some(groupCreated: Group) =>
-            logger.debug(s"register: user already existed and only created a group: user=$userDisplayName, group=$groupCreated")
-            userInfo(userDisplayName, groupCreated.id, groupCreated.displayName)
-
-        }
+        logger.debug(s"register user: create group (context=$context, newUser=$newUser)")
+        createGroup(groupDisplayName, userOpt.get, context)
 
       } else {
 
-        logger.debug("register user: create user and group")
-        // TODO create user and group
-        Future(userInfo(newUser.displayName, UUIDUtil.uuid, newUser.myGroup))
+        logger.debug(s"register user: create user and group (context=$context, newUser=$newUser)")
+        createUser(
+          displayName = newUser.displayName,
+          providerId = userContext.providerId,
+          externalId = userContext.userId
+        ) flatMap {
+
+          case None =>
+            logger.error(s"failed to create user: contextName=$contextName")
+            Future(None)
+
+          case Some(userCreated: User) => createGroup(groupDisplayName, userCreated, context)
+
+        }
 
       }
+
+    }
+
+  }
+
+  private def createUser(displayName: String,
+                         providerId: String,
+                         externalId: String
+                        )
+                        (implicit mongo: MongoUtil): Future[Option[User]] = {
+
+    val user = User(
+      displayName = displayName,
+      providerId = providerId,
+      externalId = externalId
+    )
+    UserManager.create(user)
+
+  }
+
+  private def createGroup(displayName: String,
+                          owner: User,
+                          context: Context
+                         )
+                         (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
+
+    val group = Group(
+      displayName = displayName,
+      ownerId = owner.id,
+      contextId = context.id,
+      allowedUsers = Set.empty
+    )
+    GroupManager.create(group) map {
+
+      case None =>
+        logger.error(s"group creation failed: user=${owner.displayName}/${owner.id}, group=$group")
+        None
+
+      case Some(groupCreated: Group) =>
+        logger.debug(s"created group: group=$group")
+        userInfo(owner.displayName, groupCreated.id, groupCreated.displayName)
 
     }
 

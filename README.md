@@ -191,10 +191,13 @@ in two steps:
 1) login with external OpenID Connect provider (authentication)
 2) register in our system
 
+Users are independent of a context and it can happen that they registered in another context. In this case the
+`displayName` is ignored.
+
 To register a new user:
 
     curl -XPOST localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
-      "displayName": "some string being displayed in frontend as my display name",
+      "displayName": "some string being displayed in frontend as my display name", // ignored if user already exists
       "myGroup": "my-ubirch-group"
     }'
 
@@ -231,7 +234,16 @@ If the registration fails the response is:
 
     curl localhost:8091/api/authService/v1/userInfo -H "Authorization: Bearer $TOKEN"
 
-If the query is successful the response is:
+If the query is successful the response is (user exists but is not registered not in this context):
+
+    200
+    {
+      "displayName": "some string being displayed in frontend as my display name",
+      "myGroups": [],
+      "allowedGroups": []
+    }
+
+If the query is successful the response is (user is registered in this context and has been added to other groups):
 
     200
     {
