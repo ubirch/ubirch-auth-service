@@ -2,8 +2,8 @@ package com.ubirch.auth.core.manager
 
 import com.ubirch.auth.model.NewUser
 import com.ubirch.auth.testTools.db.MongoSpec
-import com.ubirch.user.core.manager.{ContextManager, UserManager}
 import com.ubirch.user.model.db.{Context, User}
+import com.ubirch.user.testTools.external.DataHelpers
 import com.ubirch.util.oidc.model.UserContext
 
 /**
@@ -11,6 +11,8 @@ import com.ubirch.util.oidc.model.UserContext
   * since: 2017-04-24
   */
 class RegistrationManagerSpec extends MongoSpec {
+
+  private val dataHelpers = new DataHelpers
 
   feature("register()") {
 
@@ -48,8 +50,11 @@ class RegistrationManagerSpec extends MongoSpec {
       val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
       val newUser = NewUser("user display name", "my private group")
 
-      val user = User(displayName = newUser.displayName, providerId = userContext.providerId, externalId = userContext.userId)
-      UserManager.create(user) flatMap {
+      dataHelpers.createUser(
+        displayName = newUser.displayName,
+        providerId = userContext.providerId,
+        externalId = userContext.userId
+      ) flatMap {
 
         case None => fail("failed to create user during preparation")
 
@@ -81,22 +86,21 @@ class RegistrationManagerSpec extends MongoSpec {
       val userContext: UserContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
       val newUser = NewUser("user display name", "my private group")
 
-      val context = Context(displayName = userContext.context)
-      ContextManager.create(context) flatMap {
+      dataHelpers.createContext(displayName = userContext.context) flatMap {
 
         case None => fail("failed to create context during preparation")
 
         case Some(_: Context) =>
 
-              // test
-              RegistrationManager.register(userContext, newUser) map { result =>
+          // test
+          RegistrationManager.register(userContext, newUser) map { result =>
 
-                // verify
-                result should be('isDefined)
-                // TODO verify user and group
-                // TODO verify count of db records
+            // verify
+            result should be('isDefined)
+            // TODO verify user and group
+            // TODO verify count of db records
 
-              }
+          }
 
       }
 
@@ -114,15 +118,17 @@ class RegistrationManagerSpec extends MongoSpec {
       val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
       val newUser = NewUser("user display name", "my private group")
 
-      val context: Context = Context(displayName = userContext.context)
-      ContextManager.create(context) flatMap {
+      dataHelpers.createContext(displayName = userContext.context) flatMap {
 
         case None => fail("failed to create context during preparation")
 
         case Some(_: Context) =>
 
-          val user = User(displayName = newUser.displayName, providerId = userContext.providerId, externalId = userContext.userId)
-          UserManager.create(user) flatMap {
+          dataHelpers.createUser(
+            displayName = newUser.displayName,
+            providerId = userContext.providerId,
+            externalId = userContext.userId
+          ) flatMap {
 
             case None => fail("failed to create user during preparation")
 

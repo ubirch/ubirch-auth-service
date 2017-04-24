@@ -160,6 +160,7 @@ lazy val depCore = Seq(
   ubirchUtilRedisUtil,
   ubirchUtilResponse,
   ubirchUserCore,
+  ubirchUserTestToolsExt % "test",
   scalatest % "test"
 ) ++ scalaLogging
 
@@ -193,11 +194,13 @@ lazy val depUtils = Seq(
 val akkaV = "2.4.17"
 val akkaHttpV = "10.0.5"
 val json4sV = "3.5.1"
+val ubirchUserV = "0.1.0-SNAPSHOT"
 
 val scalaTestV = "3.0.1"
 
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
+val ubirchUserG = "com.ubirch.user"
 val json4sG = "org.json4s"
 val akkaG = "com.typesafe.akka"
 
@@ -245,7 +248,8 @@ lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.2.0" excludeAll(
 lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.3" excludeAll(excludedLoggers: _*)
-lazy val ubirchUserCore = "com.ubirch.user" %% "core" % "0.1.0-SNAPSHOT"
+lazy val ubirchUserCore = ubirchUserG %% "core" % ubirchUserV
+lazy val ubirchUserTestToolsExt = ubirchUserG %% "test-tools-ext" % ubirchUserV
 
 /*
  * RESOLVER
