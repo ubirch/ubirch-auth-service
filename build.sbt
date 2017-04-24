@@ -177,6 +177,7 @@ lazy val depTestTools = Seq(
   ubirchUtilJsonAutoConvert,
   ubirchUtilFutures,
   ubirchUtilRedisTestUtils,
+  ubirchUtilMongoTestUtils,
   scalatest
 ) ++ scalaLogging
 
@@ -233,6 +234,9 @@ lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(exclu
 lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.3.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.1.0" excludeAll(
+  excludedLoggers++ Seq(ExclusionRule(organization = akkaG, name = "akka-actor")): _*
+  )
+lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.1.0" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaG, name = "akka-actor")): _*
   )
 lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.3.0" excludeAll(excludedLoggers: _*)
