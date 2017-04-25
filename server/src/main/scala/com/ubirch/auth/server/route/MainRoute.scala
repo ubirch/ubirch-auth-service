@@ -17,6 +17,7 @@ class MainRoute(implicit mongo: MongoUtil) {
   val token = new TokenRoute {}
   val logout = new LogoutRoute {}
   val register = new RegisterRoute {}
+  val userInfo = new UserInfoRoute() {}
 
   val myRoute: Route = {
 
@@ -28,6 +29,7 @@ class MainRoute(implicit mongo: MongoUtil) {
             token.route ~
             logout.route ~
             register.route ~
+            userInfo.route ~
             pathEndOrSingleSlash {
               welcome.route
             }

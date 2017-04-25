@@ -4,8 +4,8 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{RegisterUser, RegistrationActor}
-import com.ubirch.auth.model.{NewUser, UserInfo}
+import com.ubirch.auth.core.actor.{GetInfo, UpdateInfo, UserInfoActor}
+import com.ubirch.auth.model.{UserUpdate, UserInfo}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
@@ -30,9 +30,9 @@ import scala.util.{Failure, Success}
 
 /**
   * author: cvandrei
-  * since: 2017-04-20
+  * since: 2017-04-25
   */
-class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
+class UserInfoRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
   with CORSDirective
   with ResponseUtil
   with StrictLogging {
@@ -41,7 +41,7 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val registrationActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props(new RegistrationActor)), ActorNames.REGISTRATION)
+  private val userInfoActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props(new UserInfoActor)), ActorNames.USER_INFO)
 
   implicit protected val redis: RedisClient = RedisClientUtil.getRedisClient()
   private val oidcDirective = new OidcDirective()
@@ -50,13 +50,15 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
 
   val route: Route = {
 
-    path(RouteConstants.register) {
+    path(RouteConstants.userInfo) {
       respondWithCORS {
         oidcToken2UserContext { userContext =>
 
-          post {
-            entity(as[NewUser]) { newUser =>
-              registerUser(userContext, newUser)
+          get {
+            getInfo(userContext)
+          } ~ put {
+            entity(as[UserUpdate]) { update =>
+              updateInfo(userContext, update)
             }
           }
 
@@ -66,12 +68,12 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
 
   }
 
-  private def registerUser(userContext: UserContext, newUser: NewUser): Route = {
+  private def getInfo(userContext: UserContext): Route = {
 
-    onComplete(registrationActor ? RegisterUser(userContext, newUser)) {
+    onComplete(userInfoActor ? GetInfo(userContext)) {
 
       case Failure(t) =>
-        logger.error("register user call responded with an unhandled message (check RegisterRoute for bugs!!!)", t)
+        logger.error("get-user call responded with an unhandled message (check UserInfoRoute for bugs!!!)", t)
         complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
 
       case Success(resp) =>
@@ -81,8 +83,32 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
           case Some(userInfo: UserInfo) => complete(userInfo)
 
           case _ =>
-            logger.error("failed to register user")
-            complete(serverErrorResponse(errorType = "RegistrationError", errorMessage = "failed to register user"))
+            logger.error("failed to get user info")
+            complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to get user info"))
+
+        }
+
+    }
+
+  }
+
+  private def updateInfo(userContext: UserContext, update: UserUpdate): Route = {
+
+    onComplete(userInfoActor ? UpdateInfo(userContext, update)) {
+
+      case Failure(t) =>
+        logger.error("update-user call responded with an unhandled message (check UserInfoRoute for bugs!!!)", t)
+        complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+
+      case Success(resp) =>
+
+        resp match {
+
+          case Some(userInfo: UserInfo) => complete(userInfo)
+
+          case _ =>
+            logger.error("failed to update user info")
+            complete(serverErrorResponse(errorType = "UpdateError", errorMessage = "failed to update user info"))
 
         }
 
