@@ -1,10 +1,12 @@
 package com.ubirch.auth.core.manager
 
-import com.ubirch.auth.model.NewUser
+import com.ubirch.auth.model.{NewUser, UserInfo}
 import com.ubirch.auth.testTools.db.MongoSpec
-import com.ubirch.user.model.db.{Context, User}
+import com.ubirch.user.config.Config
+import com.ubirch.user.model.db.{Context, Group, User}
 import com.ubirch.user.testTools.external.DataHelpers
 import com.ubirch.util.oidc.model.UserContext
+import com.ubirch.util.uuid.UUIDUtil
 
 /**
   * author: cvandrei
@@ -29,10 +31,14 @@ class RegistrationManagerSpec extends MongoSpec {
       val newUser = NewUser("user display name", "my private group")
 
       // test
-      RegistrationManager.register(userContext, newUser) map { result =>
+      RegistrationManager.register(userContext, newUser) flatMap { result =>
 
         // verify
         result shouldBe None
+
+        mongoTestUtils.countAll(Config.mongoCollectionContext) map (_ shouldBe 0)
+        mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 0)
+        mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 0)
 
       }
 
@@ -61,10 +67,14 @@ class RegistrationManagerSpec extends MongoSpec {
         case Some(_: User) =>
 
           // test
-          RegistrationManager.register(userContext, newUser) map { result =>
+          RegistrationManager.register(userContext, newUser) flatMap { result =>
 
             // verify
             result shouldBe None
+
+            mongoTestUtils.countAll(Config.mongoCollectionContext) map (_ shouldBe 0)
+            mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 1)
+            mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 0)
 
           }
 
@@ -72,7 +82,50 @@ class RegistrationManagerSpec extends MongoSpec {
 
     }
 
-    // TODO (test case) context=no; user=yes; group=yes
+    scenario(
+      """exists?
+        |  context: no
+        |  user: yes
+        |  group: yes
+      """.stripMargin
+    ) {
+
+      // prepare
+      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val newUser = NewUser("user display name", "my private group")
+
+      dataHelpers.createUser(
+        displayName = newUser.displayName,
+        providerId = userContext.providerId,
+        externalId = userContext.userId
+      ) flatMap { userOpt =>
+
+        dataHelpers.createGroup(
+          contextId = UUIDUtil.uuid,
+          ownerOpt = userOpt
+        ) flatMap {
+
+          case None => fail("failed to create group during preparation")
+
+          case Some(_: Group) =>
+
+            // test
+            RegistrationManager.register(userContext, newUser) flatMap { result =>
+
+              // verify
+              result shouldBe None
+
+              mongoTestUtils.countAll(Config.mongoCollectionContext) map (_ shouldBe 0)
+              mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 1)
+              mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 1)
+
+            }
+
+        }
+
+      }
+
+    }
 
     scenario(
       """exists?
@@ -93,12 +146,21 @@ class RegistrationManagerSpec extends MongoSpec {
         case Some(_: Context) =>
 
           // test
-          RegistrationManager.register(userContext, newUser) map { result =>
+          RegistrationManager.register(userContext, newUser) flatMap {
 
             // verify
-            result should be('isDefined)
-            // TODO verify user and group
-            // TODO verify count of db records
+            case None => fail("expected a Some result")
+
+            case Some(result: UserInfo) =>
+
+              mongoTestUtils.countAll(Config.mongoCollectionContext) map (_ shouldBe 1)
+              mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 1)
+              mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 1)
+
+              result.displayName shouldBe newUser.displayName
+              result.myGroups.size shouldBe 1
+              result.myGroups.head.displayName shouldBe newUser.myGroup
+              result.allowedGroups should be('isEmpty)
 
           }
 
@@ -109,7 +171,7 @@ class RegistrationManagerSpec extends MongoSpec {
     scenario(
       """exists?
         |  context: yes
-        |  user: yes
+        |  user: yes (different name than existing user...as it's being ignored)
         |  group: no
       """.stripMargin
     ) {
@@ -125,22 +187,31 @@ class RegistrationManagerSpec extends MongoSpec {
         case Some(_: Context) =>
 
           dataHelpers.createUser(
-            displayName = newUser.displayName,
+            displayName = s"${newUser.displayName}-actual",
             providerId = userContext.providerId,
             externalId = userContext.userId
           ) flatMap {
 
             case None => fail("failed to create user during preparation")
 
-            case Some(_: User) =>
+            case Some(user: User) =>
 
               // test
-              RegistrationManager.register(userContext, newUser) map { result =>
+              RegistrationManager.register(userContext, newUser) flatMap {
 
                 // verify
-                result should be('isDefined)
-                // TODO verify userInfo
-                // TODO verify count of db records
+                case None => fail("expected a Some result")
+
+                case Some(result: UserInfo) =>
+
+                  mongoTestUtils.countAll(Config.mongoCollectionContext) map (_ shouldBe 1)
+                  mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 1)
+                  mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 1)
+
+                  result.displayName shouldBe user.displayName
+                  result.myGroups.size shouldBe 1
+                  result.myGroups.head.displayName shouldBe newUser.myGroup
+                  result.allowedGroups should be('isEmpty)
 
               }
 
@@ -150,7 +221,54 @@ class RegistrationManagerSpec extends MongoSpec {
 
     }
 
-    // TODO (test case) context=yes; user=yes; group=yes
+    scenario(
+      """exists?
+        |  context: yes
+        |  user: yes
+        |  group: yes
+      """.stripMargin
+    ) {
+
+      // prepare
+      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val newUser = NewUser("user display name", "my private group")
+
+      dataHelpers.createContext(displayName = userContext.context) flatMap { contextOpt =>
+
+        dataHelpers.createUser(
+          displayName = newUser.displayName,
+          providerId = userContext.providerId,
+          externalId = userContext.userId
+        ) flatMap { userOpt =>
+
+          dataHelpers.createGroup(
+            contextOpt = contextOpt,
+            ownerOpt = userOpt
+          ) flatMap {
+
+            case None => fail("failed to create group during preparation")
+
+            case Some(_: Group) =>
+
+              // test
+              RegistrationManager.register(userContext, newUser) flatMap { result =>
+
+                // verify
+                result shouldBe None
+
+                mongoTestUtils.countAll(Config.mongoCollectionContext) map (_ shouldBe 1)
+                mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 1)
+                mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 1)
+
+              }
+
+          }
+
+        }
+
+      }
+
+    }
 
   }
 
