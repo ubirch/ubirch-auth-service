@@ -1,7 +1,7 @@
 package com.ubirch.auth.core.manager
 
 import com.ubirch.auth.core.manager.util.UserInfoUtil
-import com.ubirch.auth.model.UserInfo
+import com.ubirch.auth.model.{UserInfo, UserUpdate}
 import com.ubirch.auth.testTools.db.MongoSpec
 import com.ubirch.user.testTools.external.DataHelpers
 import com.ubirch.util.oidc.model.UserContext
@@ -163,6 +163,84 @@ class UserInfoManagerSpec extends MongoSpec {
           myGroups = myGroups,
           allowedGroups = allowedGroups
         )
+        result shouldBe Some(expected)
+
+      }
+
+    }
+
+  }
+
+  feature("update()") {
+
+    scenario("user does not exist") {
+
+      // prepare
+      val userContext = UserContext(context = "context-test", "provider-test", "user-test")
+      val userUpdate = UserUpdate("new display name")
+
+      // test
+      UserInfoManager.update(userContext, userUpdate) map { result =>
+
+        // verify
+        result shouldBe None
+
+      }
+
+    }
+
+    scenario("user does not change") {
+
+      // prepare
+      for {
+
+        contextOpt <- dataHelpers.createContext()
+        user1Opt <- dataHelpers.createUser()
+
+        user = user1Opt.get
+        userContext = UserContext(
+          context = contextOpt.get.displayName,
+          providerId = user.providerId,
+          userId = user.externalId
+        )
+        userUpdate = UserUpdate(user.displayName)
+
+        // test
+        result <- UserInfoManager.update(userContext, userUpdate)
+
+      } yield {
+
+        // verify
+        val expected = UserInfo(displayName = user.displayName)
+        result shouldBe Some(expected)
+
+      }
+
+    }
+
+    scenario("user.displayName changes") {
+
+      // prepare
+      for {
+
+        contextOpt <- dataHelpers.createContext()
+        user1Opt <- dataHelpers.createUser()
+
+        user = user1Opt.get
+        userContext = UserContext(
+          context = contextOpt.get.displayName,
+          providerId = user.providerId,
+          userId = user.externalId
+        )
+        userUpdate = UserUpdate(s"${user.displayName}-updated")
+
+        // test
+        result <- UserInfoManager.update(userContext, userUpdate)
+
+      } yield {
+
+        // verify
+        val expected = UserInfo(displayName = userUpdate.displayName)
         result shouldBe Some(expected)
 
       }

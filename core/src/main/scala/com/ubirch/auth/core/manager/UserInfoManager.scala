@@ -54,8 +54,30 @@ object UserInfoManager {
   def update(userContext: UserContext, userUpdate: UserUpdate)
             (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
-    // TODO implement
-    Future(None)
+    UserManager.findByProviderIdAndExternalId(
+      providerId = userContext.providerId,
+      externalUserId = userContext.userId
+    ) flatMap {
+
+      case None => Future(None)
+
+      case Some(user: User) =>
+
+        val forUpdate = user.copy(displayName = userUpdate.displayName)
+        if (user == forUpdate) {
+
+          getInfo(userContext)
+
+        } else {
+
+          UserManager.update(forUpdate) flatMap {
+            case None => Future(None)
+            case Some(_: User) => getInfo(userContext)
+          }
+
+        }
+
+    }
 
   }
 
