@@ -205,25 +205,23 @@ in two steps:
 1) login with external OpenID Connect provider (authentication)
 2) register in our system
 
-Users are independent of a context and it can happen that they registered in another context. In this case the
-`displayName` is ignored.
+Users are independent of a context and it can happen that they have been registered in another context already. All user
+specific information (user's and group' displayName) is dynamically determined based on information received from the
+OpenID Connect provider).
 
 To register a new user:
 
-    curl -XPOST localhost:8091/api/authService/v1/register -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
-      "displayName": "some string being displayed in frontend as my display name", // ignored if user already exists
-      "myGroup": "my-ubirch-group"
-    }'
+    curl -XPOST localhost:8091/api/authService/v1/register -H "Authorization: Bearer $TOKEN"
 
 If the registration is successful the response is:
 
     200
     {
-      "displayName": "some string being displayed in frontend as my display name",
+      "displayName": "some user name",
       "myGroups": [
         {
           "id": "a4c08d88-7c43-4984-a568-0672b4431016", // UUID
-          "displayName": "my-ubirch-group"
+          "displayName": "some user name" // same as displayName above
         }
       ],
       "allowedGroups": [] // being a new user it is impossible to have been added to another group

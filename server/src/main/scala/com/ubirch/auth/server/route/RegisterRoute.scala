@@ -5,7 +5,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{RegisterUser, RegistrationActor}
-import com.ubirch.auth.model.{NewUser, UserInfo}
+import com.ubirch.auth.model.UserInfo
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.MyJsonProtocol
@@ -55,9 +55,7 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
         oidcToken2UserContext { userContext =>
 
           post {
-            entity(as[NewUser]) { newUser =>
-              registerUser(userContext, newUser)
-            }
+            registerUser(userContext)
           }
 
         }
@@ -66,9 +64,9 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
 
   }
 
-  private def registerUser(userContext: UserContext, newUser: NewUser): Route = {
+  private def registerUser(userContext: UserContext): Route = {
 
-    onComplete(registrationActor ? RegisterUser(userContext, newUser)) {
+    onComplete(registrationActor ? RegisterUser(userContext)) {
 
       case Failure(t) =>
         logger.error("register user call responded with an unhandled message (check RegisterRoute for bugs!!!)", t)

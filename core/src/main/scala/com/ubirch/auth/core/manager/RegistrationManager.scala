@@ -4,7 +4,7 @@ import java.util.UUID
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.model.{NewUser, UserInfo, UserInfoGroup}
+import com.ubirch.auth.model.{UserInfo, UserInfoGroup}
 import com.ubirch.user.core.manager.{ContextManager, GroupManager, GroupsManager, UserManager}
 import com.ubirch.user.model.db.{Context, Group, User}
 import com.ubirch.util.mongo.connection.MongoUtil
@@ -19,10 +19,7 @@ import scala.concurrent.Future
   */
 object RegistrationManager extends StrictLogging {
 
-  def register(userContext: UserContext,
-               newUser: NewUser
-              )
-              (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
+  def register(userContext: UserContext)(implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
     val context = userContext.context
     val providerId = userContext.providerId
@@ -45,7 +42,6 @@ object RegistrationManager extends StrictLogging {
 
       userInfo <- createUserAndOrGroup(
         userContext = userContext,
-        newUser = newUser,
         userOpt = userOpt,
         contextOpt = contextOpt,
         groups = groups
@@ -70,7 +66,6 @@ object RegistrationManager extends StrictLogging {
 
 
   private def createUserAndOrGroup(userContext: UserContext,
-                                   newUser: NewUser,
                                    userOpt: Option[User],
                                    contextOpt: Option[Context],
                                    groups: Set[Group]
@@ -93,18 +88,18 @@ object RegistrationManager extends StrictLogging {
     } else {
 
       val context = contextOpt.get
-      val groupDisplayName = newUser.myGroup
+      val groupDisplayName = s"${userContext.userName}"
 
       if (userOpt.isDefined) {
 
-        logger.debug(s"register user: create group (context=$context, newUser=$newUser)")
+        logger.debug(s"register user: create group (context=$context, name=${userContext.userName})")
         createGroup(groupDisplayName, userOpt.get, context)
 
       } else {
 
-        logger.debug(s"register user: create user and group (context=$context, newUser=$newUser)")
+        logger.debug(s"register user: create user and group (context=$context, name=${userContext.userName})")
         createUser(
-          displayName = newUser.displayName,
+          displayName = userContext.userName,
           providerId = userContext.providerId,
           externalId = userContext.userId
         ) flatMap {
