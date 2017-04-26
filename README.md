@@ -32,6 +32,9 @@ libraryDependencies ++= Seq(
 )
 ```### `config`
 
+
+### `config`
+
 ```scala
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
@@ -63,14 +66,25 @@ libraryDependencies ++= Seq(
 )
 ```
 
-### `openid-util`
+### `model-db`
 
 ```scala
 resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "openid-util" % "0.1.0-SNAPSHOT"
+  "com.ubirch.auth" %% "model-db" % "0.1.0-SNAPSHOT"
+)
+```
+
+### `oidc-util`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("snapshots")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.auth" %% "oidc-util" % "0.1.0-SNAPSHOT"
 )
 ```
 
@@ -346,14 +360,14 @@ in:
 To configure a provider we have to create an Redis record with the key `oidc.provider.$PROVIDER`. It's value is a JSON
 with all context independent information.
 
-    set oidc.provider.google "{\"id\":\"google\",\"name\":\"Google\",\"scope\":\"openid\",\"endpointConfig\":\"https://accounts.google.com/.well-known/openid-configuration\",\"tokenSigningAlgorithms\":[\"RS256\"],\"endpoints\":{\"authorization\":\"https://accounts.google.com/o/oauth2/v2/auth\",\"token\":\"https://www.googleapis.com/oauth2/v4/token\",\"jwks\":\"https://www.googleapis.com/oauth2/v3/certs\"}}"
+    set oidc.provider.google "{\"id\":\"google\",\"name\":\"Google\",\"scope\":\"openid profile\",\"endpointConfig\":\"https://accounts.google.com/.well-known/openid-configuration\",\"tokenSigningAlgorithms\":[\"RS256\"],\"endpoints\":{\"authorization\":\"https://accounts.google.com/o/oauth2/v2/auth\",\"token\":\"https://www.googleapis.com/oauth2/v4/token\",\"jwks\":\"https://www.googleapis.com/oauth2/v3/certs\"}}"
 
 More human readable the JSON looks as follows:
 
     {
       id = "google", # the $PROVIDER from the key
       name = "Google",
-      scope = "openid",
+      scope = "openid profile",
       endpointConfig = "https://accounts.google.com/.well-known/openid-configuration",
       tokenSigningAlgorithms = ["RS256"],
       endpoints {
@@ -458,6 +472,8 @@ The token, userId and context are printed out and can be changed with the follow
 * ubirchAuthService.testUser.providerId
 * ubirchAuthService.testUser.userId
 * ubirchAuthService.testUser.context
+* ubirchAuthService.testUser.userName
+* ubirchAuthService.testUser.locale
 
 All tokens expire at some point. This TTL (time-to-live) can be configured as well. Whenever you use the token
 successfully (calling a Bearer token protected REST resource) the expiry date will be reset.

@@ -27,7 +27,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val userContext = defaultUserContext()
       val newUser = NewUser("user display name", "my private group")
 
       // test
@@ -53,7 +53,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val userContext = defaultUserContext()
       val newUser = NewUser("user display name", "my private group")
 
       dataHelpers.createUser(
@@ -91,7 +91,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val userContext = defaultUserContext()
       val newUser = NewUser("user display name", "my private group")
 
       dataHelpers.createUser(
@@ -136,7 +136,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext: UserContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val userContext: UserContext = defaultUserContext()
       val newUser = NewUser("user display name", "my private group")
 
       dataHelpers.createContext(displayName = userContext.context) flatMap {
@@ -177,7 +177,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val userContext = defaultUserContext()
       val newUser = NewUser("user display name", "my private group")
 
       dataHelpers.createContext(displayName = userContext.context) flatMap {
@@ -230,7 +230,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
+      val userContext = defaultUserContext()
       val newUser = NewUser("user display name", "my private group")
 
       dataHelpers.createContext(displayName = userContext.context) flatMap { contextOpt =>
@@ -269,6 +269,18 @@ class RegistrationManagerSpec extends MongoSpec {
       }
 
     }
+
+  }
+
+  private def defaultUserContext(): UserContext = {
+
+    UserContext(
+      context = "trackle-dev",
+      providerId = "google",
+      userId = "asdf-1234",
+      userName = "some-user-name",
+      locale = "en"
+    )
 
   }
 

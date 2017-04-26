@@ -13,7 +13,7 @@ object CreateDevToken extends App
 
   val token = TestUserUtil.persistTestUserToken()
   logger.info("====== CREATE DEV TOKEN")
-  logger.info("=== to remember another tuple of [token, providerId, userId, context] please modify the config (ubirchAuthService.testUser.*) and run this tool again")
+  logger.info("=== to remember another tuple of [token, providerId, userId, context, userName, locale] please modify the config (ubirchAuthService.testUser.*) and run this tool again")
   logger.info(s"=== token: $token")
 
 }

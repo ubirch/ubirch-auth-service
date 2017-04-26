@@ -16,7 +16,7 @@ object OidcProviders {
   private lazy val google = OidcProviderConfig(
     id = providerIdGoogle,
     name = "Google",
-    scope = "openid",
+    scope = "openid profile",
     endpointConfig = "https://accounts.google.com/.well-known/openid-configuration",
     tokenSigningAlgorithms = Seq("RS256"),
     endpoints = OidcProviderEndpoints(
@@ -29,7 +29,7 @@ object OidcProviders {
   private lazy val yahoo = OidcProviderConfig(
     id = providerIdYahoo,
     name = "Yahoo",
-    scope = "openid",
+    scope = "openid profile",
     endpointConfig = "https://login.yahoo.com/.well-known/openid-configuration",
     tokenSigningAlgorithms = Seq("RS256", "ES256"),
     endpoints = OidcProviderEndpoints(

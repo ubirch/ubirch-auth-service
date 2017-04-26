@@ -19,7 +19,7 @@ class UserInfoManagerSpec extends MongoSpec {
     scenario("user does not exist") {
 
       // prepare
-      val userContext = UserContext(context = "context-test", "provider-test", "user-test")
+      val userContext = defaultUserContext()
 
       // test
       UserInfoManager.getInfo(userContext) map { result =>
@@ -40,7 +40,7 @@ class UserInfoManagerSpec extends MongoSpec {
         userOpt <- dataHelpers.createUser()
 
         user = userOpt.get
-        userContext = UserContext(
+        userContext = defaultUserContext(
           context = contextOpt.get.displayName,
           providerId = user.providerId,
           userId = user.externalId
@@ -72,7 +72,7 @@ class UserInfoManagerSpec extends MongoSpec {
         myGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt)
 
         user = userOpt.get
-        userContext = UserContext(
+        userContext = defaultUserContext(
           context = contextOpt.get.displayName,
           providerId = user.providerId,
           userId = user.externalId
@@ -107,7 +107,7 @@ class UserInfoManagerSpec extends MongoSpec {
         allowedGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, allowedUsersOpt = user1Opt)
 
         user = user1Opt.get
-        userContext = UserContext(
+        userContext = defaultUserContext(
           context = contextOpt.get.displayName,
           providerId = user.providerId,
           userId = user.externalId
@@ -144,7 +144,7 @@ class UserInfoManagerSpec extends MongoSpec {
         allowedGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, allowedUsersOpt = user1Opt)
 
         user = user1Opt.get
-        userContext = UserContext(
+        userContext = defaultUserContext(
           context = contextOpt.get.displayName,
           providerId = user.providerId,
           userId = user.externalId
@@ -176,7 +176,7 @@ class UserInfoManagerSpec extends MongoSpec {
     scenario("user does not exist") {
 
       // prepare
-      val userContext = UserContext(context = "context-test", "provider-test", "user-test")
+      val userContext = defaultUserContext()
       val userUpdate = UserUpdate("new display name")
 
       // test
@@ -198,7 +198,7 @@ class UserInfoManagerSpec extends MongoSpec {
         user1Opt <- dataHelpers.createUser()
 
         user = user1Opt.get
-        userContext = UserContext(
+        userContext = defaultUserContext(
           context = contextOpt.get.displayName,
           providerId = user.providerId,
           userId = user.externalId
@@ -227,7 +227,7 @@ class UserInfoManagerSpec extends MongoSpec {
         user1Opt <- dataHelpers.createUser()
 
         user = user1Opt.get
-        userContext = UserContext(
+        userContext = defaultUserContext(
           context = contextOpt.get.displayName,
           providerId = user.providerId,
           userId = user.externalId
@@ -246,6 +246,23 @@ class UserInfoManagerSpec extends MongoSpec {
       }
 
     }
+
+  }
+
+  private def defaultUserContext(context: String = "context-test",
+                                 providerId: String = "provider-test",
+                                 userId: String = "user-id-test",
+                                 userName: String = "some-user-name-test",
+                                 locale: String = "en"
+                                ): UserContext = {
+
+    UserContext(
+      context = context,
+      providerId = providerId,
+      userId = userId,
+      userName = userName,
+      locale = locale
+    )
 
   }
 

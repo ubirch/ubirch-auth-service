@@ -73,4 +73,8 @@ object Config extends ConfigBase {
 
   def testUserContext(): String = config.getString(ConfigKeys.TEST_USER_CONTEXT)
 
+  def testUserName(): String = config.getString(ConfigKeys.TEST_USER_NAME)
+
+  def testUserLocale(): String = config.getString(ConfigKeys.TEST_USER_LOCALE)
+
 }
