@@ -55,4 +55,8 @@ object ConfigKeys {
 
   final val TEST_USER_CONTEXT = s"$testUser.context"
 
+  final val TEST_USER_NAME = s"$testUser.name"
+
+  final val TEST_USER_LOCALE = s"$testUser.locale"
+
 }

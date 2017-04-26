@@ -27,6 +27,8 @@ object TestUserUtil extends StrictLogging {
                            providerId: String = Config.testProviderId(),
                            userId: String = Config.testUserId(),
                            context: String = Config.testUserContext(),
+                           userName: String = Config.testUserName(),
+                           userLocale: String = Config.testUserLocale(),
                            sleepAfter: Long = 500
                           ): String = {
 
@@ -36,7 +38,9 @@ object TestUserUtil extends StrictLogging {
       context = context,
       token = token,
       providerId = providerId,
-      userId = userId
+      userId = userId,
+      userName = userName,
+      locale = userLocale
     )
 
     Thread.sleep(sleepAfter)

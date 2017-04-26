@@ -23,12 +23,21 @@ import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
   */
 object TokenUtil extends StrictLogging {
 
-  def requestToken(contextProvider: ContextProviderConfig,
-                   providerConf: OidcProviderConfig,
-                   authCode: String
+  /**
+    * Trade an OpenID (=OIDC) Connect code for a token by querying the OIDC provider. The resulting token is
+    * cryptographically verified.
+    *
+    * @param contextProvider context specific OIDC provider config
+    * @param providerConf general OIDC provider config
+    * @param code code to trade for a token
+    * @return resulting information; None if something went wrong
+    */
+  def verifyCodeWith3rdParty(contextProvider: ContextProviderConfig,
+                             providerConf: OidcProviderConfig,
+                             code: String
                   ): Option[TokenUserId] = {
 
-    sendTokenRequest(contextProvider = contextProvider, providerConf = providerConf, authCode = authCode) match {
+    sendTokenRequest(contextProvider = contextProvider, providerConf = providerConf, authCode = code) match {
 
       case None => None
 
@@ -58,9 +67,16 @@ object TokenUtil extends StrictLogging {
 
                 case Some(claims) =>
                   val userId = claims.getSubject
-                  logger.debug(s"got verified token: context=$context, provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
+                  val name = claims.getClaim("name").toString
+                  val locale = claims.getClaim("locale").toString
+                  logger.debug(s"got verified token: context=$context, provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}, claimsSet: ${claims.toString}")
                   logger.info(s"got verified token from provider=$provider (context=$context)")
-                  Some(TokenUserId(accessToken.getValue, userId))
+                  Some(TokenUserId(
+                    token = accessToken.getValue,
+                    userId = userId,
+                    name = name,
+                    locale = locale
+                  ))
 
               }
 
@@ -181,4 +197,8 @@ object TokenUtil extends StrictLogging {
 
 }
 
-case class TokenUserId(token: String, userId: String)
+case class TokenUserId(token: String,
+                       userId: String,
+                       name: String,
+                       locale: String
+                      )

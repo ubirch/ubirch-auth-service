@@ -1,7 +1,6 @@
 package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.core.manager.RegistrationManager
-import com.ubirch.auth.model.NewUser
 import com.ubirch.util.model.JsonErrorResponse
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.model.UserContext
@@ -21,7 +20,7 @@ class RegistrationActor(implicit mongo: MongoUtil) extends Actor
 
     case register: RegisterUser =>
       val sender = context.sender()
-      RegistrationManager.register(register.userContext, register.newUser) map (sender ! _)
+      RegistrationManager.register(register.userContext) map (sender ! _)
 
     case _ =>
       log.error("unknown message")
@@ -31,6 +30,4 @@ class RegistrationActor(implicit mongo: MongoUtil) extends Actor
 
 }
 
-case class RegisterUser(userContext: UserContext,
-                        newUser: NewUser
-                       )
+case class RegisterUser(userContext: UserContext)

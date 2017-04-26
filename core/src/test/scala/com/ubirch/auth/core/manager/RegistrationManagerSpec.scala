@@ -1,6 +1,6 @@
 package com.ubirch.auth.core.manager
 
-import com.ubirch.auth.model.{NewUser, UserInfo}
+import com.ubirch.auth.model.UserInfo
 import com.ubirch.auth.testTools.db.MongoSpec
 import com.ubirch.user.config.Config
 import com.ubirch.user.model.db.{Context, Group, User}
@@ -27,11 +27,10 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
-      val newUser = NewUser("user display name", "my private group")
+      val userContext = defaultUserContext()
 
       // test
-      RegistrationManager.register(userContext, newUser) flatMap { result =>
+      RegistrationManager.register(userContext) flatMap { result =>
 
         // verify
         result shouldBe None
@@ -53,11 +52,10 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
-      val newUser = NewUser("user display name", "my private group")
+      val userContext = defaultUserContext()
 
       dataHelpers.createUser(
-        displayName = newUser.displayName,
+        displayName = userContext.userName,
         providerId = userContext.providerId,
         externalId = userContext.userId
       ) flatMap {
@@ -67,7 +65,7 @@ class RegistrationManagerSpec extends MongoSpec {
         case Some(_: User) =>
 
           // test
-          RegistrationManager.register(userContext, newUser) flatMap { result =>
+          RegistrationManager.register(userContext) flatMap { result =>
 
             // verify
             result shouldBe None
@@ -91,11 +89,10 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
-      val newUser = NewUser("user display name", "my private group")
+      val userContext = defaultUserContext()
 
       dataHelpers.createUser(
-        displayName = newUser.displayName,
+        displayName = userContext.userName,
         providerId = userContext.providerId,
         externalId = userContext.userId
       ) flatMap { userOpt =>
@@ -110,7 +107,7 @@ class RegistrationManagerSpec extends MongoSpec {
           case Some(_: Group) =>
 
             // test
-            RegistrationManager.register(userContext, newUser) flatMap { result =>
+            RegistrationManager.register(userContext) flatMap { result =>
 
               // verify
               result shouldBe None
@@ -136,8 +133,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext: UserContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
-      val newUser = NewUser("user display name", "my private group")
+      val userContext: UserContext = defaultUserContext()
 
       dataHelpers.createContext(displayName = userContext.context) flatMap {
 
@@ -146,7 +142,7 @@ class RegistrationManagerSpec extends MongoSpec {
         case Some(_: Context) =>
 
           // test
-          RegistrationManager.register(userContext, newUser) flatMap {
+          RegistrationManager.register(userContext) flatMap {
 
             // verify
             case None => fail("expected a Some result")
@@ -157,9 +153,10 @@ class RegistrationManagerSpec extends MongoSpec {
               mongoTestUtils.countAll(Config.mongoCollectionUser) map (_ shouldBe 1)
               mongoTestUtils.countAll(Config.mongoCollectionGroup) map (_ shouldBe 1)
 
-              result.displayName shouldBe newUser.displayName
+              val userName = userContext.userName
+              result.displayName shouldBe userName
               result.myGroups.size shouldBe 1
-              result.myGroups.head.displayName shouldBe newUser.myGroup
+              result.myGroups.head.displayName shouldBe userName
               result.allowedGroups should be('isEmpty)
 
           }
@@ -177,8 +174,7 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
-      val newUser = NewUser("user display name", "my private group")
+      val userContext = defaultUserContext()
 
       dataHelpers.createContext(displayName = userContext.context) flatMap {
 
@@ -187,7 +183,7 @@ class RegistrationManagerSpec extends MongoSpec {
         case Some(_: Context) =>
 
           dataHelpers.createUser(
-            displayName = s"${newUser.displayName}-actual",
+            displayName = s"${userContext.userName}-actual",
             providerId = userContext.providerId,
             externalId = userContext.userId
           ) flatMap {
@@ -197,7 +193,7 @@ class RegistrationManagerSpec extends MongoSpec {
             case Some(user: User) =>
 
               // test
-              RegistrationManager.register(userContext, newUser) flatMap {
+              RegistrationManager.register(userContext) flatMap {
 
                 // verify
                 case None => fail("expected a Some result")
@@ -210,7 +206,7 @@ class RegistrationManagerSpec extends MongoSpec {
 
                   result.displayName shouldBe user.displayName
                   result.myGroups.size shouldBe 1
-                  result.myGroups.head.displayName shouldBe newUser.myGroup
+                  result.myGroups.head.displayName shouldBe userContext.userName
                   result.allowedGroups should be('isEmpty)
 
               }
@@ -230,13 +226,12 @@ class RegistrationManagerSpec extends MongoSpec {
     ) {
 
       // prepare
-      val userContext = UserContext(context = "trackle-dev", providerId = "google", userId = "asdf-1234")
-      val newUser = NewUser("user display name", "my private group")
+      val userContext = defaultUserContext()
 
       dataHelpers.createContext(displayName = userContext.context) flatMap { contextOpt =>
 
         dataHelpers.createUser(
-          displayName = newUser.displayName,
+          displayName = userContext.userName,
           providerId = userContext.providerId,
           externalId = userContext.userId
         ) flatMap { userOpt =>
@@ -251,7 +246,7 @@ class RegistrationManagerSpec extends MongoSpec {
             case Some(_: Group) =>
 
               // test
-              RegistrationManager.register(userContext, newUser) flatMap { result =>
+              RegistrationManager.register(userContext) flatMap { result =>
 
                 // verify
                 result shouldBe None
@@ -269,6 +264,18 @@ class RegistrationManagerSpec extends MongoSpec {
       }
 
     }
+
+  }
+
+  private def defaultUserContext(): UserContext = {
+
+    UserContext(
+      context = "trackle-dev",
+      providerId = "google",
+      userId = "asdf-1234",
+      userName = "user display name",
+      locale = "en"
+    )
 
   }
 

@@ -2,8 +2,8 @@ package com.ubirch.auth.core.actor
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.manager.TokenManager
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
+import com.ubirch.auth.oidcutil.TokenUtil
 import com.ubirch.util.json.JsonFormats
 import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.oidc.util.OidcUtil
@@ -85,7 +85,11 @@ class StateAndCodeActor extends Actor
           contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
         } yield {
 
-          TokenManager.verifyCodeWith3rdParty(contextProvider = contextProviderConf, providerConf = providerConf, code = code) match {
+          TokenUtil.verifyCodeWith3rdParty(
+            contextProvider = contextProviderConf,
+            providerConf = providerConf,
+            code = code
+          ) match {
 
             case None => VerifyCodeResult(errorType = Some(VerifyCodeError.CodeVerification))
 
@@ -98,7 +102,9 @@ class StateAndCodeActor extends Actor
                 context = context,
                 token = token,
                 providerId = provider,
-                userId = userId
+                userId = userId,
+                userName = tokenUserId.name,
+                locale = tokenUserId.locale
               )
               self ! DeleteState(provider, state)
 
@@ -185,7 +191,13 @@ class StateAndCodeActor extends Actor
     val context = rt.context
     val providerId = rt.providerId
     val userId = rt.userId
-    val userContext = UserContext(context = context, providerId = providerId, userId = userId)
+    val userContext = UserContext(
+      context = context,
+      providerId = providerId,
+      userId = userId,
+      userName = rt.userName,
+      locale = rt.locale
+    )
 
     val key = OidcUtil.tokenToHashedKey(token)
     val userContextJson = write(userContext)
@@ -264,7 +276,9 @@ case class VerifyStateExists(provider: String,
 case class RememberToken(context: String,
                          token: String,
                          providerId: String,
-                         userId: String
+                         userId: String,
+                         userName: String,
+                         locale: String
                         )
 
 case class VerifyTokenExists(token: String)
