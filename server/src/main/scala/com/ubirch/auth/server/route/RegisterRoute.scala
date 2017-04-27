@@ -54,6 +54,7 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
       respondWithCORS {
         oidcToken2UserContext { userContext =>
 
+          logger.debug(s"userContext=$userContext")
           post {
             registerUser(userContext)
           }
