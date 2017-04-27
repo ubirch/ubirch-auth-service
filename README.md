@@ -251,6 +251,7 @@ If the query is successful the response is (user exists but is not registered no
     200
     {
       "displayName": "some string being displayed in frontend as my display name",
+      "locale": "en",
       "myGroups": [],
       "allowedGroups": []
     }
@@ -293,7 +294,8 @@ If the query fails the response is:
 #### Update
 
     curl -XPUT localhost:8091/api/authService/v1/userInfo -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
-      "displayName": "my new display name"
+      "displayName": "my new display name",
+      "locale": "en"
     }'
 
 If the query is successful the response is:
@@ -301,6 +303,7 @@ If the query is successful the response is:
     200
     {
       "displayName": "my new display name",
+      "locale": "en",
       "myGroups": [
         {
           "id": "a4c08d88-7c43-4984-a568-0672b4431016", // UUID
