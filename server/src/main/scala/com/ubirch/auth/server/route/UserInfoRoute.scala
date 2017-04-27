@@ -83,9 +83,13 @@ class UserInfoRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
 
           case Some(userInfo: UserInfo) => complete(userInfo)
 
+          case None =>
+            logger.error("failed to get user info (None)")
+            complete(requestErrorResponse(errorType = "QueryError", errorMessage = "failed to get user info"))
+
           case _ =>
-            logger.error("failed to get user info")
-            complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to get user info"))
+            logger.error("failed to get user info (server error)")
+            complete(serverErrorResponse(errorType = "ServerError", errorMessage = "failed to get user info"))
 
         }
 
@@ -107,9 +111,13 @@ class UserInfoRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
 
           case Some(userInfo: UserInfo) => complete(userInfo)
 
+          case None =>
+            logger.error("failed to update user info (None)")
+            complete(requestErrorResponse(errorType = "UpdateError", errorMessage = "failed to update user info"))
+
           case _ =>
-            logger.error("failed to update user info")
-            complete(serverErrorResponse(errorType = "UpdateError", errorMessage = "failed to update user info"))
+            logger.error("failed to update user info (server error)")
+            complete(serverErrorResponse(errorType = "ServerError", errorMessage = "failed to update user info"))
 
         }
 

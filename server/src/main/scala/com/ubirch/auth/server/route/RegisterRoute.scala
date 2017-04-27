@@ -79,9 +79,13 @@ class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
 
           case Some(userInfo: UserInfo) => complete(userInfo)
 
+          case None =>
+            logger.error("failed to register user (None)")
+            complete(requestErrorResponse(errorType = "RegistrationError", errorMessage = "failed to register user"))
+
           case _ =>
-            logger.error("failed to register user")
-            complete(serverErrorResponse(errorType = "RegistrationError", errorMessage = "failed to register user"))
+            logger.error("failed to register user (server error)")
+            complete(serverErrorResponse(errorType = "ServerError", errorMessage = "failed to register user"))
 
         }
 
