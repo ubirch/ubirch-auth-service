@@ -454,11 +454,16 @@ generated contexts
 * trackle-admin-ui-dev
 * ubirch-admin-ui-dev
 
-3) Start AuthService
+3) Start MongoDB
+
+The `/register` and `/userInfo` calls use managers from the user-service and hence depend on MongoDB. Please follow the
+local setup section in the user-service's README, too.
+
+4) Start AuthService
 
     ./sbt server/run
 
-4) (optional) Create Test User Token
+5) (optional) Create Test User Token
 
 This step saves us from having to login with any of the OpenID Connect providers. To get a valid test user token run:
 
