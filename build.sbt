@@ -242,7 +242,7 @@ lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.1.0" excludeAll(
 lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.1.0" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaG, name = "akka-actor")): _*
   )
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.0-SNAPSHOT" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.2.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.2.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.4" excludeAll(excludedLoggers: _*)
