@@ -53,7 +53,8 @@ class UserInfoManagerSpec extends MongoSpec {
 
         // verify
         val expected = UserInfo(
-          displayName = user.displayName
+          displayName = user.displayName,
+          locale = user.locale
         )
         result shouldBe Some(expected)
 
@@ -87,6 +88,7 @@ class UserInfoManagerSpec extends MongoSpec {
         val myGroups = UserInfoUtil.toUserInfoGroups(Set(myGroup1Opt.get, myGroup2Opt.get))
         val expected = UserInfo(
           displayName = user.displayName,
+          locale = user.locale,
           myGroups = myGroups
         )
         result shouldBe Some(expected)
@@ -122,6 +124,7 @@ class UserInfoManagerSpec extends MongoSpec {
         val allowedGroups = UserInfoUtil.toUserInfoGroups(Set(allowedGroup1Opt.get, allowedGroup2Opt.get))
         val expected = UserInfo(
           displayName = user.displayName,
+          locale = user.locale,
           allowedGroups = allowedGroups
         )
         result shouldBe Some(expected)
@@ -160,6 +163,7 @@ class UserInfoManagerSpec extends MongoSpec {
         val allowedGroups = UserInfoUtil.toUserInfoGroups(Set(allowedGroup1Opt.get, allowedGroup2Opt.get))
         val expected = UserInfo(
           displayName = user.displayName,
+          locale = user.locale,
           myGroups = myGroups,
           allowedGroups = allowedGroups
         )
@@ -211,7 +215,7 @@ class UserInfoManagerSpec extends MongoSpec {
       } yield {
 
         // verify
-        val expected = UserInfo(displayName = user.displayName)
+        val expected = UserInfo(displayName = user.displayName, locale = user.locale)
         result shouldBe Some(expected)
 
       }
@@ -240,7 +244,7 @@ class UserInfoManagerSpec extends MongoSpec {
       } yield {
 
         // verify
-        val expected = UserInfo(displayName = userUpdate.displayName)
+        val expected = UserInfo(displayName = userUpdate.displayName, locale = user.locale)
         result shouldBe Some(expected)
 
       }

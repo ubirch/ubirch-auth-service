@@ -168,7 +168,7 @@ class RegistrationManagerSpec extends MongoSpec {
     scenario(
       """exists?
         |  context: yes
-        |  user: yes (different name than existing user...as it's being ignored)
+        |  user: yes (different name and locale than existing user...as it's being ignored)
         |  group: no
       """.stripMargin
     ) {
@@ -182,10 +182,16 @@ class RegistrationManagerSpec extends MongoSpec {
 
         case Some(_: Context) =>
 
+          val otherLocale = if (userContext.locale == "en") {
+            "de"
+          } else {
+            "en"
+          }
           dataHelpers.createUser(
             displayName = s"${userContext.userName}-actual",
             providerId = userContext.providerId,
-            externalId = userContext.userId
+            externalId = userContext.userId,
+            locale = otherLocale
           ) flatMap {
 
             case None => fail("failed to create user during preparation")

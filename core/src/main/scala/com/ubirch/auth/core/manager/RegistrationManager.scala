@@ -51,11 +51,16 @@ object RegistrationManager extends StrictLogging {
 
   }
 
-  private def userInfo(userDisplayName: String, groupId: UUID, groupDisplayName: String): Option[UserInfo] = {
+  private def userInfo(userDisplayName: String,
+                       locale: String,
+                       groupId: UUID,
+                       groupDisplayName: String
+                      ): Option[UserInfo] = {
 
     Some(
       UserInfo(
         displayName = userDisplayName,
+        locale = locale,
         myGroups = Set(
           UserInfoGroup(groupId, groupDisplayName)
         )
@@ -101,7 +106,8 @@ object RegistrationManager extends StrictLogging {
         createUser(
           displayName = userContext.userName,
           providerId = userContext.providerId,
-          externalId = userContext.userId
+          externalId = userContext.userId,
+          locale = userContext.locale
         ) flatMap {
 
           case None =>
@@ -120,14 +126,16 @@ object RegistrationManager extends StrictLogging {
 
   private def createUser(displayName: String,
                          providerId: String,
-                         externalId: String
+                         externalId: String,
+                         locale: String
                         )
                         (implicit mongo: MongoUtil): Future[Option[User]] = {
 
     val user = User(
       displayName = displayName,
       providerId = providerId,
-      externalId = externalId
+      externalId = externalId,
+      locale = locale
     )
     UserManager.create(user)
 
@@ -153,7 +161,12 @@ object RegistrationManager extends StrictLogging {
 
       case Some(groupCreated: Group) =>
         logger.debug(s"created group: group=$group")
-        userInfo(owner.displayName, groupCreated.id, groupCreated.displayName)
+        userInfo(
+          userDisplayName = owner.displayName,
+          locale = owner.locale,
+          groupId = groupCreated.id,
+          groupDisplayName = groupCreated.displayName
+        )
 
     }
 
