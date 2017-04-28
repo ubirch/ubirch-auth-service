@@ -57,7 +57,7 @@ lazy val server = project
     ),
     mainClass in(Compile, run) := Some("com.ubirch.auth.server.Boot"),
     resourceGenerators in Compile += Def.task {
-      generateDockerFile(baseDirectory.value / ".." / "Dockerfile", (assemblyOutputPath in assembly).value)
+      generateDockerFile(baseDirectory.value / ".." / "Dockerfile.input", (assemblyOutputPath in assembly).value)
     }.taskValue
   )
 
