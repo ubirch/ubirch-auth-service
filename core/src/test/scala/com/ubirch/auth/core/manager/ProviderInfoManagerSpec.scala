@@ -4,8 +4,8 @@ import java.net.{URI, URL}
 
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
-import com.ubirch.auth.testTools.db.config.{OidcContextProviderUtil, OidcProviderUtil}
 import com.ubirch.auth.testTools.db.redis.RedisSpec
+import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
 
 /**
   * author: cvandrei
@@ -87,7 +87,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
       OidcProviderUtil.initProviders() flatMap { expectedProviderList =>
         OidcContextProviderUtil.initContexts() flatMap { expectedContextList =>
 
-          expectedProviderList.values map(_.id) foreach(OidcProviderUtil.disableProvider(_))
+          expectedProviderList.values map (_.id) foreach (OidcProviderUtil.disableProvider(_))
 
           val context = expectedContextList.head._1
 
@@ -183,7 +183,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
     params("response_type") should be("code")
     params("client_id") should be(context.clientId)
     new URI(params("redirect_uri")).getPath should be(context.callbackUrl.toString)
-    params("scope") should be(expectedProviderList(providerInfo.providerId).scope)
+    params("scope") should be(expectedProviderList(providerInfo.providerId).scope.replaceAll(" ", "+"))
     params("state").length should be > 0
 
   }

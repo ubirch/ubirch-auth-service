@@ -1,10 +1,10 @@
-package com.ubirch.auth.testTools.db.config
+package com.ubirch.auth.util.db.config
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.model.db.ContextProviderConfig
 import com.ubirch.auth.model.db.redis.RedisKeys
-import com.ubirch.auth.testTools.db.config.defaults.OidcContextProvider
+import com.ubirch.auth.util.db.config.defaults.OidcContextProvider
 import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.MyJsonProtocol
 
@@ -22,7 +22,14 @@ import scala.concurrent.Future
 object OidcContextProviderUtil extends StrictLogging
   with MyJsonProtocol {
 
-  // TODO scaladoc
+  /**
+    * Inits OpenID Connect provider contexts.
+    *
+    * @param activateContexts true if contexts are created as active
+    * @param sleepAfter       how long to sleep afterwards in milliseconds to account for db delays
+    * @param redis            redis connection
+    * @return created context configs
+    */
   def initContexts(activateContexts: Boolean = true,
                    sleepAfter: Long = 500
                   )
@@ -52,7 +59,14 @@ object OidcContextProviderUtil extends StrictLogging
 
   }
 
-  // TODO scaladoc
+  /**
+    * Create a singe provider context.
+    *
+    * @param ctxProviderConf provider context config to create
+    * @param activateContext true if provider context is created as active
+    * @param redis           redis connection
+    * @return true if created successfully
+    */
   def storeContextProvider(ctxProviderConf: ContextProviderConfig,
                            activateContext: Boolean = true
                           )
@@ -78,11 +92,18 @@ object OidcContextProviderUtil extends StrictLogging
 
   }
 
-  // TODO scaladoc
+  /**
+    * Disable a provider context.
+    *
+    * @param context    context to disable
+    * @param sleepAfter how long to sleep afterwards in milliseconds to account for db delays
+    * @param redis      redis connection
+    * @return true if created successfully
+    */
   def disableContext(context: String, sleepAfter: Long = 100)
                     (implicit redis: RedisClient): Future[Boolean] = {
 
-    val result = redis.srem(RedisKeys.OIDC_CONTEXT_LIST, context) map(_ > 0)
+    val result = redis.srem(RedisKeys.OIDC_CONTEXT_LIST, context) map (_ > 0)
 
     Thread.sleep(sleepAfter)
     result

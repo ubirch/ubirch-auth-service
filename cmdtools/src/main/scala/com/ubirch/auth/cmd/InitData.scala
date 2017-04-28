@@ -1,6 +1,6 @@
 package com.ubirch.auth.cmd
 
-import com.ubirch.auth.testTools.db.config.{OidcContextProviderUtil, OidcProviderUtil}
+import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
 import com.ubirch.util.redis.test.RedisCleanup
 
 import scala.language.postfixOps

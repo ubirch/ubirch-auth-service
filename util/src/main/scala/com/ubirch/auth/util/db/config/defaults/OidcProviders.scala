@@ -1,4 +1,4 @@
-package com.ubirch.auth.testTools.db.config.defaults
+package com.ubirch.auth.util.db.config.defaults
 
 import com.ubirch.auth.model.db.{OidcProviderConfig, OidcProviderEndpoints}
 

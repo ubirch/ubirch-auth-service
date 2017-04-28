@@ -5,7 +5,6 @@ concurrentRestrictions in Global := Seq(
   Tags.limit(Tags.Test, 1)
 )
 
-val projectVersion = "0.0.1-SNAPSHOT"
 lazy val commonSettings = Seq(
 
   scalaVersion := "2.11.8",
@@ -108,7 +107,7 @@ lazy val modelDb = (project in file("model-db"))
 
 lazy val testTools = (project in file("test-tools"))
   .settings(commonSettings: _*)
-  .dependsOn(config, modelDb)
+  .dependsOn(config, modelDb, util)
   .settings(
     name := "test-tools",
     description := "tools useful in automated tests",
@@ -125,6 +124,7 @@ lazy val testToolsExt = (project in file("test-tools-ext"))
 
 lazy val util = project
   .settings(commonSettings: _*)
+  .dependsOn(modelDb)
   .settings(
     description := "utils",
     resolvers ++= Seq(
@@ -175,16 +175,18 @@ lazy val depModel = Seq(
 
 lazy val depTestTools = Seq(
   json4sNative,
-  ubirchUtilJsonAutoConvert,
-  ubirchUtilFutures,
   ubirchUtilRedisTestUtils,
   ubirchUtilMongoTestUtils,
   scalatest
 ) ++ scalaLogging
 
 lazy val depUtils = Seq(
-  ubirchUtilCrypto
-)
+  ubirchUtilCrypto,
+  ubirchUtilJsonAutoConvert,
+  ubirchUtilJsonAutoConvert,
+  ubirchUtilFutures,
+  rediscala
+) ++ scalaLogging
 
 /*
  * DEPENDENCIES

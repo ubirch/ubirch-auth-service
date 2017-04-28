@@ -6,13 +6,16 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.{Config, ConfigKeys}
 import com.ubirch.auth.server.route.MainRoute
+import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
 import com.ubirch.util.mongo.connection.MongoUtil
+import com.ubirch.util.redis.RedisClientUtil
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
+import redis.RedisClient
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -31,6 +34,7 @@ object Boot extends App with StrictLogging {
   implicit val timeout = Timeout(Config.timeout seconds)
 
   implicit val mongo: MongoUtil = new MongoUtil(ConfigKeys.MONGO_PREFIX)
+  implicit val redis: RedisClient = RedisClientUtil.getRedisClient()
 
   val bindingFuture = start()
   registerShutdownHooks()
@@ -40,6 +44,9 @@ object Boot extends App with StrictLogging {
     val interface = Config.interface
     val port = Config.port
     implicit val timeout = Timeout(5, TimeUnit.SECONDS)
+
+    OidcProviderUtil.initProviders()
+    OidcContextProviderUtil.initContexts()
 
     logger.info(s"start http server on $interface:$port")
     Http().bindAndHandle((new MainRoute).myRoute, interface, port)
@@ -57,6 +64,8 @@ object Boot extends App with StrictLogging {
           .onComplete(_ => system.terminate())
 
         mongo.close()
+
+        redis.stop()
 
       }
 
