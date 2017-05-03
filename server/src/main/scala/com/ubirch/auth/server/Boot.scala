@@ -7,6 +7,8 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.config.{Config, ConfigKeys}
 import com.ubirch.auth.server.route.MainRoute
 import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
+import com.ubirch.user.core.manager.ContextManager
+import com.ubirch.user.model.db.Context
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.redis.RedisClientUtil
 
@@ -48,6 +50,8 @@ object Boot extends App with StrictLogging {
     OidcProviderUtil.initProviders()
     OidcContextProviderUtil.initContexts()
 
+    prepareMongo()
+
     logger.info(s"start http server on $interface:$port")
     Http().bindAndHandle((new MainRoute).myRoute, interface, port)
 
@@ -70,6 +74,32 @@ object Boot extends App with StrictLogging {
       }
 
     })
+
+  }
+
+  private def prepareMongo()(implicit mongo: MongoUtil): Future[Boolean] = {
+
+
+    for {
+      contextUbirchAdminUIDev <- ContextManager.create(Context(displayName = "ubirch-admin-ui-dev"))
+      contextUbirchAdminUIDemo <- ContextManager.create(Context(displayName = "ubirch-admin-ui-dev"))
+    } yield {
+
+      if (contextUbirchAdminUIDev.isDefined) {
+        logger.info(s"====== Mongo Context: created (contextName=${contextUbirchAdminUIDev.get.displayName})")
+      } else {
+        logger.error(s"====== Mongo Context: failted to create (contextName=${contextUbirchAdminUIDev.get.displayName})")
+      }
+
+      if (contextUbirchAdminUIDemo.isDefined) {
+        logger.info(s"====== Mongo Context: created (contextName=${contextUbirchAdminUIDemo.get.displayName})")
+      } else {
+        logger.error(s"====== Mongo Context: failed to create (contextName=${contextUbirchAdminUIDemo.get.displayName})")
+      }
+
+      contextUbirchAdminUIDev.isDefined && contextUbirchAdminUIDemo.isDefined
+
+    }
 
   }
 
