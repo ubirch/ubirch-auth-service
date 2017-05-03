@@ -425,6 +425,26 @@ This service has the following dependencies:
 
 * MongoDB as used by the `user-service` (through the dependency `com.ubich.user:core`)
 
+* providers and contexts have to exist in Redis (see #Configuration section for details)
+
+* all contexts in which you want to register users have to exist in the MongoDB. Here's two examples:
+
+    {
+        "_id" : ObjectId("590a25ce63a845f6501f4128"),
+        "id" : UUID("4f72edd2-ec27-4df6-858e-3911d8f5207b"),
+        "displayName" : "ubirch-admin-ui-dev",
+        "created" : ISODate("2017-05-03T18:47:42.100Z"),
+        "updated" : ISODate("2017-05-03T18:47:42.100Z")
+    }
+    
+    {
+        "_id" : ObjectId("590a25ce63a845f6501f412a"),
+        "id" : UUID("91823652-e530-4908-a445-f2da660538f8"),
+        "displayName" : "ubirch-admin-ui-demo",
+        "created" : ISODate("2017-05-03T18:47:42.105Z"),
+        "updated" : ISODate("2017-05-03T18:47:42.105Z")
+    }
+
 
 ## Automated Tests
 
