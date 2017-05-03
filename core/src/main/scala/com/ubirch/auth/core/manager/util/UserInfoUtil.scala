@@ -2,6 +2,7 @@ package com.ubirch.auth.core.manager.util
 
 import com.ubirch.auth.model.UserInfoGroup
 import com.ubirch.user.model.db.Group
+import com.ubirch.util.uuid.UUIDUtil
 
 /**
   * author: cvandrei
@@ -13,7 +14,7 @@ object UserInfoUtil {
 
     // TODO automated tests
     groups map { group =>
-      UserInfoGroup(group.id, group.displayName)
+      UserInfoGroup(UUIDUtil.fromString(group.id), group.displayName)
     }
 
   }

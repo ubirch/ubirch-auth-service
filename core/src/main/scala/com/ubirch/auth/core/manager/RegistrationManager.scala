@@ -9,6 +9,7 @@ import com.ubirch.user.core.manager.{ContextManager, GroupManager, GroupsManager
 import com.ubirch.user.model.db.{Context, Group, User}
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.model.UserContext
+import com.ubirch.util.uuid.UUIDUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -164,7 +165,7 @@ object RegistrationManager extends StrictLogging {
         userInfo(
           userDisplayName = owner.displayName,
           locale = owner.locale,
-          groupId = groupCreated.id,
+          groupId = UUIDUtil.fromString(groupCreated.id),
           groupDisplayName = groupCreated.displayName
         )
 
