@@ -17,8 +17,9 @@
     </appender>
 
     <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
-        <url>http://${ES_HOST}:${ES_PORT_HTTP}/_bulk</url>
-        <index>auth-service-logs-%date{yyyy-MM-dd}</index>
+        <url>http://${ES_LOG_HOST}:${ES_LOG_PORT}/_bulk</url>
+        <authentication class="com.internetitem.logback.elasticsearch.config.BasicAuthentication"/>
+        <index>${ENVID}-auth-service-logs-%date{yyyy-MM-dd}</index>
         <type>log</type>
         <loggerName>es-logger</loggerName> <!-- optional -->
         <errorLoggerName>es-error-logger</errorLoggerName> <!-- optional -->
@@ -69,7 +70,7 @@
     <logger name="com.ubirch" level="DEBUG"/>
 
     <root level="DEBUG">
-        <!--<appender-ref ref="STDOUT"/>-->
+        <appender-ref ref="STDOUT"/>
         <appender-ref ref="ELASTIC"/>
     </root>
 </configuration>
