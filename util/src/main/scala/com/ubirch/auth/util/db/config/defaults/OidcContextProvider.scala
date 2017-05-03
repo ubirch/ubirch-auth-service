@@ -55,9 +55,9 @@ object OidcContextProvider {
   private lazy val ubirchAdminUIDemoGoogle: ContextProviderConfig = ContextProviderConfig(
     context = ContextDefinitions.ctxUbirchAdminUIDemo,
     provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-q7dccmh0leq20rqgs2550vp0u67pj42p.apps.googleusercontent.com",
-    clientSecret = "BFmveucyPZ9Ijt31UvYocrj4",
-    callbackUrl = new URI("http://localhost:9000/auth?providerId=google")
+    clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
+    clientSecret = "MV0WoHigItLlgRl1fS7ILP_g",
+    callbackUrl = new URI("http://ubirch.dev.ubirch.com/auth?providerId=google")
   )
 
   private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
