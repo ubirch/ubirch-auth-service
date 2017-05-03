@@ -454,8 +454,10 @@ To init default providers and contexts for development please run
 
 generated contexts
 
+* trackle-dev
 * trackle-admin-ui-dev
 * ubirch-admin-ui-dev
+* ubirch-admin-ui-demo
 
 3) Start MongoDB
 
