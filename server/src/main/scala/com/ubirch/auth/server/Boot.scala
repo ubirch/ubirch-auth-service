@@ -50,10 +50,6 @@ object Boot extends App with StrictLogging {
     OidcProviderUtil.initProviders()
     OidcContextProviderUtil.initContexts()
 
-    prepareMongo() map { mongoPrepareStatus =>
-      logger.info(s"======= Mongo Prepare: status=$mongoPrepareStatus")
-    }
-
     logger.info(s"start http server on $interface:$port")
     Http().bindAndHandle((new MainRoute).myRoute, interface, port)
 
@@ -76,32 +72,6 @@ object Boot extends App with StrictLogging {
       }
 
     })
-
-  }
-
-  private def prepareMongo()(implicit mongo: MongoUtil): Future[Boolean] = {
-
-
-    for {
-      contextUbirchAdminUIDev <- ContextManager.create(Context(displayName = "ubirch-admin-ui-dev"))
-      contextUbirchAdminUIDemo <- ContextManager.create(Context(displayName = "ubirch-admin-ui-demo"))
-    } yield {
-
-      if (contextUbirchAdminUIDev.isDefined) {
-        logger.info(s"====== Mongo Context: created (contextName=${contextUbirchAdminUIDev.get.displayName})")
-      } else {
-        logger.error(s"====== Mongo Context: failed to create (contextName=${contextUbirchAdminUIDev.get.displayName})")
-      }
-
-      if (contextUbirchAdminUIDemo.isDefined) {
-        logger.info(s"====== Mongo Context: created (contextName=${contextUbirchAdminUIDemo.get.displayName})")
-      } else {
-        logger.error(s"====== Mongo Context: failed to create (contextName=${contextUbirchAdminUIDemo.get.displayName})")
-      }
-
-      contextUbirchAdminUIDev.isDefined && contextUbirchAdminUIDemo.isDefined
-
-    }
 
   }
 

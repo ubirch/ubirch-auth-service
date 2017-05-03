@@ -98,7 +98,7 @@ class RegistrationManagerSpec extends MongoSpec {
       ) flatMap { userOpt =>
 
         dataHelpers.createGroup(
-          contextId = UUIDUtil.uuid,
+          contextId = UUIDUtil.uuidStr,
           ownerOpt = userOpt
         ) flatMap {
 
