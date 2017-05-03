@@ -454,8 +454,9 @@ To init default providers and contexts for development please run
 
 generated contexts
 
-* trackle-dev
-* trackle-admin-ui-dev
+* trackle-local
+* trackle-admin-ui-local
+* ubirch-admin-ui-local
 * ubirch-admin-ui-dev
 * ubirch-admin-ui-demo
 
