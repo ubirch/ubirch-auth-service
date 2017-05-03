@@ -89,7 +89,7 @@ object OidcContextProvider {
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
     clientSecret = "MV0WoHigItLlgRl1fS7ILP_g",
-    callbackUrl = new URI("http://ubirch.dev.ubirch.com/auth?providerId=google")
+    callbackUrl = new URI("http://ubirch.demo.ubirch.com/auth?providerId=google")
   )
 
 }
