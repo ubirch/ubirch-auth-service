@@ -87,8 +87,8 @@ object OidcContextProvider {
   private lazy val ubirchAdminUIDemoGoogle: ContextProviderConfig = ContextProviderConfig(
     context = ContextDefinitions.ctxUbirchAdminUIDemo,
     provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
-    clientSecret = "MV0WoHigItLlgRl1fS7ILP_g",
+    clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
+    clientSecret = "utYeF1TtkeMDidNRBzOWivF0",
     callbackUrl = new URI("http://ubirch.demo.ubirch.com/auth?providerId=google")
   )
 
