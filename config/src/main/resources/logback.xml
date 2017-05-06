@@ -21,6 +21,8 @@
 
     <logger name="com.ubirch" level="DEBUG"/>
 
+    <logger name="reactivemongo.core" level="WARN"/>
+
     <root level="DEBUG">
         <!--<appender-ref ref="FILE"/>-->
         <appender-ref ref="STDOUT"/>
