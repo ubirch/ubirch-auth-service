@@ -69,6 +69,8 @@
 
     <logger name="com.ubirch" level="DEBUG"/>
 
+    <logger name="reactivemongo-akka" level="WARN"/>
+
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="ELASTIC"/>
