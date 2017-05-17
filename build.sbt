@@ -194,7 +194,7 @@ lazy val depUtils = Seq(
 
 // VERSIONS
 val akkaV = "2.4.17"
-val akkaHttpV = "10.0.5"
+val akkaHttpV = "10.0.6"
 val json4sV = "3.5.1"
 val ubirchUserV = "0.2.0"
 
@@ -239,17 +239,17 @@ lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(exclu
 lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.3.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilJsonAutoConvert = ubirchUtilG %% "json-auto-convert" % "0.3.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.2.0" excludeAll(
-  excludedLoggers++ Seq(ExclusionRule(organization = akkaG, name = "akka-actor")): _*
+  excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
 lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.2.0" excludeAll(
-  excludedLoggers++ Seq(ExclusionRule(organization = akkaG, name = "akka-actor")): _*
+  excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
 lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.2.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.2.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.4" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.4" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.3" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.6-SNAPSHOT" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.6-SNAPSHOT" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.4-SNAPSHOT" excludeAll(excludedLoggers: _*)
 lazy val ubirchUserCore = ubirchUserG %% "core" % ubirchUserV
 lazy val ubirchUserTestToolsExt = ubirchUserG %% "test-tools-ext" % ubirchUserV
 

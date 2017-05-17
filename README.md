@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.1.1 (tbd)
 
-* tbd
+* update Akka Http to 10.0.6
 
 ### Version 0.1.0 (2017-05-05)
 
