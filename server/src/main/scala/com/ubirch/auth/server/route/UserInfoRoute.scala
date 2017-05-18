@@ -46,13 +46,11 @@ class UserInfoRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
   implicit protected val redis: RedisClient = RedisClientUtil.getRedisClient()
   private val oidcDirective = new OidcDirective()
 
-  import oidcDirective._
-
   val route: Route = {
 
     path(RouteConstants.userInfo) {
       respondWithCORS {
-        oidcToken2UserContext { userContext =>
+        oidcDirective.oidcToken2UserContext { userContext =>
 
           logger.debug(s"userContext=$userContext")
           get {

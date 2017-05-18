@@ -17,6 +17,7 @@ The ubirch AuthService is responsible for:
 ### Version 0.1.1 (tbd)
 
 * update Akka Http to 10.0.6
+* try to fix issue where Angular gets http status -1 instead of 403/404/405
 
 ### Version 0.1.0 (2017-05-05)
 
