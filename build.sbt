@@ -16,7 +16,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-auth-service"),
     "scm:git:git@github.com:ubirch/ubirch-auth-service.git"
   )),
-  version := "0.1.2-SNAPSHOT",
+  version := "0.1.1",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
