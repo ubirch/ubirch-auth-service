@@ -142,6 +142,7 @@ lazy val depServer = Seq(
   akkaSlf4j,
   akkaHttp,
   ubirchUtilRestAkkaHttp,
+  akkaHttpCors,
   ubirchUtilRestAkkaHttpTest % "test",
 
   ubirchUtilMongo,
@@ -222,6 +223,9 @@ lazy val scalaLogging = Seq(
 lazy val akkaActor = akkaG %% "akka-actor" % akkaV
 lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
 lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
+
+// https://github.com/lomigmegard/akka-http-cors
+lazy val akkaHttpCors = "ch.megard" %% "akka-http-cors" % "0.2.1"
 
 lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.24.2"
 
