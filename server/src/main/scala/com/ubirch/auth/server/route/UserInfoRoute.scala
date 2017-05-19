@@ -13,20 +13,16 @@ import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.directive.OidcDirective
 import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.redis.RedisClientUtil
+import com.ubirch.util.rest.akka.directives.CORSDirective
 
 import akka.actor.{ActorSystem, Props}
-import akka.http.scaladsl.model.HttpMethods._
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{RejectionHandler, Route}
+import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
-import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
-import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import redis.RedisClient
 
-import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -37,6 +33,7 @@ import scala.util.{Failure, Success}
   * since: 2017-04-25
   */
 class UserInfoRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
+  with CORSDirective
   with ResponseUtil
   with StrictLogging {
 
@@ -49,28 +46,21 @@ class UserInfoRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
   implicit protected val redis: RedisClient = RedisClientUtil.getRedisClient()
   private val oidcDirective = new OidcDirective()
 
-  private val corsSettings = CorsSettings.defaultSettings.copy(
-    allowedMethods = Seq(GET, POST, PUT, DELETE, OPTIONS)
-  )
-  private val rejectionHandler = corsRejectionHandler withFallback RejectionHandler.default
-
   val route: Route = {
 
     path(RouteConstants.userInfo) {
-      cors(corsSettings) {
-        handleRejections(rejectionHandler) {
-          oidcDirective.oidcToken2UserContext { userContext =>
+      respondWithCORS {
+        oidcDirective.oidcToken2UserContext { userContext =>
 
-            logger.debug(s"userContext=$userContext")
-            get {
-              getInfo(userContext)
-            } ~ put {
-              entity(as[UserUpdate]) { update =>
-                updateInfo(userContext, update)
-              }
+          logger.debug(s"userContext=$userContext")
+          get {
+            getInfo(userContext)
+          } ~ put {
+            entity(as[UserUpdate]) { update =>
+              updateInfo(userContext, update)
             }
-
           }
+
         }
       }
     }

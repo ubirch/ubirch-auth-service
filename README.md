@@ -17,7 +17,13 @@ The ubirch AuthService is responsible for:
 ### Version 0.1.1 (tbd)
 
 * update Akka Http to 10.0.6
-* try to fix issue where Angular gets http status -1 instead of 403/404/405
+* update to Akka 2.4.18
+* update _com.ubirch.util:rest-akka-http_ to 0.3.7
+* update _com.ubirch.util:rest-akka-http-test_ to 0.3.7
+* update _com.ubirch.util:oidc-utils_ to 0.4.1
+* update _com.ubirch.util:redis-test-util_ to 0.2.2
+* update _com.ubirch.util:redis-util_ to 0.2.2
+* update _com.ubirch.util:response-util_ to 0.1.4
 
 ### Version 0.1.0 (2017-05-05)
 

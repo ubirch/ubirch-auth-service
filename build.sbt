@@ -142,7 +142,6 @@ lazy val depServer = Seq(
   akkaSlf4j,
   akkaHttp,
   ubirchUtilRestAkkaHttp,
-  akkaHttpCors,
   ubirchUtilRestAkkaHttpTest % "test",
 
   ubirchUtilMongo,
@@ -224,9 +223,6 @@ lazy val akkaActor = akkaG %% "akka-actor" % akkaV
 lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
 lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
 
-// https://github.com/lomigmegard/akka-http-cors
-lazy val akkaHttpCors = "ch.megard" %% "akka-http-cors" % "0.2.1"
-
 lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.24.2"
 
 lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll ExclusionRule(organization = "com.typesafe.akka")
@@ -248,12 +244,12 @@ lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.2.0" excludeAll(
 lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.2.0" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.2.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.2.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.6-SNAPSHOT" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.6-SNAPSHOT" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.4-SNAPSHOT" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.2.2" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.2.2" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.7-SNAPSHOT" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.7-SNAPSHOT" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.1.4" excludeAll(excludedLoggers: _*)
 lazy val ubirchUserCore = ubirchUserG %% "core" % ubirchUserV
 lazy val ubirchUserTestToolsExt = ubirchUserG %% "test-tools-ext" % ubirchUserV
 
