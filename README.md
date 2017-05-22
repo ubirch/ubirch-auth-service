@@ -14,7 +14,7 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
-### Version 0.1.1 (2017-05-19)
+### Version 0.1.1 (2017-05-22)
 
 * update Akka Http to 10.0.6
 * update to Akka 2.4.18
@@ -24,6 +24,7 @@ The ubirch AuthService is responsible for:
 * update _com.ubirch.util:redis-test-util_ to 0.2.2
 * update _com.ubirch.util:redis-util_ to 0.2.2
 * update _com.ubirch.util:response-util_ to 0.1.4
+* update _com.ubirch.user:*_ to 0.3.1
 
 ### Version 0.1.0 (2017-05-05)
 
