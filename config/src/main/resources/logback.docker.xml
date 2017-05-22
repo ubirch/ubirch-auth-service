@@ -71,8 +71,8 @@
 
     <logger name="reactivemongo-akka" level="WARN"/>
 
-    <root level="DEBUG">
-        <appender-ref ref="STDOUT"/>
+    <root level="INFO">
+        <!--<appender-ref ref="STDOUT"/>-->
         <appender-ref ref="ELASTIC"/>
     </root>
 </configuration>
