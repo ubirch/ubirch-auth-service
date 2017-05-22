@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.1.2 (tbd)
 
-* tbd
+* change default test user created by `CreateDevToken`
 
 ### Version 0.1.1 (2017-05-22)
 
