@@ -62,15 +62,50 @@ class UserInfoManagerSpec extends MongoSpec {
 
     }
 
-    scenario("user exists - with myGroups") {
+    scenario("non-admin user exists - with myGroups") {
 
       // prepare
       for {
 
         contextOpt <- dataHelpers.createContext()
         userOpt <- dataHelpers.createUser()
-        myGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt)
-        myGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt)
+        myGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt, adminGroup = None)
+        myGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt, adminGroup = None)
+
+        user = userOpt.get
+        userContext = defaultUserContext(
+          context = contextOpt.get.displayName,
+          providerId = user.providerId,
+          userId = user.externalId
+        )
+
+        // test
+        result <- UserInfoManager.getInfo(userContext)
+
+      } yield {
+
+        // verify
+        val myGroups = UserInfoUtil.toUserInfoGroups(Set(myGroup1Opt.get, myGroup2Opt.get))
+        val expected = UserInfo(
+          displayName = user.displayName,
+          locale = user.locale,
+          myGroups = myGroups
+        )
+        result shouldBe Some(expected)
+
+      }
+
+    }
+
+    scenario("admin user exists - with myGroups") {
+
+      // prepare
+      for {
+
+        contextOpt <- dataHelpers.createContext()
+        userOpt <- dataHelpers.createUser()
+        myGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt, adminGroup = Some(true))
+        myGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = userOpt, adminGroup = None)
 
         user = userOpt.get
         userContext = defaultUserContext(
@@ -105,8 +140,8 @@ class UserInfoManagerSpec extends MongoSpec {
         contextOpt <- dataHelpers.createContext()
         user1Opt <- dataHelpers.createUser()
         user2Opt <- dataHelpers.createUser()
-        allowedGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, allowedUsersOpt = user1Opt)
-        allowedGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, allowedUsersOpt = user1Opt)
+        allowedGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, adminGroup = None, allowedUsersOpt = user1Opt)
+        allowedGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, adminGroup = None, allowedUsersOpt = user1Opt)
 
         user = user1Opt.get
         userContext = defaultUserContext(
@@ -140,11 +175,11 @@ class UserInfoManagerSpec extends MongoSpec {
 
         contextOpt <- dataHelpers.createContext()
         user1Opt <- dataHelpers.createUser()
-        myGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user1Opt)
-        myGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user1Opt)
+        myGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user1Opt, adminGroup = None)
+        myGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user1Opt, adminGroup = None)
         user2Opt <- dataHelpers.createUser()
-        allowedGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, allowedUsersOpt = user1Opt)
-        allowedGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, allowedUsersOpt = user1Opt)
+        allowedGroup1Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, adminGroup = None, allowedUsersOpt = user1Opt)
+        allowedGroup2Opt <- dataHelpers.createGroup(contextOpt = contextOpt, ownerOpt = user2Opt, adminGroup = None, allowedUsersOpt = user1Opt)
 
         user = user1Opt.get
         userContext = defaultUserContext(

@@ -16,7 +16,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-auth-service"),
     "scm:git:git@github.com:ubirch/ubirch-auth-service.git"
   )),
-  version := "0.1.3-SNAPSHOT",
+  version := "0.2.0",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
@@ -196,7 +196,7 @@ lazy val depUtils = Seq(
 val akkaV = "2.4.17"
 val akkaHttpV = "10.0.6"
 val json4sV = "3.5.1"
-val ubirchUserV = "0.3.2"
+val ubirchUserV = "0.4.1"
 
 val scalaTestV = "3.0.1"
 
@@ -223,7 +223,7 @@ lazy val akkaActor = akkaG %% "akka-actor" % akkaV
 lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
 lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
 
-lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.24.2"
+lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.26"
 
 lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll ExclusionRule(organization = "com.typesafe.akka")
 

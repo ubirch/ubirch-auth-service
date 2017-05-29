@@ -99,7 +99,8 @@ class RegistrationManagerSpec extends MongoSpec {
 
         dataHelpers.createGroup(
           contextId = UUIDUtil.uuidStr,
-          ownerOpt = userOpt
+          ownerOpt = userOpt,
+          adminGroup = None
         ) flatMap {
 
           case None => fail("failed to create group during preparation")
@@ -157,6 +158,7 @@ class RegistrationManagerSpec extends MongoSpec {
               result.displayName shouldBe userName
               result.myGroups.size shouldBe 1
               result.myGroups.head.displayName shouldBe userName
+              result.myGroups.head.adminGroup shouldBe None
               result.allowedGroups should be('isEmpty)
 
           }
@@ -213,6 +215,7 @@ class RegistrationManagerSpec extends MongoSpec {
                   result.displayName shouldBe user.displayName
                   result.myGroups.size shouldBe 1
                   result.myGroups.head.displayName shouldBe userContext.userName
+                  result.myGroups.head.adminGroup shouldBe None
                   result.allowedGroups should be('isEmpty)
 
               }
@@ -244,7 +247,8 @@ class RegistrationManagerSpec extends MongoSpec {
 
           dataHelpers.createGroup(
             contextOpt = contextOpt,
-            ownerOpt = userOpt
+            ownerOpt = userOpt,
+            adminGroup = None
           ) flatMap {
 
             case None => fail("failed to create group during preparation")

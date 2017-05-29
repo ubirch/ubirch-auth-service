@@ -14,7 +14,11 @@ object UserInfoUtil {
 
     // TODO automated tests
     groups map { group =>
-      UserInfoGroup(UUIDUtil.fromString(group.id), group.displayName)
+      UserInfoGroup(
+        id = UUIDUtil.fromString(group.id),
+        displayName = group.displayName,
+        adminGroup = group.adminGroup
+      )
     }
 
   }

@@ -1,15 +1,13 @@
 package com.ubirch.auth.core.manager
 
-import java.util.UUID
-
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
+import com.ubirch.auth.core.manager.util.UserInfoUtil
 import com.ubirch.auth.model.{UserInfo, UserInfoGroup}
 import com.ubirch.user.core.manager.{ContextManager, GroupManager, GroupsManager, UserManager}
 import com.ubirch.user.model.db.{Context, Group, User}
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.model.UserContext
-import com.ubirch.util.uuid.UUIDUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -54,17 +52,14 @@ object RegistrationManager extends StrictLogging {
 
   private def userInfo(userDisplayName: String,
                        locale: String,
-                       groupId: UUID,
-                       groupDisplayName: String
+                       myGroups: Set[UserInfoGroup]
                       ): Option[UserInfo] = {
 
     Some(
       UserInfo(
         displayName = userDisplayName,
         locale = locale,
-        myGroups = Set(
-          UserInfoGroup(groupId, groupDisplayName)
-        )
+        myGroups = myGroups
       )
     )
 
@@ -165,8 +160,7 @@ object RegistrationManager extends StrictLogging {
         userInfo(
           userDisplayName = owner.displayName,
           locale = owner.locale,
-          groupId = UUIDUtil.fromString(groupCreated.id),
-          groupDisplayName = groupCreated.displayName
+          myGroups = UserInfoUtil.toUserInfoGroups(Set(groupCreated))
         )
 
     }

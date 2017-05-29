@@ -13,5 +13,6 @@ case class UserInfo(displayName: String,
                    )
 
 case class UserInfoGroup(id: UUID,
-                         displayName: String
+                         displayName: String,
+                         adminGroup: Option[Boolean] = None
                         )
