@@ -14,6 +14,11 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
+### Version 0.2.1 (2017-05-31)
+
+* added activeUser flag to userInfo
+* updated to ubirchUserService 0.4.5
+
 ### Version 0.2.0 (2017-05-29)
 
 * update _com.ubirch.user:*_ to 0.4.1

@@ -9,7 +9,8 @@ import java.util.UUID
 case class UserInfo(displayName: String,
                     locale: String,
                     myGroups: Set[UserInfoGroup] = Set.empty,
-                    allowedGroups: Set[UserInfoGroup] = Set.empty
+                    allowedGroups: Set[UserInfoGroup] = Set.empty,
+                    activeUser: Boolean = false
                    )
 
 case class UserInfoGroup(id: UUID,
