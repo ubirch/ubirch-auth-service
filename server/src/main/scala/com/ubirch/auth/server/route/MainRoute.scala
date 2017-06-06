@@ -30,9 +30,11 @@ class MainRoute(implicit mongo: MongoUtil) {
             logout.route ~
             register.route ~
             userInfo.route ~
-            pathEndOrSingleSlash {
+            path(RouteConstants.check) {
               welcome.route
-            }
+            } ~ pathEndOrSingleSlash {
+            welcome.route
+          }
 
         }
       }

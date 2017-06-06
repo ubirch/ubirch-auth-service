@@ -9,6 +9,7 @@ object RouteConstants {
   final val apiPrefix = "api"
   final val serviceName = "authService"
   final val currentVersion = "v1"
+  final val check = "check"
 
   // $prefix/providerInfo/*
   final val providerInfo = "providerInfo"

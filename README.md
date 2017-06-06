@@ -16,7 +16,8 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.1 (tbd)
 
-* tbd
+* introduce endpoint `/api/authService/v1/check`
+* update to sbt 0.13.15
 
 ### Version 0.2.0 (2017-05-29)
 
@@ -165,10 +166,11 @@ libraryDependencies ++= Seq(
 
 ## REST Methods
 
-### Welcome / Health
+### Welcome / Health / Check
 
     curl localhost:8091/
     curl localhost:8091/api/authService/v1
+    curl localhost:8091/api/authService/v1/check
 
 If healthy the server response is:
 
