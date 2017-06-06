@@ -40,6 +40,7 @@ object UserInfoManager {
           val info = UserInfo(
             displayName = user.displayName,
             locale = user.locale,
+            activeUser = user.activeUser.getOrElse(false),
             myGroups = UserInfoUtil.toUserInfoGroups(myGroups),
             allowedGroups = UserInfoUtil.toUserInfoGroups(allowedGroups)
           )
