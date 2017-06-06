@@ -14,6 +14,11 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
+### Version 0.2.2 (tbd)
+
+* introduce endpoint `/api/authService/v1/check`
+* update to sbt 0.13.15
+
 ### Version 0.2.1 (2017-05-31)
 
 * added activeUser flag to userInfo
