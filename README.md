@@ -18,6 +18,9 @@ The ubirch AuthService is responsible for:
 
 * introduce endpoint `/api/authService/v1/check`
 * update to sbt 0.13.15
+* update _com.ubirch.util:json_ to version 0.4.0
+* update _com.ubirch.util:oidc-utils_ to version 0.4.3
+* update _com.ubirch.util:response-util_ to version 0.1.6
 
 ### Version 0.2.1 (2017-05-31)
 

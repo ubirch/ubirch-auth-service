@@ -8,7 +8,6 @@ import com.ubirch.auth.core.actor.{RegisterUser, RegistrationActor}
 import com.ubirch.auth.model.UserInfo
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
-import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.directive.OidcDirective
 import com.ubirch.util.oidc.model.UserContext
@@ -32,10 +31,10 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-04-20
   */
-class RegisterRoute(implicit mongo: MongoUtil) extends MyJsonProtocol
-  with CORSDirective
-  with ResponseUtil
-  with StrictLogging {
+class RegisterRoute(implicit mongo: MongoUtil)
+  extends ResponseUtil
+    with CORSDirective
+    with StrictLogging {
 
   implicit val system = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher

@@ -7,7 +7,6 @@ import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{GetProviderInfoList, ProviderInfoActor, ProviderInfoList}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
-import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
 import akka.actor.{ActorSystem, Props}
@@ -26,9 +25,8 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-01-26
   */
-trait ProviderRoute extends MyJsonProtocol
+trait ProviderRoute extends ResponseUtil
   with CORSDirective
-  with ResponseUtil
   with StrictLogging {
 
   implicit val system = ActorSystem()

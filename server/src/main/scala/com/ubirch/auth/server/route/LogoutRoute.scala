@@ -1,11 +1,10 @@
 package com.ubirch.auth.server.route
 
 import com.ubirch.auth.config.Config
-import com.ubirch.auth.core.actor.{Logout, LogoutActor}
 import com.ubirch.auth.core.actor.util.ActorNames
+import com.ubirch.auth.core.actor.{Logout, LogoutActor}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
-import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
 import akka.actor.{ActorSystem, Props}
@@ -23,9 +22,8 @@ import scala.language.postfixOps
   * author: cvandrei
   * since: 2017-02-01
   */
-trait LogoutRoute extends MyJsonProtocol
-  with CORSDirective
-  with ResponseUtil {
+trait LogoutRoute extends ResponseUtil
+  with CORSDirective {
 
   implicit val system = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher

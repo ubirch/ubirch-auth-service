@@ -8,7 +8,6 @@ import com.ubirch.auth.core.actor.{StateAndCodeActor, VerifyCode, VerifyCodeErro
 import com.ubirch.auth.model.{AfterLogin, Token}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
-import com.ubirch.util.json.MyJsonProtocol
 import com.ubirch.util.model.JsonErrorResponse
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
@@ -29,9 +28,8 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-01-31
   */
-trait TokenRoute extends MyJsonProtocol
+trait TokenRoute extends ResponseUtil
   with CORSDirective
-  with ResponseUtil
   with StrictLogging {
 
   implicit val system = ActorSystem()
