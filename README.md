@@ -14,13 +14,19 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
-### Version 0.2.2 (tbd)
+### Version 0.2.2 (2017-06-08)
 
 * introduce endpoint `/api/authService/v1/check`
 * update to sbt 0.13.15
 * update _com.ubirch.util:json_ to version 0.4.0
-* update _com.ubirch.util:oidc-utils_ to version 0.4.3
+* update _com.ubirch.util:oidc-utils_ to version 0.4.4
 * update _com.ubirch.util:response-util_ to version 0.1.6
+* update _com.ubirch.util:mongo-test-utils_ to version 0.2.3
+* update _com.ubirch.util:mongo-utils_ to version 0.2.3
+* update _com.ubirch.util:redis-test-utils_ to version 0.2.3
+* update _com.ubirch.util:redis-utils_ to version 0.2.3
+* update _com.ubirch.user:*_ to 0.4.7
+* introduce endpoint `/api/userService/v1/deepCheck`
 
 ### Version 0.2.1 (2017-05-31)
 
@@ -61,10 +67,10 @@ The ubirch AuthService is responsible for:
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "cmdtools" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "cmdtools" % "0.2.2"
 )
 ```### `config`
 
@@ -73,10 +79,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "config" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "config" % "0.2.2"
 )
 ```
 
@@ -84,10 +90,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "core" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "core" % "0.2.2"
 )
 ```
 
@@ -95,10 +101,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "model" % "0.2.2"
 )
 ```
 
@@ -106,10 +112,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model-db" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "model-db" % "0.2.2"
 )
 ```
 
@@ -117,10 +123,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "oidc-util" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "oidc-util" % "0.2.2"
 )
 ```
 
@@ -128,11 +134,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "server" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "server" % "0.2.2"
 )
 ```
 
@@ -140,11 +146,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "test-tools" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "test-tools" % "0.2.2"
 )
 ```
 
@@ -152,11 +158,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "test-tools-ext" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "test-tools-ext" % "0.2.2"
 )
 ```
 
@@ -164,10 +170,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "util" % "0.2.1-SNAPSHOT"
+  "com.ubirch.auth" %% "util" % "0.2.2"
 )
 ```
 
@@ -187,6 +193,18 @@ If healthy the server response is:
 If not healthy the server response is:
 
     400 {"version":"1.0","status":"NOK","message":"$ERROR_MESSAGE"}
+
+### Deep Check / Server Health
+
+    curl localhost:8092/api/authService/v1/deepCheck
+
+If healthy the response is:
+
+    200 {"version":"1.0","status":"OK","messages":[]}
+
+If not healthy the status is "NOK" and the `messages` array not empty:
+
+    500 {"version":"1.0","status":"NOK","messages":["unable to connect to the database"]}
 
 
 ### Provider Infos

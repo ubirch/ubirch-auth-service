@@ -13,5 +13,6 @@ object ActorNames {
   final val OIDC_CONFIG = "oicd-config-actor"
   final val REGISTRATION = "registration-actor"
   final val USER_INFO = "user-info-actor"
+  final val DEEP_CHECK = "deep-check-actor"
 
 }

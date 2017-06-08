@@ -10,6 +10,7 @@ object RouteConstants {
   final val serviceName = "authService"
   final val currentVersion = "v1"
   final val check = "check"
+  final val deepCheck = "deepCheck"
 
   // $prefix/providerInfo/*
   final val providerInfo = "providerInfo"
@@ -29,6 +30,9 @@ object RouteConstants {
   final val userInfo = "userInfo"
 
   final val pathPrefix = s"/$apiPrefix/$serviceName/$currentVersion"
+
+  val pathCheck = s"$pathPrefix/$check"
+  val pathDeepCheck = s"$pathPrefix/$deepCheck"
 
   final val pathProviderInfoList = s"$pathPrefix/$providerInfo/$list"
   final val pathCodeVerify = s"$pathPrefix/$code/$verify"

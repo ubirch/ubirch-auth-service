@@ -13,6 +13,7 @@ import akka.http.scaladsl.server.Route
 class MainRoute(implicit mongo: MongoUtil) {
 
   val welcome = new WelcomeRoute {}
+  val deepCheck = new DeepCheckRoute {}
   val provider = new ProviderRoute {}
   val token = new TokenRoute {}
   val logout = new LogoutRoute {}
@@ -30,6 +31,7 @@ class MainRoute(implicit mongo: MongoUtil) {
             logout.route ~
             register.route ~
             userInfo.route ~
+            deepCheck.route ~
             path(RouteConstants.check) {
               welcome.route
             } ~ pathEndOrSingleSlash {
