@@ -1,6 +1,6 @@
 package com.ubirch.auth.core.manager
 
-import com.ubirch.util.model.DeepCheckResponse
+import com.ubirch.util.deepCheck.model.DeepCheckResponse
 import com.ubirch.util.redis.RedisClientUtil
 
 import akka.actor.ActorSystem
