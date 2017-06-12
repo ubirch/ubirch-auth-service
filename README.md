@@ -215,7 +215,7 @@ If healthy the response is:
 
 If not healthy the status is `false` and the `messages` array not empty:
 
-    500 {"version":"1.0","status":"NOK","messages":["unable to connect to the database"]}
+    503 {"version":"1.0","status":"NOK","messages":["unable to connect to the database"]}
 
 
 ### Provider Infos
