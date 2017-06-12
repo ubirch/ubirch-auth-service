@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.4 (tbd)
 
-* tbd
+* endpoint `/api/userService/v1/deepCheck` responds with http status 503 if deep check finds problems
 
 ### Version 0.2.3 (2017-06-09)
 
