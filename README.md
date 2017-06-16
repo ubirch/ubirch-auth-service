@@ -16,7 +16,17 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.5 (tbd)
 
-* tbd
+* update json4s to 3.5.2
+* update to _com.ubirch.util:json:0.4.1_
+* update to _com.ubirch.util:deep-check-model:0.1.1_
+* update to _com.ubirch.util:response-util:0.2.1_
+* update to _com.ubirch.util:mongo-utils:0.3.1_
+* update to _com.ubirch.util:mongo-test-utils:0.3.1_
+* update to _com.ubirch.util:redis-util:0.3.1_
+* update to _com.ubirch.util:redis-test-util:0.3.1_
+* update to _com.ubirch.util:oidc-utils:0.4.6_
+* update to _com.ubirch.util:response-util:0.2.1_
+* update to _com.ubirch.user:*:0.4.10_
 
 ### Version 0.2.4 (2017-06-12)
 
