@@ -82,7 +82,7 @@ class UserInfoRoute(implicit mongo: MongoUtil)
 
           case None =>
             logger.error("failed to get user info (None)")
-            complete(requestErrorResponse(errorType = "QueryError", errorMessage = "failed to get user info"))
+            complete(requestErrorResponse(errorType = "NoUserInfoFound", errorMessage = "failed to get user info"))
 
           case _ =>
             logger.error("failed to get user info (server error)")

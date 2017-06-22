@@ -16,6 +16,11 @@ import scala.concurrent.Future
   */
 object UserInfoManager {
 
+  /**
+    * @param userContext user is determined based on this context
+    * @param mongo       mongo connection
+    * @return None if no user is found; Some otherwise
+    */
   def getInfo(userContext: UserContext)
              (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 

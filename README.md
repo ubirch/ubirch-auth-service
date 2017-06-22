@@ -16,7 +16,8 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.6 (tbd)
 
-* tbd
+* endpoint `GET /userInfo` now responds with errorType _NoUserInfoFound_
+* updated curl call documentation in README
 
 ### Version 0.2.5 (2017-06-19)
 
@@ -365,15 +366,27 @@ including the admin group of this context):
       ]
     }
 
-If the query fails the response is:
+If no user is found the response is:
 
     400
     {
       "apiVersion": "1.0.0",
       "status": "NOK",
       "error": {
-        "errorId": "QueryError", // errorId can be different
-        "errorMessage": "user does not exist" // errorMessage can be different
+        "errorId": "NoUserInfoFound"
+        "errorMessage": "failed to get user info"
+      }
+    }
+
+If the query fails the response is:
+
+    500
+    {
+      "apiVersion": "1.0.0",
+      "status": "NOK",
+      "error": {
+        "errorId": "ServerError",
+        "errorMessage": "failed to get user info"
       }
     }
 
