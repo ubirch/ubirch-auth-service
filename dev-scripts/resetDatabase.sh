@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+cd ..
+
 echo "======"
 echo "====== STEP 1/2: start to delete database"
 echo "======"
