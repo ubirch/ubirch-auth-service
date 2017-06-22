@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.7 (tbd)
 
-* tbd
+* add scripts `resetDatabase.sh` and `createDevtoken.sh`
 
 ### Version 0.2.6 (2017-06-22)
 
@@ -567,6 +567,8 @@ more details here: https://github.com/scoverage/sbt-scoverage
 
 2) Configure OpenConnectID Providers
 
+*Running `resetDatabase.sh` does everything in this step.*
+
 If you still have old data you want to delete first please run
 
     ./sbt "cmdtools/runMain com.ubirch.auth.cmd.RedisDelete"
@@ -593,6 +595,8 @@ local setup section in the user-service's README, too.
     ./sbt server/run
 
 5) (optional) Create Test User Token
+
+*Everything in this step can be done by running `createDevtoken.sh`, too.*
 
 This step saves us from having to login with any of the OpenID Connect providers. To get a valid test user token run:
 
