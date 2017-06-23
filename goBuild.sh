@@ -59,6 +59,8 @@ if [ -z $GO_PIPELINE_LABEL ]; then
       # build with GoCD
       docker build -t ubirch-auth-service:v$GO_PIPELINE_LABEL --build-arg GO_PIPELINE_NAME=$GO_PIPELINE_NAME \
       --build-arg GO_PIPELINE_LABEL=$GO_PIPELINE_LABEL \
+      --build-arg GO_REVISION_GIT=$GO_REVISION_GIT \
+      --build-arg GO_STAGE_COUNTER=$GO_STAGE_COUNTER \
       --build-arg GO_PIPELINE_COUNTER=$GO_PIPELINE_COUNTER  .
 
       docker tag ubirch-auth-service:v$GO_PIPELINE_LABEL tracklecontainerregistry-on.azurecr.io/ubirch-auth-service:v$GO_PIPELINE_LABEL
