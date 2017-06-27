@@ -36,7 +36,7 @@ class StateAndCodeActor extends Actor
   implicit val timeout = Timeout(Config.actorTimeout seconds)
   implicit val redis: RedisClient = RedisClientUtil.getRedisClient()
 
-  private val oidcConfigActor = context.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor]), ActorNames.OIDC_CONFIG)
+  private val oidcConfigActor = context.actorOf(OidcConfigActor.props(), ActorNames.OIDC_CONFIG)
 
   override def receive: Receive = {
 
@@ -253,6 +253,10 @@ class StateAndCodeActor extends Actor
 
   }
 
+}
+
+object StateAndCodeActor {
+  def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor])
 }
 
 case class VerifyCode(context: String,

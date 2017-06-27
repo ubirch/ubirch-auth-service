@@ -1,9 +1,11 @@
 package com.ubirch.auth.core.actor
 
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.manager.LogoutManager
 import com.ubirch.util.model.JsonErrorResponse
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.routing.RoundRobinPool
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
@@ -38,6 +40,10 @@ class LogoutActor extends Actor
 
   }
 
+}
+
+object LogoutActor {
+  def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[LogoutActor])
 }
 
 case class Logout(token: String)

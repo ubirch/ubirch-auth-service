@@ -10,9 +10,8 @@ import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.oidcutil.AuthRequest
 import com.ubirch.util.futures.FutureUtil
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.pattern.ask
-import akka.routing.RoundRobinPool
 import akka.util.Timeout
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -29,8 +28,8 @@ object ProviderInfoManager extends StrictLogging {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.REDIS)
-  private val oidcConfigActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor]), ActorNames.OIDC_CONFIG)
+  private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.REDIS)
+  private val oidcConfigActor = system.actorOf(OidcConfigActor.props(), ActorNames.OIDC_CONFIG)
 
   def providerInfoList(context: String): Future[Seq[ProviderInfo]] = {
 

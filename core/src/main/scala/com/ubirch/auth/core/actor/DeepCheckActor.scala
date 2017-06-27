@@ -1,9 +1,11 @@
 package com.ubirch.auth.core.actor
 
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.manager.DeepCheckManager
 import com.ubirch.util.deepCheck.model.{DeepCheckRequest, DeepCheckResponse}
 
-import akka.actor.{Actor, ActorLogging, ActorSystem}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.routing.RoundRobinPool
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -29,4 +31,8 @@ class DeepCheckActor extends Actor
 
   private def deepCheck(): Future[DeepCheckResponse] = DeepCheckManager.connectivityCheck()
 
+}
+
+object DeepCheckActor {
+  def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[DeepCheckActor])
 }

@@ -17,6 +17,7 @@ The ubirch AuthService is responsible for:
 ### Version 0.2.7 (tbd)
 
 * add scripts `dev-scripts/resetDatabase.sh` and `dev-scripts/createDevtoken.sh`
+* add _props()_ method to actors
 
 ### Version 0.2.6 (2017-06-22)
 

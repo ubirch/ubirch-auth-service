@@ -1,10 +1,12 @@
 package com.ubirch.auth.core.actor
 
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.manager.ProviderInfoManager
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.util.model.JsonErrorResponse
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.routing.RoundRobinPool
 
 import scala.concurrent.ExecutionContextExecutor
 
@@ -29,6 +31,10 @@ class ProviderInfoActor extends Actor
 
   }
 
+}
+
+object ProviderInfoActor {
+  def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[ProviderInfoActor])
 }
 
 case class GetProviderInfoList(context: String)

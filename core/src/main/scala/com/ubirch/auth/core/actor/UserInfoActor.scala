@@ -1,12 +1,14 @@
 package com.ubirch.auth.core.actor
 
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.manager.UserInfoManager
 import com.ubirch.auth.model.UserUpdate
 import com.ubirch.util.model.JsonErrorResponse
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.model.UserContext
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.routing.RoundRobinPool
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -31,6 +33,14 @@ class UserInfoActor(implicit mongo: MongoUtil) extends Actor
       log.error("unknown message")
       sender ! JsonErrorResponse(errorType = "UnknownMessage", errorMessage = "unable to handle message")
 
+  }
+
+}
+
+object UserInfoActor {
+
+  def props()(implicit mongo: MongoUtil): Props = {
+    new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props(new UserInfoActor))
   }
 
 }

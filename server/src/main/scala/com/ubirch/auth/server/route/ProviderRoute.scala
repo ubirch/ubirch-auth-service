@@ -9,10 +9,9 @@ import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Route
 import akka.pattern.ask
-import akka.routing.RoundRobinPool
 import akka.util.Timeout
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
@@ -33,7 +32,7 @@ trait ProviderRoute extends ResponseUtil
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val providerInfoActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[ProviderInfoActor]), ActorNames.PROVIDER_INFO)
+  private val providerInfoActor = system.actorOf(ProviderInfoActor.props(), ActorNames.PROVIDER_INFO)
 
   val route: Route = {
 
