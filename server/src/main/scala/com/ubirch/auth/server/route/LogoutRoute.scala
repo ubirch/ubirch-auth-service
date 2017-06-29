@@ -7,10 +7,9 @@ import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Route
 import akka.pattern.ask
-import akka.routing.RoundRobinPool
 import akka.util.Timeout
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 
@@ -29,7 +28,7 @@ trait LogoutRoute extends ResponseUtil
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val logoutActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[LogoutActor]), ActorNames.LOGOUT)
+  private val logoutActor = system.actorOf(LogoutActor.props(), ActorNames.LOGOUT)
 
   val route: Route = {
 

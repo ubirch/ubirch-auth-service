@@ -6,9 +6,8 @@ import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{DeleteToken, StateAndCodeActor, VerifyTokenExists}
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.pattern.ask
-import akka.routing.RoundRobinPool
 import akka.util.Timeout
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,7 +24,7 @@ object LogoutManager extends StrictLogging {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(Config.actorTimeout seconds)
 
-  private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.REDIS)
+  private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.REDIS)
 
   def logout(token: String): Future[Boolean] = {
 

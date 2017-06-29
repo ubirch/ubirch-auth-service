@@ -14,6 +14,12 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
+### Version 0.2.7 (2017-06-29)
+
+* add scripts `dev-scripts/resetDatabase.sh` and `dev-scripts/createDevtoken.sh`
+* add _props()_ method to actors
+* updated to _com.ubirch.util:json:0.4.2_ and all ubirch util libs depending on it, too
+
 ### Version 0.2.6 (2017-06-22)
 
 * endpoint `GET /userInfo` now responds with errorType _NoUserInfoFound_
@@ -100,7 +106,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "cmdtools" % "0.2.6"
+  "com.ubirch.auth" %% "cmdtools" % "0.2.7"
 )
 ```### `config`
 
@@ -112,7 +118,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "config" % "0.2.6"
+  "com.ubirch.auth" %% "config" % "0.2.7"
 )
 ```
 
@@ -123,7 +129,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "core" % "0.2.6"
+  "com.ubirch.auth" %% "core" % "0.2.7"
 )
 ```
 
@@ -134,7 +140,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model" % "0.2.6"
+  "com.ubirch.auth" %% "model" % "0.2.7"
 )
 ```
 
@@ -145,7 +151,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model-db" % "0.2.6"
+  "com.ubirch.auth" %% "model-db" % "0.2.7"
 )
 ```
 
@@ -156,7 +162,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "oidc-util" % "0.2.6"
+  "com.ubirch.auth" %% "oidc-util" % "0.2.7"
 )
 ```
 
@@ -168,7 +174,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "server" % "0.2.6"
+  "com.ubirch.auth" %% "server" % "0.2.7"
 )
 ```
 
@@ -180,7 +186,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "test-tools" % "0.2.6"
+  "com.ubirch.auth" %% "test-tools" % "0.2.7"
 )
 ```
 
@@ -192,7 +198,7 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "test-tools-ext" % "0.2.6"
+  "com.ubirch.auth" %% "test-tools-ext" % "0.2.7"
 )
 ```
 
@@ -203,7 +209,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "util" % "0.2.6"
+  "com.ubirch.auth" %% "util" % "0.2.7"
 )
 ```
 
@@ -563,6 +569,8 @@ more details here: https://github.com/scoverage/sbt-scoverage
 
 2) Configure OpenConnectID Providers
 
+*Running `dev-scripts/resetDatabase.sh` does everything in this step.*
+
 If you still have old data you want to delete first please run
 
     ./sbt "cmdtools/runMain com.ubirch.auth.cmd.RedisDelete"
@@ -589,6 +597,8 @@ local setup section in the user-service's README, too.
     ./sbt server/run
 
 5) (optional) Create Test User Token
+
+*Everything in this step can be done by running `dev-scripts/createDevtoken.sh`, too.*
 
 This step saves us from having to login with any of the OpenID Connect providers. To get a valid test user token run:
 

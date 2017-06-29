@@ -1,5 +1,6 @@
 package com.ubirch.auth.core.actor
 
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.util.futures.FutureUtil
@@ -8,7 +9,8 @@ import com.ubirch.util.redis.RedisClientUtil
 
 import org.json4s.native.Serialization.read
 
-import akka.actor.{Actor, ActorLogging, ActorSystem}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.routing.RoundRobinPool
 import redis.RedisClient
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -149,6 +151,10 @@ class OidcConfigActor extends Actor
 
   }
 
+}
+
+object OidcConfigActor {
+  def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[OidcConfigActor])
 }
 
 case class GetActiveProviderIds()

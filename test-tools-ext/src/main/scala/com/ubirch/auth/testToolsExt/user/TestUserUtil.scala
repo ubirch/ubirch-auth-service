@@ -6,8 +6,7 @@ import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{RememberToken, StateAndCodeActor}
 
-import akka.actor.{ActorSystem, Props}
-import akka.routing.RoundRobinPool
+import akka.actor.ActorSystem
 import akka.util.Timeout
 
 import scala.concurrent.duration._
@@ -21,7 +20,7 @@ object TestUserUtil extends StrictLogging {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(15 seconds)
 
-  private val stateAndCodeActor = system.actorOf(new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[StateAndCodeActor]), ActorNames.OIDC_CONFIG)
+  private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.OIDC_CONFIG)
 
   def persistTestUserToken(token: String = Config.testUserToken(),
                            providerId: String = Config.testProviderId(),
