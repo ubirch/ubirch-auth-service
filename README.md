@@ -14,7 +14,7 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
-### Version 0.2.7 (tbd)
+### Version 0.2.7 (2017-06-29)
 
 * add scripts `dev-scripts/resetDatabase.sh` and `dev-scripts/createDevtoken.sh`
 * add _props()_ method to actors
@@ -103,10 +103,10 @@ The ubirch AuthService is responsible for:
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "cmdtools" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "cmdtools" % "0.2.7"
 )
 ```### `config`
 
@@ -115,10 +115,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "config" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "config" % "0.2.7"
 )
 ```
 
@@ -126,10 +126,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "core" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "core" % "0.2.7"
 )
 ```
 
@@ -137,10 +137,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "model" % "0.2.7"
 )
 ```
 
@@ -148,10 +148,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "model-db" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "model-db" % "0.2.7"
 )
 ```
 
@@ -159,10 +159,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "oidc-util" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "oidc-util" % "0.2.7"
 )
 ```
 
@@ -170,11 +170,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "server" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "server" % "0.2.7"
 )
 ```
 
@@ -182,11 +182,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "test-tools" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "test-tools" % "0.2.7"
 )
 ```
 
@@ -194,11 +194,11 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
   Resolver.bintrayRepo("hseeberger", "maven")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "test-tools-ext" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "test-tools-ext" % "0.2.7"
 )
 ```
 
@@ -206,10 +206,10 @@ libraryDependencies ++= Seq(
 
 ```scala
 resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots")
+  Resolver.sonatypeRepo("releases")
 )
 libraryDependencies ++= Seq(
-  "com.ubirch.auth" %% "util" % "0.2.7-SNAPSHOT"
+  "com.ubirch.auth" %% "util" % "0.2.7"
 )
 ```
 
