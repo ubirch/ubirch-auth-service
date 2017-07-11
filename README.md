@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.8 (tbd)
 
-* tbd
+* update logging dependencies
 
 ### Version 0.2.7 (2017-06-29)
 

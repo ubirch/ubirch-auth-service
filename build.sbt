@@ -197,6 +197,9 @@ val ubirchUserV = "0.4.12"
 
 val scalaTestV = "3.0.1"
 
+val logbackV = "1.2.3"
+val slf4jV = "1.7.25"
+
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
 val ubirchUserG = "com.ubirch.user"
@@ -208,12 +211,13 @@ lazy val scalatest = "org.scalatest" %% "scalatest" % scalaTestV
 lazy val json4sNative = json4sG %% "json4s-native" % json4sV
 
 lazy val scalaLogging = Seq(
-  "org.slf4j" % "slf4j-api" % "1.7.21",
+  "org.slf4j" % "slf4j-api" % slf4jV,
+  "org.slf4j" % "log4j-over-slf4j" % slf4jV,
   "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2" exclude("org.slf4j", "slf4j-api"),
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0" exclude("org.slf4j", "slf4j-api"),
-  "ch.qos.logback" % "logback-core" % "1.1.7",
-  "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
+  "ch.qos.logback" % "logback-core" % logbackV exclude("org.slf4j", "slf4j-api"),
+  "ch.qos.logback" % "logback-classic" % logbackV exclude("org.slf4j", "slf4j-api"),
+  "com.internetitem" % "logback-elasticsearch-appender" % "1.5" exclude("org.slf4j", "slf4j-api")
 )
 
 lazy val akkaActor = akkaG %% "akka-actor" % akkaV
