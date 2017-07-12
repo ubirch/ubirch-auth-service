@@ -9,8 +9,6 @@
     -->
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <!-- encoders are assigned the type
-             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
             <pattern>%date{ISO8601} %-5level - %msg -[%logger{36}] - [%thread]%n</pattern>
         </encoder>
@@ -68,11 +66,12 @@
     </appender>
 
     <logger name="com.ubirch" level="DEBUG"/>
-
-    <logger name="reactivemongo-akka" level="WARN"/>
+    <logger name="akka.actor" level="WARN"/>
+    <logger name="reactivemongo-akka.actor" level="WARN"/>
+    <logger name="reactivemongo.core" level="WARN"/>
 
     <root level="INFO">
-        <!--<appender-ref ref="STDOUT"/>-->
         <appender-ref ref="ELASTIC"/>
     </root>
+
 </configuration>
