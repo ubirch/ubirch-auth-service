@@ -16,7 +16,7 @@ lazy val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-auth-service"),
     "scm:git:git@github.com:ubirch/ubirch-auth-service.git"
   )),
-  version := "0.2.9-SNAPSHOT",
+  version := "0.2.8",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
@@ -193,7 +193,7 @@ lazy val depUtils = Seq(
 val akkaV = "2.4.18"
 val akkaHttpV = "10.0.6"
 val json4sV = "3.5.2"
-val ubirchUserV = "0.4.12"
+val ubirchUserV = "0.4.14"
 
 val scalaTestV = "3.0.1"
 
@@ -239,10 +239,10 @@ lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(exclude
 lazy val ubirchUtilDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.1.2" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.4.2" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.3.2" excludeAll(
+lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.3.3" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
-lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.3.2" excludeAll(
+lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.3.3" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
 lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.7" excludeAll(excludedLoggers: _*)
@@ -251,6 +251,7 @@ lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.3.2" excludeAll(
 lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.3.7" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.3.7" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.2.2" excludeAll(excludedLoggers: _*)
+
 lazy val ubirchUserCore = ubirchUserG %% "core" % ubirchUserV
 lazy val ubirchUserTestToolsExt = ubirchUserG %% "test-tools-ext" % ubirchUserV
 

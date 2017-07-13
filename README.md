@@ -14,14 +14,12 @@ The ubirch AuthService is responsible for:
 
 ## Release History
 
-### Version 0.2.9 (tbd)
-
-* tbd
-
-### Version 0.2.8 (2017-07-12)
+### Version 0.2.8 (2017-07-13)
 
 * update logging dependencies
 * update logback configs
+* update _com.ubirch.util:mongo(-test)-utils_ to 0.3.3
+* update _com.ubirch.user:*_ to 0.4.14
 
 ### Version 0.2.7 (2017-06-29)
 
