@@ -16,7 +16,11 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.9 (tbd)
 
-* tbd
+* update Akka HTTP to 10.0.9
+* update _com.ubirch.util:rest-akka-http(-test)_ to 0.3.8
+* update _com.ubirch.util:response-util_ to 0.2.3
+* update _com.ubirch.util:oidc-utils_ to 0.4.8
+* update _com.ubirch.user:*_ to 0.4.15
 
 ### Version 0.2.8 (2017-07-13)
 
