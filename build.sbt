@@ -190,10 +190,10 @@ lazy val depUtils = Seq(
  ********************************************************/
 
 // VERSIONS
-val akkaV = "2.4.18"
+val akkaV = "2.4.19"
 val akkaHttpV = "10.0.9"
 val json4sV = "3.5.2"
-val ubirchUserV = "0.4.15"
+val ubirchUserV = "0.4.17"
 
 val scalaTestV = "3.0.1"
 
@@ -239,10 +239,10 @@ lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(exclude
 lazy val ubirchUtilDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.1.2" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.4.2" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.3.3" excludeAll(
+lazy val ubirchUtilMongo = ubirchUtilG %% "mongo-utils" % "0.3.4" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
-lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.3.3" excludeAll(
+lazy val ubirchUtilMongoTestUtils = ubirchUtilG %% "mongo-test-utils" % "0.3.4" excludeAll(
   excludedLoggers++ Seq(ExclusionRule(organization = akkaActor.organization, name = akkaActor.name)): _*
   )
 lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.4.8" excludeAll(excludedLoggers: _*)
