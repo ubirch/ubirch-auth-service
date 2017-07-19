@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.12 (tbd)
 
-* tbd
+* update to `com.nimbusds:oauth2-oidc-sdk:5.30`
 
 ### Version 0.2.11 (2017-07-19)
 

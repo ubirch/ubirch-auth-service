@@ -224,7 +224,7 @@ lazy val akkaActor = akkaG %% "akka-actor" % akkaV
 lazy val akkaHttp = akkaG %% "akka-http" % akkaHttpV
 lazy val akkaSlf4j = akkaG %% "akka-slf4j" % akkaV
 
-lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.26"
+lazy val nimbusOidc = "com.nimbusds" % "oauth2-oidc-sdk" % "5.30"
 
 lazy val rediscala = "com.github.etaty" %% "rediscala" % "1.8.0" excludeAll ExclusionRule(organization = "com.typesafe.akka")
 
