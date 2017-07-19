@@ -43,7 +43,7 @@ object OidcProviderUtil extends StrictLogging
         if (stored) {
           logger.info(s"created provider base conf: provider=${providerConf.id}")
         } else {
-          logger.error(s"failed to create provider base conf: provider=${providerConf.id}")
+          logger.info(s"did not create provider base conf (most likely it already exists): provider=${providerConf.id}")
         }
         providerConf
 

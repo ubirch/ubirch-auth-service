@@ -41,9 +41,9 @@ object OidcContextProviderUtil extends StrictLogging
       storeContextProvider(ctxProviderConf, activateContexts) map { stored =>
 
         if (stored) {
-          logger.info(s"created context provider conf: context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
+          logger.info(s"created context related conf: context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
         } else {
-          logger.error(s"failed to create provider base conf: context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
+          logger.info(s"did not create context related conf (most likely it already exists): context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
         }
         ctxProviderConf
 
