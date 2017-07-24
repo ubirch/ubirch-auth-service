@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.13 (tbd)
 
-* tbd
+* configure trackle-admin-ui-* contexts for dev and demo (except for the client secret)
 
 ### Version 0.2.12 (2017-07-19)
 
@@ -618,7 +618,9 @@ generated contexts
 * trackle-admin-ui-local
 * ubirch-admin-ui-local
 * ubirch-admin-ui-dev
+* trackle-admin-ui-dev
 * ubirch-admin-ui-demo
+* trackle-admin-ui-demo
 
 3) Start MongoDB
 

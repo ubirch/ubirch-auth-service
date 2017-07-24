@@ -17,8 +17,11 @@ object OidcContextProvider {
     ContextDefinitions.ctxTrackleAdminUILocal,
     // dev
     ContextDefinitions.ctxUbirchAdminUIDev,
+    ContextDefinitions.ctxTrackleAdminUIDev,
     // demo
-    ContextDefinitions.ctxUbirchAdminUIDemo
+    ContextDefinitions.ctxUbirchAdminUIDemo,
+    ContextDefinitions.ctxTrackleAdminUIDemo
+
   )
 
   final val contextProviderList: Seq[ContextProviderConfig] = Seq(
@@ -28,8 +31,10 @@ object OidcContextProvider {
     trackleAdminUILocalGoogle,
     // dev
     ubirchAdminUIDevGoogle,
+    trackleAdminUIDevGoogle,
     // demo
-    ubirchAdminUIDemoGoogle
+    ubirchAdminUIDemoGoogle,
+    trackleAdminUIDemoGoogle,
   )
 
   /*
@@ -80,6 +85,14 @@ object OidcContextProvider {
     callbackUrl = new URI("http://ubirch.dev.ubirch.com/auth?providerId=google")
   )
 
+  private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ctxTrackleAdminUIDev,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
+    clientSecret = "", // TODO set client secret
+    callbackUrl = new URI("http://ubirch.trackle.dev.ubirch.com/auth?providerId=google")
+  )
+
   /*
    * *-demo
    ***********************************************************************/
@@ -90,6 +103,14 @@ object OidcContextProvider {
     clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
     clientSecret = "utYeF1TtkeMDidNRBzOWivF0",
     callbackUrl = new URI("http://ubirch.demo.ubirch.com/auth?providerId=google")
+  )
+
+  private lazy val trackleAdminUIDemoGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ctxTrackleAdminUIDemo,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
+    clientSecret = "", // TODO set client secret
+    callbackUrl = new URI("http://ubirch.trackle.demo.ubirch.com/auth?providerId=google")
   )
 
 }
@@ -112,10 +133,14 @@ object ContextDefinitions {
 
   final val ctxUbirchAdminUIDev = "ubirch-admin-ui-dev"
 
+  final val ctxTrackleAdminUIDev = "trackle-admin-ui-dev"
+
   /*
    * *-demo
    *********************************************************************/
 
   final val ctxUbirchAdminUIDemo = "ubirch-admin-ui-demo"
+
+  final val ctxTrackleAdminUIDemo = "trackle-admin-ui-demo"
 
 }
