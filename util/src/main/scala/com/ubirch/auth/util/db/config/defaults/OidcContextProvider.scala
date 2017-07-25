@@ -41,7 +41,7 @@ object OidcContextProvider {
    ***********************************************************************/
 
   private lazy val ubirchAdminUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxUbirchAdminUILocal,
+    context = ContextDefinitions.ctxLocal,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-q7dccmh0leq20rqgs2550vp0u67pj42p.apps.googleusercontent.com",
     clientSecret = "BFmveucyPZ9Ijt31UvYocrj4",
@@ -49,7 +49,7 @@ object OidcContextProvider {
   )
 
   private lazy val trackleUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleAdminUILocal,
+    context = ContextDefinitions.ctxLocal,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-dqhiaemv68bjvtnp84beg26plrpkmc8t.apps.googleusercontent.com",
     clientSecret = "n3fPuja818436VmggJZSht6-",
@@ -69,7 +69,7 @@ object OidcContextProvider {
   )
 
   private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleAdminUIDev,
+    context = ContextDefinitions.ctxTrackleAdminUIDemo,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
     clientSecret = "", // TODO set client secret
