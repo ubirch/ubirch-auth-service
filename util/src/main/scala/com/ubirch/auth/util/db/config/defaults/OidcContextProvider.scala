@@ -71,7 +71,7 @@ object OidcContextProvider {
   )
 
   private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleAdminUIDemo,
+    context = ContextDefinitions.ctxTrackleAdminUIDev,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-b639g31cl7u2ngtbqjibnsgqpsk8c55u.apps.googleusercontent.com",
     clientSecret = "qmbfxFXxgvBu6BIXieKut2m7",
