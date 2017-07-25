@@ -73,16 +73,16 @@ object OidcContextProvider {
   private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
     context = ContextDefinitions.ctxTrackleAdminUIDemo,
     provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
-    clientSecret = "", // TODO set client secret
+    clientId = "370115332091-b639g31cl7u2ngtbqjibnsgqpsk8c55u.apps.googleusercontent.com",
+    clientSecret = "qmbfxFXxgvBu6BIXieKut2m7",
     callbackUrl = new URI("http://ubirch.trackle.dev.ubirch.com/auth?providerId=google")
   )
 
   private lazy val trackleUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
     context = ContextDefinitions.ctxTrackleUIDev,
     provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
-    clientSecret = "", // TODO set client secret
+    clientId = "370115332091-rehhv8bdepdj3u8t4b89ta6udrglalj2.apps.googleusercontent.com",
+    clientSecret = "RFBUQugBYmUcRYHnr9053dUJ",
     callbackUrl = new URI("http://trackle.dev.ubirch.com/auth?providerId=google")
   )
 
