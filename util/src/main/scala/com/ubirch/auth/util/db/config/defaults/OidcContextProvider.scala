@@ -26,12 +26,11 @@ object OidcContextProvider {
 
   final val contextProviderList: Seq[ContextProviderConfig] = Seq(
     // local
-    trackleUILocalGoogle, trackleUILocalYahoo,
+    trackleUILocalGoogle,
     ubirchAdminUILocalGoogle,
-    trackleAdminUILocalGoogle,
-    // dev
+    // ubirch-dev
     ubirchAdminUIDevGoogle,
-    trackleAdminUIDevGoogle,
+    track
     // demo
     ubirchAdminUIDemoGoogle,
     trackleAdminUIDemoGoogle
@@ -69,7 +68,21 @@ object OidcContextProvider {
     callbackUrl = new URI("http://ubirch.dev.ubirch.com/auth?providerId=google")
   )
 
+  private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ctxTrackleAdminUIDev,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
+    clientSecret = "", // TODO set client secret
+    callbackUrl = new URI("http://ubirch.trackle.dev.ubirch.com/auth?providerId=google")
+  )
 
+  private lazy val trackleUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ctxTrackleUIDev,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
+    clientSecret = "", // TODO set client secret
+    callbackUrl = new URI("http://trackle.dev.ubirch.com/auth?providerId=google")
+  )
 
   /*
    * *-demo
