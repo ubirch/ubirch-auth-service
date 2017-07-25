@@ -14,25 +14,27 @@ object OidcContextProvider {
     // local
     ContextDefinitions.ctxTrackleUILocal,
     ContextDefinitions.ctxUbirchAdminUILocal,
-    ContextDefinitions.ctxTrackleAdminUILocal,
     // dev
     ContextDefinitions.ctxUbirchAdminUIDev,
     ContextDefinitions.ctxTrackleAdminUIDev,
+    ContextDefinitions.ctxTrackleUIDev,
     // demo
     ContextDefinitions.ctxUbirchAdminUIDemo,
-    ContextDefinitions.ctxTrackleAdminUIDemo
-
+    ContextDefinitions.ctxTrackleAdminUIDemo,
+    ContextDefinitions.ctxTrackleUIDemo
   )
 
   final val contextProviderList: Seq[ContextProviderConfig] = Seq(
     // local
-    trackleUILocalGoogle,
     ubirchAdminUILocalGoogle,
+    trackleUILocalGoogle,
     // ubirch-dev
     ubirchAdminUIDevGoogle,
-    track
+    trackleAdminUIDevGoogle,
+    trackleUIDevGoogle,
     // demo
     ubirchAdminUIDemoGoogle,
+    trackleAdminUIDemoGoogle,
     trackleAdminUIDemoGoogle
   )
 
