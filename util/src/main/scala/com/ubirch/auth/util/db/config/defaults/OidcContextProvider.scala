@@ -49,28 +49,12 @@ object OidcContextProvider {
     callbackUrl = new URI("http://localhost:9000/auth?providerId=google")
   )
 
-  private lazy val trackleAdminUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
+  private lazy val trackleUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
     context = ContextDefinitions.ctxTrackleAdminUILocal,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-dqhiaemv68bjvtnp84beg26plrpkmc8t.apps.googleusercontent.com",
     clientSecret = "n3fPuja818436VmggJZSht6-",
     callbackUrl = new URI("http://localhost:9100/auth?providerId=google")
-  )
-
-  private lazy val trackleUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleUILocal,
-    provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-kqf5hu698s4sodrvv03ka3bule530rp5.apps.googleusercontent.com",
-    clientSecret = "M86oj4LxV-CcEDd3ougKSbsV",
-    callbackUrl = new URI("https://localhost:10000/oidc-callback-google")
-  )
-
-  private lazy val trackleUILocalYahoo: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleUILocal,
-    provider = OidcProviders.providerIdYahoo,
-    clientId = "dj0yJmk9eWdKUGRJM01KclhqJmQ9WVdrOVlrMUVSRTF3TlRBbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1mMA--",
-    clientSecret = "069dd28f2144ed043dcb70e27f99e424369c3040",
-    callbackUrl = new URI("https://example.com/oidc-callback-yahoo")
   )
 
   /*
@@ -85,21 +69,7 @@ object OidcContextProvider {
     callbackUrl = new URI("http://ubirch.dev.ubirch.com/auth?providerId=google")
   )
 
-  private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleAdminUIDev,
-    provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
-    clientSecret = "", // TODO set client secret
-    callbackUrl = new URI("http://ubirch.trackle.dev.ubirch.com/auth?providerId=google")
-  )
 
-  private lazy val trackleUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxTrackleUIDev,
-    provider = OidcProviders.providerIdGoogle,
-    clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
-    clientSecret = "", // TODO set client secret
-    callbackUrl = new URI("http://trackle.dev.ubirch.com/auth?providerId=google")
-  )
 
   /*
    * *-demo
