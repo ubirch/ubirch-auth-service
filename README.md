@@ -17,6 +17,15 @@ The ubirch AuthService is responsible for:
 ### Version 0.2.13 (tbd)
 
 * configure trackle-admin-ui-* contexts for dev and demo (except for the client secret)
+* update to `com.ubirch.util:json:0.4.3`
+* update to `com.ubirch.util:deep-check-model:0.1.3`
+* update to `com.ubirch.util:response-util:0.2.4`
+* update to `com.ubirch.util:mongo-test-utils:0.3.5`
+* update to `com.ubirch.util:mongo-utils:0.3.5`
+* update to `com.ubirch.util:redis-test-util:0.3.3`
+* update to `com.ubirch.util:redis-util:0.3.3`
+* update to `com.ubirch.util:oidc-utils:0.4.9`
+* update to `com.ubirch.user:*:0.4.19`
 
 ### Version 0.2.12 (2017-07-19)
 
