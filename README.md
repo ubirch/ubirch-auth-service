@@ -17,6 +17,13 @@ The ubirch AuthService is responsible for:
 ### Version 0.2.14 (tbd)
 
 * fixed broken logging (would lead to a Throwable not being logged)
+* update to `com.ubirch.util:deep-check-model:0.2.0`
+* update to `com.ubirch.util:mongo-utils:0.3.6`
+* update to `com.ubirch.util:mongo-test-utils:0.3.6`
+* update to `com.ubirch.util:redis-util:0.3.4`
+* update to `com.ubirch.util:redis-test-util:0.3.4`
+* update to `com.ubirch.util:oidc-utils:0.4.10`
+* update to `com.ubirch.user:*:0.5.1`
 
 ### Version 0.2.13 (2017-07-27)
 
