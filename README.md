@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.14 (tbd)
 
-* tbd
+* fixed broken logging (would lead to a Throwable not being logged)
 
 ### Version 0.2.13 (2017-07-27)
 

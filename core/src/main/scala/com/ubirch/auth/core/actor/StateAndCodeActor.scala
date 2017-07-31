@@ -144,7 +144,7 @@ class StateAndCodeActor extends Actor
 
         }
 
-      case Failure(e) => log.error(s"failed to remember state: $state (ttl: $ttl seconds)", e)
+      case Failure(e) => log.error(e, "failed to remember state: %s (ttl: %d seconds)", state, ttl)
 
     }
 
@@ -217,7 +217,7 @@ class StateAndCodeActor extends Actor
 
         }
 
-      case Failure(e) => log.error(s"failed to remember token (ttl: $ttl seconds)", e)
+      case Failure(e) => log.error(e, "failed to remember token (ttl: %d seconds)", ttl)
 
     }
 
