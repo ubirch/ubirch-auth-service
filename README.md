@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.15 (tbd)
 
-* tbd
+* add trackle related clientIds and clientSecrets for demo environment
 
 ### Version 0.2.14 (2017-07-31)
 
