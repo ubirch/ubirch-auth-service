@@ -35,7 +35,7 @@ object OidcContextProvider {
     // demo
     ubirchAdminUIDemoGoogle,
     trackleAdminUIDemoGoogle,
-    trackleAdminUIDemoGoogle
+    trackleUIDemoGoogle
   )
 
   /*
