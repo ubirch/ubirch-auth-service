@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
-import com.ubirch.auth.core.actor.{GetProviderInfoList, ProviderInfoActor, ProviderInfoList}
+import com.ubirch.auth.core.actor.{GetProviderInfoList, GetProviderInfoListLegacy, ProviderInfoActor, ProviderInfoList}
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
@@ -36,11 +36,39 @@ trait ProviderRoute extends ResponseUtil
 
   val route: Route = {
 
-    path(RouteConstants.providerInfo / RouteConstants.list / Segment) { context =>
+    pathPrefix(RouteConstants.providerInfo / RouteConstants.list) {
+
+      path(Segment) { context =>
+
+        respondWithCORS {
+
+          get {
+            onComplete(providerInfoActor ? GetProviderInfoListLegacy(context)) {
+
+              case Failure(t) =>
+                logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)", t)
+                complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+
+              case Success(resp) =>
+
+                resp match {
+                  case providerInfos: ProviderInfoList => complete(providerInfos.seq)
+                  case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
+                }
+
+            }
+          }
+
+        }
+
+      }
+
+    } ~ path(Segment /Segment) { (context, appId) =>
+
       respondWithCORS {
 
         get {
-          onComplete(providerInfoActor ? GetProviderInfoList(context)) {
+          onComplete(providerInfoActor ? GetProviderInfoList(context = context, appId = appId)) {
 
             case Failure(t) =>
               logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)", t)
@@ -57,6 +85,7 @@ trait ProviderRoute extends ResponseUtil
         }
 
       }
+
     }
 
   }

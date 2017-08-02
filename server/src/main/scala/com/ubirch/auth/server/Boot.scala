@@ -7,8 +7,6 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.config.{Config, ConfigKeys}
 import com.ubirch.auth.server.route.MainRoute
 import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
-import com.ubirch.user.core.manager.ContextManager
-import com.ubirch.user.model.db.Context
 import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.redis.RedisClientUtil
 

@@ -70,7 +70,6 @@ class StateAndCodeActor extends Actor
 
   private def verifyCodeGetToken(vc: VerifyCode): Future[VerifyCodeResult] = {
 
-    // TODO refactor to be idempotent?
     val context = vc.context
     val provider = vc.provider
     val code = vc.code

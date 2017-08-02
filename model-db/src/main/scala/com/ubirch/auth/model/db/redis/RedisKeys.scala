@@ -28,6 +28,6 @@ object RedisKeys {
 
   def oidcContextPrefix(context: String): String = s"$OIDC_CONTEXT_PREFIX.$context"
 
-  def oidcContextProviderKey(context: String, provider: String): String = s"$OIDC_CONTEXT_PREFIX.$context.$provider"
+  def oidcContextProviderKey(context: String, appId: String, provider: String): String = s"$OIDC_CONTEXT_PREFIX.$context.$appId.$provider"
 
 }

@@ -57,11 +57,15 @@ class OidcConfigActor extends Actor
 
     case msg: GetContextProviders =>
       val sender = context.sender()
-      contextProviders(msg.context) map (sender ! _)
+      contextProviders(msg.context, msg.appId) map (sender ! _)
 
     case msg: GetContextProvider =>
       val sender = context.sender()
-      contextProvider(msg.context, msg.provider) map (sender ! _)
+      contextProvider(
+        context = msg.context,
+        appId = msg.appId,
+        provider = msg.provider
+      ) map (sender ! _)
 
     case _ => log.error("unknown message")
 
@@ -124,22 +128,28 @@ class OidcConfigActor extends Actor
 
   }
 
-  private def contextProviders(context: String): Future[Seq[ContextProviderConfig]] = {
+  private def contextProviders(context: String, appId: String): Future[Seq[ContextProviderConfig]] = {
 
     val pattern = s"${RedisKeys.oidcContextPrefix(context)}.*"
     redis.keys(pattern) flatMap { providerList =>
       FutureUtil.unfoldInnerFutures(
-        providerList.map(contextProvider(context, _))
+        providerList.map(contextProvider(context, appId,  _))
       )
     }
 
   }
 
-  private def contextProvider(context: String, provider: String): Future[ContextProviderConfig] = {
+  private def contextProvider(context: String,
+                              appId: String,
+                              provider: String
+                             ): Future[ContextProviderConfig] = {
 
-    val key = RedisKeys.oidcContextProviderKey(context, provider)
-    val redisResult = redis.get[String](key)
-    redisResult map {
+    val key = RedisKeys.oidcContextProviderKey(
+      context = context,
+      appId = appId,
+      provider = provider
+    )
+    redis.get[String](key) map {
 
       case None =>
         log.error(s"failed to load context provider: context=$context, provider=$provider")
@@ -169,6 +179,6 @@ case class IsContextActive(context: String)
 
 case class ContextProviderIds(context: String)
 
-case class GetContextProviders(context: String)
+case class GetContextProviders(context: String, appId: String)
 
-case class GetContextProvider(context: String, provider: String)
+case class GetContextProvider(context: String, appId: String, provider: String)

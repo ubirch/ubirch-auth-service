@@ -73,7 +73,12 @@ object OidcContextProviderUtil extends StrictLogging
                           (implicit redis: RedisClient): Future[Boolean] = {
 
     val context = ctxProviderConf.context
-    val key = RedisKeys.oidcContextProviderKey(context = context, provider = ctxProviderConf.provider)
+    val key = RedisKeys.oidcContextProviderKey(
+      context = context,
+      appId = ctxProviderConf.appId,
+      provider = ctxProviderConf.provider
+    )
+
     val json = write(ctxProviderConf)
 
     redis.set(key, json) flatMap { stored =>

@@ -10,32 +10,24 @@ import com.ubirch.auth.model.db.ContextProviderConfig
   */
 object OidcContextProvider {
 
-  final val activeContexts: Seq[String] = Seq(
-    // local
-    ContextDefinitions.ctxTrackleUILocal,
-    ContextDefinitions.ctxUbirchAdminUILocal,
-    // dev
-    ContextDefinitions.ctxUbirchAdminUIDev,
-    ContextDefinitions.ctxTrackleAdminUIDev,
-    ContextDefinitions.ctxTrackleUIDev,
-    // demo
-    ContextDefinitions.ctxUbirchAdminUIDemo,
-    ContextDefinitions.ctxTrackleAdminUIDemo,
-    ContextDefinitions.ctxTrackleUIDemo
-  )
-
   final val contextProviderList: Seq[ContextProviderConfig] = Seq(
+
     // local
-    ubirchAdminUILocalGoogle,
-    trackleUILocalGoogle,
+    //ubirchAdminUILocalGoogle,
+    //trackleUILocalGoogle,
+    ubirchAdminUILocalGoogle_Legacy,
+    trackleUILocalGoogle_Legacy,
+
     // ubirch-dev
     ubirchAdminUIDevGoogle,
     trackleAdminUIDevGoogle,
     trackleUIDevGoogle,
+
     // demo
     ubirchAdminUIDemoGoogle,
     trackleAdminUIDemoGoogle,
     trackleUIDemoGoogle
+
   )
 
   /*
@@ -43,7 +35,8 @@ object OidcContextProvider {
    ***********************************************************************/
 
   private lazy val ubirchAdminUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
-    context = ContextDefinitions.ctxUbirchAdminUILocal,
+    context = ContextDefinitions.ctxUbirchLocal,
+    appId = AppIds.adminUi,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-q7dccmh0leq20rqgs2550vp0u67pj42p.apps.googleusercontent.com",
     clientSecret = "BFmveucyPZ9Ijt31UvYocrj4",
@@ -51,6 +44,23 @@ object OidcContextProvider {
   )
 
   private lazy val trackleUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ctxTrackleLocal,
+    appId = AppIds.ui,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-dqhiaemv68bjvtnp84beg26plrpkmc8t.apps.googleusercontent.com",
+    clientSecret = "n3fPuja818436VmggJZSht6-",
+    callbackUrl = new URI("http://localhost:9100/auth?providerId=google")
+  )
+
+  private lazy val ubirchAdminUILocalGoogle_Legacy: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ctxUbirchAdminUILocal,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-q7dccmh0leq20rqgs2550vp0u67pj42p.apps.googleusercontent.com",
+    clientSecret = "BFmveucyPZ9Ijt31UvYocrj4",
+    callbackUrl = new URI("http://localhost:9000/auth?providerId=google")
+  )
+
+  private lazy val trackleUILocalGoogle_Legacy: ContextProviderConfig = ContextProviderConfig(
     context = ContextDefinitions.ctxTrackleUILocal,
     provider = OidcProviders.providerIdGoogle,
     clientId = "370115332091-dqhiaemv68bjvtnp84beg26plrpkmc8t.apps.googleusercontent.com",
@@ -122,6 +132,10 @@ object ContextDefinitions {
    * *-local
    *********************************************************************/
 
+  final val ctxUbirchLocal = "ubirch-local"
+
+  final val ctxTrackleLocal = "trackle-local"
+
   final val ctxUbirchAdminUILocal = "ubirch-admin-ui-local"
 
   final val ctxTrackleAdminUILocal = "trackle-admin-ui-local"
@@ -147,5 +161,13 @@ object ContextDefinitions {
   final val ctxTrackleAdminUIDemo = "trackle-admin-ui-demo"
 
   final val ctxTrackleUIDemo = "trackle-ui-demo"
+
+}
+
+object AppIds {
+
+  final val adminUi = "admin-ui"
+
+  final val ui = "ui"
 
 }

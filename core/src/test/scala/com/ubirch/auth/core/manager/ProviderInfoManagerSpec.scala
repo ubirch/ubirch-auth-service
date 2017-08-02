@@ -13,10 +13,10 @@ import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil
   */
 class ProviderInfoManagerSpec extends RedisSpec {
 
-  feature("providerInfoList()") {
+  feature("providerInfoListLegacy()") {
 
     scenario("context does not exist; no config exists --> return no providers") {
-      ProviderInfoManager.providerInfoList("contextName") map (_ should be('isEmpty))
+      ProviderInfoManager.providerInfoListLegacy("contextName") map (_ should be('isEmpty))
     }
 
     scenario("context does not exist") {
@@ -28,7 +28,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           expectedContextList.contains(context) should be(false)
 
           // test
-          ProviderInfoManager.providerInfoList(context) map { contextProviderList =>
+          ProviderInfoManager.providerInfoListLegacy(context) map { contextProviderList =>
             contextProviderList should be('isEmpty)
           }
 
@@ -46,7 +46,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test
-          ProviderInfoManager.providerInfoList(context) map { contextProviderList =>
+          ProviderInfoManager.providerInfoListLegacy(context) map { contextProviderList =>
 
             // verify
             val expectedContextProviders = expectedContextList(context)
@@ -73,7 +73,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test && verify
-          ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+          ProviderInfoManager.providerInfoListLegacy(context) map (_ should be('isEmpty))
 
         }
       }
@@ -92,7 +92,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test && verify
-          ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+          ProviderInfoManager.providerInfoListLegacy(context) map (_ should be('isEmpty))
 
         }
       }
@@ -111,7 +111,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
             contextDisabled should be(true)
 
             // test && verify
-            ProviderInfoManager.providerInfoList(context) map (_ should be('isEmpty))
+            ProviderInfoManager.providerInfoListLegacy(context) map (_ should be('isEmpty))
 
           }
 

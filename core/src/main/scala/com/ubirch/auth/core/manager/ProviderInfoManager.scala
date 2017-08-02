@@ -31,7 +31,7 @@ object ProviderInfoManager extends StrictLogging {
   private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.REDIS)
   private val oidcConfigActor = system.actorOf(OidcConfigActor.props(), ActorNames.OIDC_CONFIG)
 
-  def providerInfoList(context: String): Future[Seq[ProviderInfo]] = {
+  def providerInfoListLegacy(context: String): Future[Seq[ProviderInfo]] = {
 
     (oidcConfigActor ? IsContextActive(context)).mapTo[Boolean].flatMap {
 
@@ -51,6 +51,49 @@ object ProviderInfoManager extends StrictLogging {
 
               ProviderInfo(
                 context = context,
+                providerId = providerConf.id,
+                name = providerConf.name,
+                redirectUrl = redirectUrl
+              )
+
+            }
+
+          }
+          FutureUtil.unfoldInnerFutures(futureProviders)
+
+        }
+
+      case false =>
+
+        logger.error(s"context not active: $context")
+        Future(Seq.empty)
+
+    }
+
+  }
+
+  def providerInfoList(context: String, appId: String): Future[Seq[ProviderInfo]] = {
+
+    // TODO refactor queries to be based on (context, appId)
+    (oidcConfigActor ? IsContextActive(context)).mapTo[Boolean].flatMap {
+
+      case true =>
+
+        (oidcConfigActor ? ContextProviderIds(context)).mapTo[Seq[String]].flatMap { providerIdList =>
+
+          val futureProviders: Seq[Future[ProviderInfo]] = providerIdList map { provider =>
+
+            for {
+              providerConf <- (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig]
+              contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
+            } yield {
+
+              val (redirectUrl, state) = AuthRequest.redirectUrl(contextProviderConf, providerConf)
+              stateAndCodeActor ! RememberState(provider, state.toString)
+
+              ProviderInfo(
+                context = context,
+                appId = Some(appId),
                 providerId = providerConf.id,
                 name = providerConf.name,
                 redirectUrl = redirectUrl
