@@ -317,30 +317,6 @@ Gives us a list of providers configured for a specific context and app id (e.g. 
     curl localhost:8091/api/authService/v1/providerInfo/list/$CONTEXT/$APP_ID
 
 
-### Verify Code (DEPRECATED)
-
-*This method is deprecated!!! Use the one with the appId field in the input instead_*
-
-After a successful login users are being redirect to the Frontend. That call includes a _context_, _providerId_, _code_
-and _state_. Calling this method has the effect that our system verifies the code and responds with the resulting token.
-This token can then be used to request protected resources in other backend services.
-
-    curl -XPOST localhost:8091/api/authService/v1/verify/code -H "Content-Type: application/json" -d'{
-      "context": "$CONTEXT",
-      "providerId": "$PROVIDER_ID",
-      "code": "$CODE",
-      "state": "$STATE"
-    }'
-
-If the code could be verified the response will be:
-
-    200 {"token": "a_token_1234"}
-
-In case of an error the response will be:
-
-    400 {"version":"1.0","status":"NOK","errorType":"VerificationError","errorMessage":"invalid code"}
-
-
 ### Verify Code
 
 After a successful login users are being redirect to the Frontend. That call includes a _context_, _appId_,
@@ -583,14 +559,15 @@ above JSON).
 
 A context can be `trackle-dev` for example and requires it's own `clientId`, `clientSecret` and `callbackUrl`.
 
-To add the config we create a record with the key `oidc.context.$CONTEXT.$PROVIDER`. It's value is a JSON, too.
+To add the config we create a record with the key `oidc.context.$CONTEXT.$APP_ID.$PROVIDER`. It's value is a JSON, too.
 
-    set oidc.context.trackle-dev.google "{\"context\":\"trackle-dev\",\"provider\":\"google\",\"clientId\":\"370115332091-kqf5hu698s4sodrvv03ka3bule530rp5.apps.googleusercontent.com\",\"clientSecret\":\"M86oj4LxV-CcEDd3ougKSbsV\",\"callbackUrl\":\"https://localhost:10000/oidc-callback-google\"}"
+    set oidc.context.trackle-dev.admin-ui.google "{\"context\":\"trackle-dev\",\"appId\":\"admin-ui\",\"provider\":\"google\",\"clientId\":\"370115332091-kqf5hu698s4sodrvv03ka3bule530rp5.apps.googleusercontent.com\",\"clientSecret\":\"M86oj4LxV-CcEDd3ougKSbsV\",\"callbackUrl\":\"https://localhost:10000/oidc-callback-google\"}"
 
 More human-readable the JSON looks as follows:
 
     {
       "context": "trackle-dev", # the $CONTEXT from the key
+      "appId": "admin-ui", # the $APP_ID from the key
       "provider": "google", # the $PROVIDER from the key which also has to exist in `oidc.provider.$PROVIDER`
       "clientId": "370115332091-kqf5hu698s4sodrvv03ka3bule530rp5.apps.googleusercontent.com",
       "clientSecret": "M86oj4LxV-CcEDd3ougKSbsV",
@@ -628,7 +605,7 @@ This service has the following dependencies:
     {
         "_id" : ObjectId("590a25ce63a845f6501f4128"),
         "id" : UUID("4f72edd2-ec27-4df6-858e-3911d8f5207b"),
-        "displayName" : "ubirch-admin-ui-dev",
+        "displayName" : "ubirch-dev",
         "created" : ISODate("2017-05-03T18:47:42.100Z"),
         "updated" : ISODate("2017-05-03T18:47:42.100Z")
     }
@@ -636,7 +613,7 @@ This service has the following dependencies:
     {
         "_id" : ObjectId("590a25ce63a845f6501f412a"),
         "id" : UUID("91823652-e530-4908-a445-f2da660538f8"),
-        "displayName" : "ubirch-admin-ui-demo",
+        "displayName" : "ubirch-demo",
         "created" : ISODate("2017-05-03T18:47:42.105Z"),
         "updated" : ISODate("2017-05-03T18:47:42.105Z")
     }
