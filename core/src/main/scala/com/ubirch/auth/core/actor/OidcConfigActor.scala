@@ -53,7 +53,7 @@ class OidcConfigActor extends Actor
 
     case msg: ContextProviderIds =>
       val sender = context.sender()
-      contextProviderIds(msg.context) map (sender ! _)
+      contextProviderIds(msg.context, msg.appId) map (sender ! _)
 
     case msg: GetContextProviders =>
       val sender = context.sender()
@@ -111,15 +111,18 @@ class OidcConfigActor extends Actor
     redis.sismember(RedisKeys.OIDC_CONTEXT_LIST, context)
   }
 
-  private def contextProviderIds(context: String): Future[Seq[String]] = {
+  private def contextProviderIds(context: String, appId: String): Future[Seq[String]] = {
 
-    val prefix = RedisKeys.oidcContextPrefix(context)
+    val prefix = RedisKeys.oidcContextPrefix(context, appId)
     val pattern = s"$prefix.*"
+    log.debug(s"contextProviderIds(): pattern=$pattern")
 
     redis.keys(pattern) flatMap { providerKeys =>
 
+      log.debug(s"contextProviderIds(): providerKeys=$providerKeys")
       val allProviderKeys = providerKeys map (_.replaceAll(prefix + ".", ""))
 
+      log.debug(s"contextProviderIds(): allProviderKeys=$allProviderKeys")
       activeProviderIds() map { activeProviders =>
         allProviderKeys filter(activeProviders.contains(_))
       }
@@ -130,7 +133,7 @@ class OidcConfigActor extends Actor
 
   private def contextProviders(context: String, appId: String): Future[Seq[ContextProviderConfig]] = {
 
-    val pattern = s"${RedisKeys.oidcContextPrefix(context)}.*"
+    val pattern = s"${RedisKeys.oidcContextPrefix(context, appId)}.*"
     redis.keys(pattern) flatMap { providerList =>
       FutureUtil.unfoldInnerFutures(
         providerList.map(contextProvider(context, appId,  _))
@@ -177,7 +180,7 @@ case class GetActiveContexts()
 
 case class IsContextActive(context: String)
 
-case class ContextProviderIds(context: String)
+case class ContextProviderIds(context: String, appId: String)
 
 case class GetContextProviders(context: String, appId: String)
 

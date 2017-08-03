@@ -81,7 +81,7 @@ class StateAndCodeActor extends Actor
 
         for {
           providerConf <- (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig]
-          contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
+          contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, vc.appId, provider)).mapTo[ContextProviderConfig]
         } yield {
 
           TokenUtil.verifyCodeWith3rdParty(
@@ -143,7 +143,7 @@ class StateAndCodeActor extends Actor
 
         }
 
-      case Failure(e) => log.error(e, "failed to remember state: %s (ttl: %d seconds)", state, ttl)
+      case Failure(e) => log.error(e, s"failed to remember state: $state (ttl: $ttl seconds)")
 
     }
 
@@ -216,7 +216,7 @@ class StateAndCodeActor extends Actor
 
         }
 
-      case Failure(e) => log.error(e, "failed to remember token (ttl: %d seconds)", ttl)
+      case Failure(e) => log.error(e, s"failed to remember token (ttl: $ttl seconds)")
 
     }
 
@@ -259,6 +259,7 @@ object StateAndCodeActor {
 }
 
 case class VerifyCode(context: String,
+                      appId: String,
                       provider: String,
                       code: String,
                       state: String

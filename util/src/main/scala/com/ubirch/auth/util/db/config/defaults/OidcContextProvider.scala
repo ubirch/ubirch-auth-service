@@ -170,4 +170,6 @@ object AppIds {
 
   final val ui = "ui"
 
+  final val legacy = "legacy"
+
 }

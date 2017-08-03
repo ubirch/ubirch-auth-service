@@ -317,7 +317,9 @@ Gives us a list of providers configured for a specific context and app id (e.g. 
     curl localhost:8091/api/authService/v1/providerInfo/list/$CONTEXT/$APP_ID
 
 
-### Verify Code
+### Verify Code (DEPRECATED)
+
+*This method is deprecated!!! Use the one with the appId field in the input instead_*
 
 After a successful login users are being redirect to the Frontend. That call includes a _context_, _providerId_, _code_
 and _state_. Calling this method has the effect that our system verifies the code and responds with the resulting token.
@@ -325,6 +327,29 @@ This token can then be used to request protected resources in other backend serv
 
     curl -XPOST localhost:8091/api/authService/v1/verify/code -H "Content-Type: application/json" -d'{
       "context": "$CONTEXT",
+      "providerId": "$PROVIDER_ID",
+      "code": "$CODE",
+      "state": "$STATE"
+    }'
+
+If the code could be verified the response will be:
+
+    200 {"token": "a_token_1234"}
+
+In case of an error the response will be:
+
+    400 {"version":"1.0","status":"NOK","errorType":"VerificationError","errorMessage":"invalid code"}
+
+
+### Verify Code
+
+After a successful login users are being redirect to the Frontend. That call includes a _context_, _appId_,
+_providerId_, _code_ and _state_. Calling this method has the effect that our system verifies the code and responds with
+the resulting token. This token can then be used to request protected resources in other backend services.
+
+    curl -XPOST localhost:8091/api/authService/v1/verify/code -H "Content-Type: application/json" -d'{
+      "context": "$CONTEXT",
+      "appId": "$APP_ID",
       "providerId": "$PROVIDER_ID",
       "code": "$CODE",
       "state": "$STATE"

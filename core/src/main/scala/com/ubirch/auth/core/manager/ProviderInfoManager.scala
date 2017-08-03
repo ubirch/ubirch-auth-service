@@ -31,61 +31,21 @@ object ProviderInfoManager extends StrictLogging {
   private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.REDIS)
   private val oidcConfigActor = system.actorOf(OidcConfigActor.props(), ActorNames.OIDC_CONFIG)
 
-  def providerInfoListLegacy(context: String): Future[Seq[ProviderInfo]] = {
-
-    (oidcConfigActor ? IsContextActive(context)).mapTo[Boolean].flatMap {
-
-      case true =>
-
-        (oidcConfigActor ? ContextProviderIds(context)).mapTo[Seq[String]].flatMap { providerIdList =>
-
-          val futureProviders: Seq[Future[ProviderInfo]] = providerIdList map { provider =>
-
-            for {
-              providerConf <- (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig]
-              contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
-            } yield {
-
-              val (redirectUrl, state) = AuthRequest.redirectUrl(contextProviderConf, providerConf)
-              stateAndCodeActor ! RememberState(provider, state.toString)
-
-              ProviderInfo(
-                context = context,
-                providerId = providerConf.id,
-                name = providerConf.name,
-                redirectUrl = redirectUrl
-              )
-
-            }
-
-          }
-          FutureUtil.unfoldInnerFutures(futureProviders)
-
-        }
-
-      case false =>
-
-        logger.error(s"context not active: $context")
-        Future(Seq.empty)
-
-    }
-
-  }
-
   def providerInfoList(context: String, appId: String): Future[Seq[ProviderInfo]] = {
 
-    // TODO refactor queries to be based on (context, appId)
+    logger.debug(s"providerInfoList(): context=$context, appId=$appId")
     (oidcConfigActor ? IsContextActive(context)).mapTo[Boolean].flatMap {
 
       case true =>
 
-        (oidcConfigActor ? ContextProviderIds(context)).mapTo[Seq[String]].flatMap { providerIdList =>
+        (oidcConfigActor ? ContextProviderIds(context, appId)).mapTo[Seq[String]].flatMap { providerIdList =>
 
+          logger.debug(s"providerInfoList(): providerIdList=$providerIdList")
           val futureProviders: Seq[Future[ProviderInfo]] = providerIdList map { provider =>
 
             for {
               providerConf <- (oidcConfigActor ? GetProviderBaseConfig(provider)).mapTo[OidcProviderConfig]
-              contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, provider)).mapTo[ContextProviderConfig]
+              contextProviderConf <- (oidcConfigActor ? GetContextProvider(context, appId, provider)).mapTo[ContextProviderConfig]
             } yield {
 
               val (redirectUrl, state) = AuthRequest.redirectUrl(contextProviderConf, providerConf)
@@ -93,7 +53,7 @@ object ProviderInfoManager extends StrictLogging {
 
               ProviderInfo(
                 context = context,
-                appId = Some(appId),
+                appId = appId,
                 providerId = providerConf.id,
                 name = providerConf.name,
                 redirectUrl = redirectUrl

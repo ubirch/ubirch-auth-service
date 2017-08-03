@@ -25,10 +25,6 @@ class ProviderInfoActor extends Actor
       val sender = context.sender
       ProviderInfoManager.providerInfoList(context = getInfos.context, appId = getInfos.appId) map(sender ! ProviderInfoList(_))
 
-    case getProviderInfoList: GetProviderInfoListLegacy =>
-      val sender = context.sender
-      ProviderInfoManager.providerInfoListLegacy(getProviderInfoList.context) map(sender ! ProviderInfoList(_))
-
     case _ =>
       log.error("unknown message")
       sender ! JsonErrorResponse(errorType = "UnknownMessage", errorMessage = "unable to handle message")
@@ -42,7 +38,5 @@ object ProviderInfoActor {
 }
 
 case class GetProviderInfoList(context: String, appId: String)
-
-case class GetProviderInfoListLegacy(context: String)
 
 case class ProviderInfoList(seq: Seq[ProviderInfo])

@@ -5,7 +5,7 @@ package com.ubirch.auth.model
   * since: 2017-01-26
   */
 case class ProviderInfo(context: String,
-                        appId: Option[String] = None, // TODO change to mandatory once /provider/info/list/$CONTEXT has been removed
+                        appId: String,
                         providerId: String,
                         name: String,
                         redirectUrl: String

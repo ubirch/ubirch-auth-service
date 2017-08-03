@@ -5,6 +5,7 @@ import java.net.{URI, URL}
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.testTools.db.redis.RedisSpec
+import com.ubirch.auth.util.db.config.defaults.AppIds
 import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
 
 /**
@@ -13,10 +14,10 @@ import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil
   */
 class ProviderInfoManagerSpec extends RedisSpec {
 
-  feature("providerInfoListLegacy()") {
+  feature("providerInfoList()") {
 
     scenario("context does not exist; no config exists --> return no providers") {
-      ProviderInfoManager.providerInfoListLegacy("contextName") map (_ should be('isEmpty))
+      ProviderInfoManager.providerInfoList("contextName", "appId") map (_ should be('isEmpty))
     }
 
     scenario("context does not exist") {
@@ -28,7 +29,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           expectedContextList.contains(context) should be(false)
 
           // test
-          ProviderInfoManager.providerInfoListLegacy(context) map { contextProviderList =>
+          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map { contextProviderList =>
             contextProviderList should be('isEmpty)
           }
 
@@ -46,7 +47,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test
-          ProviderInfoManager.providerInfoListLegacy(context) map { contextProviderList =>
+          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map { contextProviderList =>
 
             // verify
             val expectedContextProviders = expectedContextList(context)
@@ -73,7 +74,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test && verify
-          ProviderInfoManager.providerInfoListLegacy(context) map (_ should be('isEmpty))
+          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map (_ should be('isEmpty))
 
         }
       }
@@ -92,7 +93,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test && verify
-          ProviderInfoManager.providerInfoListLegacy(context) map (_ should be('isEmpty))
+          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map (_ should be('isEmpty))
 
         }
       }
@@ -111,7 +112,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
             contextDisabled should be(true)
 
             // test && verify
-            ProviderInfoManager.providerInfoListLegacy(context) map (_ should be('isEmpty))
+            ProviderInfoManager.providerInfoList(context, AppIds.legacy) map (_ should be('isEmpty))
 
           }
 
@@ -134,6 +135,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
     val expectedProviderInfos = expectedContextList.map { ctx =>
       ProviderInfo(
         context = ctx.context,
+        appId = ctx.appId,
         providerId = ctx.provider,
         name = expectedProviderList(ctx.provider).name,
         redirectUrl = ""
