@@ -53,15 +53,19 @@ class OidcConfigActor extends Actor
 
     case msg: ContextProviderIds =>
       val sender = context.sender()
-      contextProviderIds(msg.context) map (sender ! _)
+      contextProviderIds(msg.context, msg.appId) map (sender ! _)
 
     case msg: GetContextProviders =>
       val sender = context.sender()
-      contextProviders(msg.context) map (sender ! _)
+      contextProviders(msg.context, msg.appId) map (sender ! _)
 
     case msg: GetContextProvider =>
       val sender = context.sender()
-      contextProvider(msg.context, msg.provider) map (sender ! _)
+      contextProvider(
+        context = msg.context,
+        appId = msg.appId,
+        provider = msg.provider
+      ) map (sender ! _)
 
     case _ => log.error("unknown message")
 
@@ -107,15 +111,18 @@ class OidcConfigActor extends Actor
     redis.sismember(RedisKeys.OIDC_CONTEXT_LIST, context)
   }
 
-  private def contextProviderIds(context: String): Future[Seq[String]] = {
+  private def contextProviderIds(context: String, appId: String): Future[Seq[String]] = {
 
-    val prefix = RedisKeys.oidcContextPrefix(context)
+    val prefix = RedisKeys.oidcContextPrefix(context, appId)
     val pattern = s"$prefix.*"
+    log.debug(s"contextProviderIds(): pattern=$pattern")
 
     redis.keys(pattern) flatMap { providerKeys =>
 
+      log.debug(s"contextProviderIds(): providerKeys=$providerKeys")
       val allProviderKeys = providerKeys map (_.replaceAll(prefix + ".", ""))
 
+      log.debug(s"contextProviderIds(): allProviderKeys=$allProviderKeys")
       activeProviderIds() map { activeProviders =>
         allProviderKeys filter(activeProviders.contains(_))
       }
@@ -124,22 +131,28 @@ class OidcConfigActor extends Actor
 
   }
 
-  private def contextProviders(context: String): Future[Seq[ContextProviderConfig]] = {
+  private def contextProviders(context: String, appId: String): Future[Seq[ContextProviderConfig]] = {
 
-    val pattern = s"${RedisKeys.oidcContextPrefix(context)}.*"
+    val pattern = s"${RedisKeys.oidcContextPrefix(context, appId)}.*"
     redis.keys(pattern) flatMap { providerList =>
       FutureUtil.unfoldInnerFutures(
-        providerList.map(contextProvider(context, _))
+        providerList.map(contextProvider(context, appId,  _))
       )
     }
 
   }
 
-  private def contextProvider(context: String, provider: String): Future[ContextProviderConfig] = {
+  private def contextProvider(context: String,
+                              appId: String,
+                              provider: String
+                             ): Future[ContextProviderConfig] = {
 
-    val key = RedisKeys.oidcContextProviderKey(context, provider)
-    val redisResult = redis.get[String](key)
-    redisResult map {
+    val key = RedisKeys.oidcContextProviderKey(
+      context = context,
+      appId = appId,
+      provider = provider
+    )
+    redis.get[String](key) map {
 
       case None =>
         log.error(s"failed to load context provider: context=$context, provider=$provider")
@@ -167,8 +180,8 @@ case class GetActiveContexts()
 
 case class IsContextActive(context: String)
 
-case class ContextProviderIds(context: String)
+case class ContextProviderIds(context: String, appId: String)
 
-case class GetContextProviders(context: String)
+case class GetContextProviders(context: String, appId: String)
 
-case class GetContextProvider(context: String, provider: String)
+case class GetContextProvider(context: String, appId: String, provider: String)

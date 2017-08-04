@@ -21,9 +21,9 @@ class ProviderInfoActor extends Actor
 
   override def receive: Receive = {
 
-    case getProviderInfoList: GetProviderInfoList =>
+    case getInfos: GetProviderInfoList =>
       val sender = context.sender
-      ProviderInfoManager.providerInfoList(getProviderInfoList.context) map(sender ! ProviderInfoList(_))
+      ProviderInfoManager.providerInfoList(context = getInfos.context, appId = getInfos.appId) map(sender ! ProviderInfoList(_))
 
     case _ =>
       log.error("unknown message")
@@ -37,6 +37,6 @@ object ProviderInfoActor {
   def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[ProviderInfoActor])
 }
 
-case class GetProviderInfoList(context: String)
+case class GetProviderInfoList(context: String, appId: String)
 
 case class ProviderInfoList(seq: Seq[ProviderInfo])

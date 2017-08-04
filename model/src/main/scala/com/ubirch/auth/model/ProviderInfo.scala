@@ -5,6 +5,7 @@ package com.ubirch.auth.model
   * since: 2017-01-26
   */
 case class ProviderInfo(context: String,
+                        appId: String,
                         providerId: String,
                         name: String,
                         redirectUrl: String

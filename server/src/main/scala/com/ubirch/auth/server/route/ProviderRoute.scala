@@ -5,6 +5,7 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{GetProviderInfoList, ProviderInfoActor, ProviderInfoList}
+import com.ubirch.auth.util.db.config.defaults.AppIds
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
@@ -36,27 +37,43 @@ trait ProviderRoute extends ResponseUtil
 
   val route: Route = {
 
-    path(RouteConstants.providerInfo / RouteConstants.list / Segment) { context =>
-      respondWithCORS {
+    pathPrefix(RouteConstants.providerInfo / RouteConstants.list) {
 
-        get {
-          onComplete(providerInfoActor ? GetProviderInfoList(context)) {
+      path(Segment) { context =>
 
-            case Failure(t) =>
-              logger.error("verify code call responded with an unhandled message (check TokenRoute for bugs!!!)", t)
-              complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+        providerInfoList(context)
 
-            case Success(resp) =>
+      } ~ path(Segment /Segment) { (context, appId) =>
 
-              resp match {
-                case providerInfos: ProviderInfoList => complete(providerInfos.seq)
-                case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
-              }
-
-          }
-        }
+        providerInfoList(context, appId)
 
       }
+
+    }
+
+  }
+
+  private def providerInfoList(context: String, appId: String = AppIds.legacy) = {
+
+    respondWithCORS {
+
+      get {
+        onComplete(providerInfoActor ? GetProviderInfoList(context = context, appId = appId)) {
+
+          case Failure(t) =>
+            logger.error("provider info list call responded with an unhandled message (check ProviderRoute for bugs!!!)", t)
+            complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+
+          case Success(resp) =>
+
+            resp match {
+              case providerInfos: ProviderInfoList => complete(providerInfos.seq)
+              case _ => complete(serverErrorResponse(errorType = "QueryError", errorMessage = "failed to query provider info list"))
+            }
+
+        }
+      }
+
     }
 
   }

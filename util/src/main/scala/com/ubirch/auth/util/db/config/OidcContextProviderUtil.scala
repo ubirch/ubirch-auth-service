@@ -41,9 +41,9 @@ object OidcContextProviderUtil extends StrictLogging
       storeContextProvider(ctxProviderConf, activateContexts) map { stored =>
 
         if (stored) {
-          logger.info(s"created context related conf: context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
+          logger.info(s"created context related conf: context=${ctxProviderConf.context}, appId=${ctxProviderConf.appId}, provider=${ctxProviderConf.provider}")
         } else {
-          logger.info(s"did not create context related conf (most likely it already exists): context=${ctxProviderConf.context}, provider=${ctxProviderConf.provider}")
+          logger.info(s"did not create context related conf (most likely it already exists): context=${ctxProviderConf.context}, appId=${ctxProviderConf.appId}, provider=${ctxProviderConf.provider}")
         }
         ctxProviderConf
 
@@ -73,7 +73,12 @@ object OidcContextProviderUtil extends StrictLogging
                           (implicit redis: RedisClient): Future[Boolean] = {
 
     val context = ctxProviderConf.context
-    val key = RedisKeys.oidcContextProviderKey(context = context, provider = ctxProviderConf.provider)
+    val key = RedisKeys.oidcContextProviderKey(
+      context = context,
+      appId = ctxProviderConf.appId,
+      provider = ctxProviderConf.provider
+    )
+
     val json = write(ctxProviderConf)
 
     redis.set(key, json) flatMap { stored =>
