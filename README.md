@@ -17,6 +17,9 @@ The ubirch AuthService is responsible for:
 ### Version 0.2.15 (tbd)
 
 * add trackle related clientIds and clientSecrets for demo environment
+* add route `providerInfo/list/$CONTEXT/$APP_ID`
+* refactored the now deprecated `providerInfo/list/$CONTEXT` path to be compatible with it's replacement (with `/$APP_ID` postfix)
+* add _appId_ field to input of `/verify/code` (which defaults to "legacy" until we can remove the `providerInfo/list/$CONTEXT/$APP_ID` route
 
 ### Version 0.2.14 (2017-07-31)
 
