@@ -39,7 +39,7 @@ object UserInfoManager {
           externalUserId = userContext.userId
         ) map { groups =>
 
-          val myGroups = groups filter (_.ownerId == user.id)
+          val myGroups = groups filter (_.ownerIds.contains(user.id))
           val allowedGroups = groups diff myGroups
 
           val info = UserInfo(

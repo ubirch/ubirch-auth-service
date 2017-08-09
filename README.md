@@ -20,6 +20,7 @@ The ubirch AuthService is responsible for:
 * add route `providerInfo/list/$CONTEXT/$APP_ID`
 * refactored the now deprecated `providerInfo/list/$CONTEXT` path to be compatible with it's replacement (with `/$APP_ID` postfix)
 * add _appId_ field to input of `/verify/code` (which defaults to "legacy" until we can remove the `providerInfo/list/$CONTEXT/$APP_ID` route
+* update to `com.ubirch.user:*:0.6.1`
 
 ### Version 0.2.14 (2017-07-31)
 

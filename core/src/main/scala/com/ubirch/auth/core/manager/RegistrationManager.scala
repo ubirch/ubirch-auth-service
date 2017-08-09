@@ -145,7 +145,7 @@ object RegistrationManager extends StrictLogging {
 
     val group = Group(
       displayName = displayName,
-      ownerId = owner.id,
+      ownerIds = Set(owner.id),
       contextId = context.id,
       allowedUsers = Set.empty
     )

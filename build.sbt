@@ -193,7 +193,7 @@ lazy val depUtils = Seq(
 val akkaV = "2.4.19"
 val akkaHttpV = "10.0.9"
 val json4sV = "3.5.2"
-val ubirchUserV = "0.5.1"
+val ubirchUserV = "0.6.1"
 
 val scalaTestV = "3.0.1"
 
