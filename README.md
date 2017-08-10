@@ -16,7 +16,7 @@ The ubirch AuthService is responsible for:
 
 ### Version 0.2.16 (tbd)
 
-* tbd
+* update to `com.ubirch.util:oidc-utils:0.4.11`
 
 ### Version 0.2.15 (2017-08-09)
 
