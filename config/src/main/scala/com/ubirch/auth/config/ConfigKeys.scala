@@ -43,7 +43,7 @@ object ConfigKeys {
    * MongoDB
    *********************************************************************************************/
 
-  final val MONGO_PREFIX = "ubirch.mongo"
+  final val MONGO_PREFIX = "ubirchUserService.mongo"
 
   /*
    * Test User
