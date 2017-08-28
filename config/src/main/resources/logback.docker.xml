@@ -66,11 +66,14 @@
     </appender>
 
     <logger name="com.ubirch" level="DEBUG"/>
-    <logger name="akka.actor" level="DEBUG"/>
-    <logger name="reactivemongo-akka.actor" level="DEBUG"/>
-    <logger name="reactivemongo.core" level="DEBUG"/>
+    <logger name="akka.info" level="INFO"/>
+    <logger name="akka.actor" level="INFO"/>
+    <logger name="akka.event" level="INFO"/>
+    <logger name="com.amazonaws" level="INFO"/>
+    <logger name="reactivemongo-akka.actor" level="WARN"/>
+    <logger name="reactivemongo.core" level="WARN"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="ELASTIC"/>
     </root>
 

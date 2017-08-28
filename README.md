@@ -297,7 +297,7 @@ If not healthy the server response is:
 
 ### Deep Check / Server Health
 
-    curl localhost:8092/api/authService/v1/deepCheck
+    curl localhost:8091/api/authService/v1/deepCheck
 
 If healthy the response is:
 
