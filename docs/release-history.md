@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.2.17 (tbd)
+### Version 0.2.17 (2017-09-14)
 
 * remove deprecated endpoint _GET /providerInfo/list/$CONTEXT_
 * improve performance by not performing an unnecessary http request in _AuthRequest.redirectUrl()_
