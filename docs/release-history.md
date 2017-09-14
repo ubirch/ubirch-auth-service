@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.2.17 (tbd)
+
+* tbd
+
 ### Version 0.2.16 (2017-09-14)
 
 * update to `com.ubirch.util:oidc-utils:0.4.11`
