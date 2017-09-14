@@ -66,10 +66,11 @@ object TokenUtil extends StrictLogging {
                   None
 
                 case Some(claims) =>
+                  logger.debug(s"claims=$claims")
                   val userId = claims.getSubject
-                  val name = claims.getClaim("name").toString
-                  val locale = claims.getClaim("locale").toString
-                  logger.debug(s"got verified token: context=$context, provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}, claimsSet: ${claims.toString}")
+                  val name = extractUserName(claims)
+                  val locale = extractLanguage(claims)
+                  logger.debug(s"got verified token: context=$context, provider=$provider, userId=$userId, accessToken=$accessToken, userId=$userId, idToken=${idToken.getParsedString}")
                   logger.info(s"got verified token from provider=$provider (context=$context)")
                   Some(TokenUserId(
                     token = accessToken.getValue,
@@ -191,6 +192,28 @@ object TokenUtil extends StrictLogging {
       logger.error(s"signing algorithm does not match those allowed by our configuration: provider=${providerConf.id}, algorithm=$algorithm")
       None
 
+    }
+
+  }
+
+  private def extractUserName(claims: JWTClaimsSet): String = {
+
+    if (claims.getClaim("preferred_username") != null) {
+      claims.getClaim("preferred_username").toString
+    } else if (claims.getClaim("name") != null) {
+      claims.getClaim("name").toString
+    } else {
+      "null"
+    }
+
+  }
+
+  private def extractLanguage(claims: JWTClaimsSet): String = {
+
+    if (claims.getClaim("locale") == null) {
+      "en"
+    } else {
+      claims.getClaim("locale").toString
     }
 
   }
