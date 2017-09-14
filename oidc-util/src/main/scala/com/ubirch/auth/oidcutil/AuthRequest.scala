@@ -17,9 +17,9 @@ object AuthRequest {
   def redirectUrl(contextProviderConf: ContextProviderConfig, providerConf: OidcProviderConfig): (String, State) = {
 
     val authReq = create(contextProviderConf, providerConf)
-    authReq.toHTTPRequest.send()
-    val redirectHost = URLDecoder.decode(authReq.toHTTPRequest.getURL.toString, "UTF-8")
-    val redirectParams = authReq.toHTTPRequest().getQuery
+    val authReqHttp = authReq.toHTTPRequest
+    val redirectHost = URLDecoder.decode(authReqHttp.getURL.toString, "UTF-8")
+    val redirectParams = authReqHttp.getQuery
 
     (s"$redirectHost?$redirectParams", authReq.getState)
 
