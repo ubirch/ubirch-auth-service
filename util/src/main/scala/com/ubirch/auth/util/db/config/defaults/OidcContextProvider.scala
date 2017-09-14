@@ -14,6 +14,7 @@ object OidcContextProvider {
 
     // local
     ubirchAdminUILocalGoogle,
+    ubirchAdminUILocalKeycloak,
     trackleUILocalGoogle,
     ubirchAdminUILocalGoogle_Deprecated,
     trackleUILocalGoogle_Deprecated,
@@ -47,6 +48,15 @@ object OidcContextProvider {
     clientId = "370115332091-q7dccmh0leq20rqgs2550vp0u67pj42p.apps.googleusercontent.com",
     clientSecret = "BFmveucyPZ9Ijt31UvYocrj4",
     callbackUrl = new URI("http://localhost:9000/auth?providerId=google")
+  )
+
+  private lazy val ubirchAdminUILocalKeycloak: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ubirchLocal,
+    appId = AppIds.adminUi,
+    provider = OidcProviders.providerIdKeycloak,
+    clientId = "ubirch-admin-ui-local",
+    clientSecret = "fc9bd005-1a4c-4c2f-99c3-dc3aa65c0ae1",
+    callbackUrl = new URI("http://localhost:9000/auth?providerId=keycloak")
   )
 
   private lazy val trackleUILocalGoogle: ContextProviderConfig = ContextProviderConfig(

@@ -10,8 +10,9 @@ object OidcProviders {
 
   final val providerIdGoogle: String = "google"
   final val providerIdYahoo: String = "yahoo"
+  final val providerIdKeycloak: String = "keycloak"
 
-  final val providers: Seq[OidcProviderConfig] = Seq(google, yahoo)
+  final val providers: Seq[OidcProviderConfig] = Seq(google, yahoo, keycloak)
 
   private lazy val google = OidcProviderConfig(
     id = providerIdGoogle,
@@ -36,6 +37,19 @@ object OidcProviders {
       authorization = "https://api.login.yahoo.com/oauth2/request_auth",
       token = "https://api.login.yahoo.com/oauth2/get_token",
       jwks = "https://login.yahoo.com/openid/v1/certs"
+    )
+  )
+
+  private lazy val keycloak = OidcProviderConfig(
+    id = providerIdKeycloak,
+    name = "Keycloak",
+    scope = "openid profile",
+    endpointConfig = "https://id.dev.ubirch.com/auth/realms/ubirch/.well-known/openid-configuration",
+    tokenSigningAlgorithms = Seq("RS256"),
+    endpoints = OidcProviderEndpoints(
+      authorization = "https://id.dev.ubirch.com/auth/realms/ubirch/protocol/openid-connect/auth",
+      token = "https://id.dev.ubirch.com/auth/realms/ubirch/protocol/openid-connect/token",
+      jwks = "https://id.dev.ubirch.com/auth/realms/ubirch/protocol/openid-connect/certs"
     )
   )
 
