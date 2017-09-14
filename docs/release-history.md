@@ -5,6 +5,7 @@
 * update to `com.ubirch.util:oidc-utils:0.4.11`
 * moved some of README's documentation to separate files in newly created folder _docs_
 * fixed bug where we failed to read the user name and language claims from our own Keycloak response
+* added Keycloak related OpenID Connect configs
 
 ### Version 0.2.15 (2017-08-09)
 
