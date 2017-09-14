@@ -21,6 +21,7 @@ object OidcContextProvider {
 
     // ubirch-dev
     ubirchAdminUIDevGoogle,
+    ubirchAdminUIDevKeycloak,
     trackleAdminUIDevGoogle,
     trackleUIDevGoogle,
     ubirchAdminUIDevGoogle_Deprecated,
@@ -29,6 +30,7 @@ object OidcContextProvider {
 
     // demo
     ubirchAdminUIDemoGoogle,
+    ubirchAdminUIDemoKeycloak,
     trackleAdminUIDemoGoogle,
     trackleUIDemoGoogle,
     ubirchAdminUIDemoGoogle_Deprecated,
