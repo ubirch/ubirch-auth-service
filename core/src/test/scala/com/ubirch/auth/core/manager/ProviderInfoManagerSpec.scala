@@ -29,7 +29,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           expectedContextList.contains(context) should be(false)
 
           // test
-          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map { contextProviderList =>
+          ProviderInfoManager.providerInfoList(context, AppIds.adminUi) map { contextProviderList =>
             contextProviderList should be('isEmpty)
           }
 
@@ -47,7 +47,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test
-          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map { contextProviderList =>
+          ProviderInfoManager.providerInfoList(context, AppIds.adminUi) map { contextProviderList =>
 
             // verify
             val expectedContextProviders = expectedContextList(context)
@@ -93,7 +93,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
           val context = expectedContextList.head._1
 
           // test && verify
-          ProviderInfoManager.providerInfoList(context, AppIds.legacy) map (_ should be('isEmpty))
+          ProviderInfoManager.providerInfoList(context, AppIds.adminUi) map (_ should be('isEmpty))
 
         }
       }
@@ -112,7 +112,7 @@ class ProviderInfoManagerSpec extends RedisSpec {
             contextDisabled should be(true)
 
             // test && verify
-            ProviderInfoManager.providerInfoList(context, AppIds.legacy) map (_ should be('isEmpty))
+            ProviderInfoManager.providerInfoList(context, AppIds.adminUi) map (_ should be('isEmpty))
 
           }
 

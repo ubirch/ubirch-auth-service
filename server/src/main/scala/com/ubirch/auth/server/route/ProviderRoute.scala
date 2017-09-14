@@ -5,7 +5,6 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.core.actor.util.ActorNames
 import com.ubirch.auth.core.actor.{GetProviderInfoList, ProviderInfoActor, ProviderInfoList}
-import com.ubirch.auth.util.db.config.defaults.AppIds
 import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.rest.akka.directives.CORSDirective
@@ -29,9 +28,9 @@ trait ProviderRoute extends ResponseUtil
   with CORSDirective
   with StrictLogging {
 
-  implicit val system = ActorSystem()
+  implicit val system: ActorSystem = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-  implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val timeout: Timeout = Timeout(Config.actorTimeout seconds)
 
   private val providerInfoActor = system.actorOf(ProviderInfoActor.props(), ActorNames.PROVIDER_INFO)
 
@@ -39,11 +38,7 @@ trait ProviderRoute extends ResponseUtil
 
     pathPrefix(RouteConstants.providerInfo / RouteConstants.list) {
 
-      path(Segment) { context =>
-
-        providerInfoList(context)
-
-      } ~ path(Segment /Segment) { (context, appId) =>
+      path(Segment /Segment) { (context, appId) =>
 
         providerInfoList(context, appId)
 
@@ -53,7 +48,7 @@ trait ProviderRoute extends ResponseUtil
 
   }
 
-  private def providerInfoList(context: String, appId: String = AppIds.legacy) = {
+  private def providerInfoList(context: String, appId: String) = {
 
     respondWithCORS {
 

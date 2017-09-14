@@ -27,15 +27,6 @@ If not healthy the status is `false` and the `messages` array not empty:
     503 {"version":"1.0","status":"NOK","messages":["unable to connect to the database"]}
 
 
-### Provider Infos (DEPRECATED)
-
-*This method is deprecated!!! Use _/providerInfo/list/$CONTEXT/$APP_ID instead_*
-
-Gives us a list of providers configured for a specific context (e.g. `trackle`, `trackle-dev`, `ubirch`, `ubirch-dev`,
-...).
-
-    curl localhost:8091/api/authService/v1/providerInfo/list/$CONTEXT
-
 ### Provider Infos
 
 Gives us a list of providers configured for a specific context and app id (e.g. `trackle-dev/ui`, `ubirch-dev/admin-ui`,

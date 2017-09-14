@@ -2,7 +2,7 @@
 
 ### Version 0.2.17 (tbd)
 
-* tbd
+* remove deprecated endpoint _GET /providerInfo/list/$CONTEXT_
 
 ### Version 0.2.16 (2017-09-14)
 
