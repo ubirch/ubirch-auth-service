@@ -14,6 +14,7 @@ object OidcContextProvider {
 
     // local
     ubirchAdminUILocalGoogle,
+    ubirchAdminUILocalKeycloak,
     trackleUILocalGoogle,
     ubirchAdminUILocalGoogle_Deprecated,
     trackleUILocalGoogle_Deprecated,
@@ -47,6 +48,15 @@ object OidcContextProvider {
     clientId = "370115332091-q7dccmh0leq20rqgs2550vp0u67pj42p.apps.googleusercontent.com",
     clientSecret = "BFmveucyPZ9Ijt31UvYocrj4",
     callbackUrl = new URI("http://localhost:9000/auth?providerId=google")
+  )
+
+  private lazy val ubirchAdminUILocalKeycloak: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ubirchLocal,
+    appId = AppIds.adminUi,
+    provider = OidcProviders.providerIdKeycloak,
+    clientId = "ubirch-admin-ui-local",
+    clientSecret = "fc9bd005-1a4c-4c2f-99c3-dc3aa65c0ae1",
+    callbackUrl = new URI("http://localhost:9000/auth?providerId=keycloak")
   )
 
   private lazy val trackleUILocalGoogle: ContextProviderConfig = ContextProviderConfig(
@@ -85,6 +95,15 @@ object OidcContextProvider {
     clientId = "370115332091-6rk357g8229khqp5g2ea3qu1hdesfq4p.apps.googleusercontent.com",
     clientSecret = "MV0WoHigItLlgRl1fS7ILP_g",
     callbackUrl = new URI("http://ubirch.dev.ubirch.com/auth?providerId=google")
+  )
+
+  private lazy val ubirchAdminUIDevKeycloak: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ubirchDev,
+    appId = AppIds.adminUi,
+    provider = OidcProviders.providerIdKeycloak,
+    clientId = "ubirch-admin-ui-dev",
+    clientSecret = "f64cf8e3-3721-4e5b-b91f-00d4b284265f",
+    callbackUrl = new URI("http://ubirch.dev.ubirch.com:80/auth?providerId=keycloak")
   )
 
   private lazy val trackleAdminUIDevGoogle: ContextProviderConfig = ContextProviderConfig(
@@ -140,6 +159,15 @@ object OidcContextProvider {
     clientId = "370115332091-6iu7qbha7f5oo8d12tsteh5crsj53m9k.apps.googleusercontent.com",
     clientSecret = "utYeF1TtkeMDidNRBzOWivF0",
     callbackUrl = new URI("http://ubirch.demo.ubirch.com/auth?providerId=google")
+  )
+
+  private lazy val ubirchAdminUIDemoKeycloak: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ubirchDemo,
+    appId = AppIds.adminUi,
+    provider = OidcProviders.providerIdKeycloak,
+    clientId = "ubirch-admin-ui-demo",
+    clientSecret = "b4d01ceb-49ee-4b52-a38a-0a764e713915",
+    callbackUrl = new URI("http://ubirch.demo.ubirch.com:80/auth?providerId=keycloak")
   )
 
   private lazy val trackleAdminUIDemoGoogle: ContextProviderConfig = ContextProviderConfig(
