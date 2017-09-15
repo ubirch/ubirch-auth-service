@@ -3,6 +3,7 @@
 ### Version 0.2.18 (tbd)
 
 * update to `com.ubirch.user:*:0.6.3-SNAPSHOT`
+* admin-ui in dev environment now has https 
 
 ### Version 0.2.17 (2017-09-14)
 
