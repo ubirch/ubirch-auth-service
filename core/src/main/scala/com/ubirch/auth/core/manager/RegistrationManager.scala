@@ -51,6 +51,7 @@ object RegistrationManager extends StrictLogging {
   }
 
   private def userInfo(userDisplayName: String,
+                       userActivated: Boolean,
                        locale: String,
                        myGroups: Set[UserInfoGroup]
                       ): Option[UserInfo] = {
@@ -59,7 +60,8 @@ object RegistrationManager extends StrictLogging {
       UserInfo(
         displayName = userDisplayName,
         locale = locale,
-        myGroups = myGroups
+        myGroups = myGroups,
+        activeUser = userActivated
       )
     )
 
@@ -160,7 +162,8 @@ object RegistrationManager extends StrictLogging {
         userInfo(
           userDisplayName = owner.displayName,
           locale = owner.locale,
-          myGroups = UserInfoUtil.toUserInfoGroups(Set(groupCreated))
+          myGroups = UserInfoUtil.toUserInfoGroups(Set(groupCreated)),
+          userActivated = owner.activeUser.get
         )
 
     }
