@@ -42,7 +42,7 @@ object OidcProviders {
 
   private lazy val keycloak = OidcProviderConfig(
     id = providerIdKeycloak,
-    name = "Keycloak",
+    name = "ubirch",
     scope = "openid profile",
     endpointConfig = "https://id.dev.ubirch.com/auth/realms/ubirch/.well-known/openid-configuration",
     tokenSigningAlgorithms = Seq("RS256"),
