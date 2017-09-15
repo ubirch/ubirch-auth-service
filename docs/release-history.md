@@ -4,6 +4,7 @@
 
 * update to `com.ubirch.user:*:0.6.3-SNAPSHOT`
 * admin-ui in dev environment now has https 
+* added user-service related key to docker conf: `ubirchUserService.providersWithUsersActivated`
 
 ### Version 0.2.17 (2017-09-14)
 
