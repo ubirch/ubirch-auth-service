@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.2.19 (tbd)
+
+* tbd
+
 ### Version 0.2.18 (2017-09-18)
 
 * update to `com.ubirch.user:*:0.6.3`
