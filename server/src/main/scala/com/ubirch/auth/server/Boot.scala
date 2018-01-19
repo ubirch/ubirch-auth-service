@@ -11,7 +11,7 @@ import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.redis.RedisClientUtil
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
+import akka.http.scaladsl.{Http, HttpExt}
 import akka.http.scaladsl.Http.ServerBinding
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
@@ -30,6 +30,7 @@ object Boot extends App with StrictLogging {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
+  implicit val httpClient: HttpExt = Http()
 
   implicit val timeout = Timeout(Config.timeout seconds)
 

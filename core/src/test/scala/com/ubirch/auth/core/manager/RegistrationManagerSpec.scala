@@ -23,6 +23,8 @@ class RegistrationManagerSpec extends MongoSpec {
         |  context: no
         |  user: no
         |  group: no
+        |
+        | --> nothing happens
       """.stripMargin
     ) {
 
@@ -48,6 +50,8 @@ class RegistrationManagerSpec extends MongoSpec {
         |  context: no
         |  user: yes
         |  group: no
+        |
+        | --> nothing happens
       """.stripMargin
     ) {
 
@@ -85,6 +89,8 @@ class RegistrationManagerSpec extends MongoSpec {
         |  context: no
         |  user: yes
         |  group: yes
+        |
+        | --> nothing happens
       """.stripMargin
     ) {
 
@@ -130,6 +136,10 @@ class RegistrationManagerSpec extends MongoSpec {
         |  context: yes
         |  user: no
         |  group: no
+        |
+        | -- create user without email address
+        |
+        | --> create user and group
       """.stripMargin
     ) {
 
@@ -172,6 +182,8 @@ class RegistrationManagerSpec extends MongoSpec {
         |  context: yes
         |  user: yes (different name and locale than existing user...as it's being ignored)
         |  group: no
+        |
+        | --> create missing group
       """.stripMargin
     ) {
 
@@ -231,6 +243,8 @@ class RegistrationManagerSpec extends MongoSpec {
         |  context: yes
         |  user: yes
         |  group: yes
+        |
+        | --> nothing happens
       """.stripMargin
     ) {
 
