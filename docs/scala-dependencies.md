@@ -1,5 +1,29 @@
 ## Scala Dependencies
 
+### `client-rest`
+
+```scala
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("snapshots")
+)
+libraryDependencies ++= Seq(
+  "com.ubirch.auth" %% "client-rest" % "0.2.19-SNAPSHOT"
+)
+```
+
+#### Configuration
+   
+| Config Item                        | Mandatory  | Description       |
+|:-----------------------------------|:-----------|:------------------|
+| ubirchAuthService.client.rest.host | yes        | key-service host  |
+
+#### Usage
+
+The REST client class is `KeyServiceClientRest` and the host it connects to needs to be configured:
+
+    ubirchAuthService.client.rest.host = "http://localhost:8091"
+
+
 ### `cmdtools`
 
 ```scala

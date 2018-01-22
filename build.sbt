@@ -33,6 +33,7 @@ lazy val authService = (project in file("."))
   .settings(commonSettings: _*)
   .aggregate(
     server,
+    clientRest,
     cmdtools,
     config,
     core,
@@ -60,6 +61,16 @@ lazy val server = project
       generateDockerFile(baseDirectory.value / ".." / "Dockerfile.input", (assemblyOutputPath in assembly).value)
     }.taskValue
   )
+
+lazy val clientRest = (project in file("client-rest"))
+  .settings(commonSettings: _*)
+  .dependsOn(config, model, util)
+  .settings(
+    name := "client-rest",
+    description := "REST client of the key-service",
+    libraryDependencies ++= depClientRest
+  )
+
 
 lazy val config = project
   .settings(commonSettings: _*)
@@ -161,6 +172,13 @@ lazy val depCore = Seq(
   ubirchUserCore,
   ubirchUserTestToolsExt % "test",
   scalatest % "test"
+) ++ scalaLogging
+
+lazy val depClientRest = Seq(
+  akkaHttp,
+  akkaSlf4j,
+  ubirchUtilResponse,
+  ubirchUtilDeepCheckModel
 ) ++ scalaLogging
 
 lazy val depOpenIdUtil = Seq(
