@@ -256,7 +256,7 @@ lazy val excludedLoggers = Seq(
 )
 
 lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.3.3" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.4.2" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.2.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilFutures = ubirchUtilG %% "futures" % "0.1.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.4.3" excludeAll(excludedLoggers: _*)
