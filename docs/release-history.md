@@ -2,7 +2,8 @@
 
 ### Version 0.2.20 (tbd)
 
-* tbd
+* update to `com.ubirch.util:oidc-utils:0.4.15-SNAPSHOT`
+* register users with email from include _UserContext.email_
 
 ### Version 0.2.19 (2018-01-22)
 

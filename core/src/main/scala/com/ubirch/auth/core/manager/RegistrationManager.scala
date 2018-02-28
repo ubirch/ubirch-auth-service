@@ -105,7 +105,8 @@ object RegistrationManager extends StrictLogging {
           displayName = userContext.userName,
           providerId = userContext.providerId,
           externalId = userContext.userId,
-          locale = userContext.locale
+          locale = userContext.locale,
+          email = userContext.email // TODO update tests to account for email, too
         ) flatMap {
 
           case None =>
@@ -125,7 +126,8 @@ object RegistrationManager extends StrictLogging {
   private def createUser(displayName: String,
                          providerId: String,
                          externalId: String,
-                         locale: String
+                         locale: String,
+                         email: Option[String]
                         )
                         (implicit mongo: MongoUtil): Future[Option[User]] = {
 
@@ -133,7 +135,8 @@ object RegistrationManager extends StrictLogging {
       displayName = displayName,
       providerId = providerId,
       externalId = externalId,
-      locale = locale
+      locale = locale,
+      email = email
     )
     UserManager.create(user)
 
