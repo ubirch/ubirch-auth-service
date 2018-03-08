@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.2.20 (tbd)
+### Version 0.2.20 (2018-03-08)
 
 * register users with email from include _UserContext.email_
 * updated list of logging dependencies including their versions
