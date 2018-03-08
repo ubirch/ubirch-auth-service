@@ -2,8 +2,15 @@
 
 ### Version 0.2.20 (tbd)
 
-* update to `com.ubirch.util:oidc-utils:0.4.15-SNAPSHOT`
 * register users with email from include _UserContext.email_
+* updated list of logging dependencies including their versions
+* update to `com.ubirch.util:config:0.2.0`
+* update to `com.ubirch.util:mongo-utils:0.3.7`
+* update to `com.ubirch.util:mongo-test-utils:0.3.7`
+* update to `com.ubirch.util:redis-util:0.3.5`
+* update to `com.ubirch.util:redis-test-util:0.3.5`
+* update to `com.ubirch.user:*:0.7.0`
+* update to `com.ubirch.util:oidc-utils:0.4.15`
 
 ### Version 0.2.19 (2018-01-22)
 
