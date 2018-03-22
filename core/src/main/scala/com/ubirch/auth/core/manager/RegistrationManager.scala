@@ -1,7 +1,6 @@
 package com.ubirch.auth.core.manager
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
-
 import com.ubirch.auth.core.manager.util.UserInfoUtil
 import com.ubirch.auth.model.{UserInfo, UserInfoGroup}
 import com.ubirch.user.core.manager.{ContextManager, GroupManager, GroupsManager, UserManager}
@@ -24,6 +23,7 @@ object RegistrationManager extends StrictLogging {
     val providerId = userContext.providerId
     val externalUserId = userContext.userId
 
+    //@REVIEW What happens in case of errors with ext. systems (USerService, mongoDB, ...)?
     for {
 
       userOpt <- UserManager.findByProviderIdAndExternalId(

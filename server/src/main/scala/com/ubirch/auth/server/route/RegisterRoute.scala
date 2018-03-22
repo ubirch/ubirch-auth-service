@@ -71,8 +71,8 @@ class RegisterRoute(implicit mongo: MongoUtil,
     onComplete(registrationActor ? RegisterUser(userContext)) {
 
       case Failure(t) =>
-        logger.error("register user call responded with an unhandled message (check RegisterRoute for bugs!!!)", t)
-        complete(serverErrorResponse(errorType = "ServerError", errorMessage = "sorry, something went wrong on our end"))
+        logger.error("register user call responded with an unhandled message: ", t)
+        complete(serverErrorResponse(errorType = "ServerError", errorMessage = t.getMessage))
 
       case Success(resp) =>
 
