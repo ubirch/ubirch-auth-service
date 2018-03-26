@@ -1,8 +1,15 @@
 ## Release History
 
-### Version 0.2.21 (tbd)
+### Version 0.2.22 (tbd)
 
 * tbd
+
+### Version 0.2.21 (2018-03-26)
+
+* update to `com.ubirch.user:*:0.8.3`
+* update to `com.ubirch.util:mongo-utils:0.4.1`
+* update to `com.ubirch.util:mongo-test-utils:0.4.1`
+* update to `com.ubirch.util:oidc-utils:0.5.3`
 
 ### Version 0.2.20 (2018-03-08)
 
