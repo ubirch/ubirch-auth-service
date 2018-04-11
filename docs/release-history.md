@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.2.23 (tbd)
+
+* tbd
+
 ### Version 0.2.22 (2018-04-11)
 
 * update to `com.typesafe.akka:akka-(actor|slf4j):2.4.20`
