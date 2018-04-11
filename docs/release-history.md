@@ -2,7 +2,18 @@
 
 ### Version 0.2.22 (tbd)
 
-* tbd
+* update to `com.typesafe.akka:akka-(actor|slf4j):2.4.20`
+* update to `com.typesafe.akka:akka-http:10.0.11`
+* update to `net.logstash.logback:logstash-logback-encoder:5.0`
+* update to `com.ubirch.user:*:0.8.4`
+* update to `com.ubirch.util:crypto:0.4.7`
+* update to `com.ubirch.util:mongo-utils:0.5.3`
+* update to `com.ubirch.util:mongo-test-utils:0.5.3`
+* update to `com.ubirch.util:redis-util:0.3.6`
+* update to `com.ubirch.util:redis-test-util:0.3.6`
+* update to `com.ubirch.util:rest-akka-http:0.3.9`
+* update to `com.ubirch.util:rest-akka-http-test:0.3.9`
+* update to `com.ubirch.util:response-util:0.2.5`
 
 ### Version 0.2.21 (2018-03-26)
 
