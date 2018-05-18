@@ -13,7 +13,7 @@ If you still have old data you want to delete first please run
 To init default providers and contexts for development please run
 
     ./sbt "cmdtools/runMain com.ubirch.auth.cmd.InitData"
-
+Init
 generated contexts
 
 * trackle-local
