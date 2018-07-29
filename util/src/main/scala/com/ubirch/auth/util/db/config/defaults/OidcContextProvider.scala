@@ -29,6 +29,11 @@ object OidcContextProvider {
     trackleAdminUIDemoGoogle,
     trackleUIDemoGoogle
 
+    // prod
+    ubirchAdminUIProdGoogle,
+    ubirchAdminUIProdKeycloak,
+    trackleAdminUIProdGoogle
+
   )
 
   /*
@@ -142,6 +147,28 @@ object OidcContextProvider {
     callbackUrl = new URI("http://trackle.demo.ubirch.com/auth?providerId=google")
   )
 
+
+  /*
+   * *-prod
+   ***********************************************************************/
+
+  private lazy val ubirchAdminUIProdGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.ubirchProd,
+    appId = AppIds.adminUi,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-aetk3uvbgp9erra7ljf3i9n0du8rhjfp.apps.googleusercontent.com",
+    clientSecret = "N93u2VuRWqW47SJu0fmaepHD",
+    callbackUrl = new URI("https://ubirch.prod.ubirch.com/auth?providerId=google")
+  )
+
+  private lazy val trackleAdminUIProdGoogle: ContextProviderConfig = ContextProviderConfig(
+    context = ContextDefinitions.trackleProd,
+    appId = AppIds.adminUi,
+    provider = OidcProviders.providerIdGoogle,
+    clientId = "370115332091-svjcpckodfa7q6f4uctjp3ttgfqdhetn.apps.googleusercontent.com",
+    clientSecret = "hJCM_XzCBXOckNd66OHBBC4B",
+    callbackUrl = new URI("http://ubirch.trackle.prod.ubirch.com/auth?providerId=google")
+  )
 }
 
 object ContextDefinitions {
@@ -170,6 +197,13 @@ object ContextDefinitions {
 
   final val trackleDemo = "trackle-demo"
 
+  /*
+   * *-demo
+   *********************************************************************/
+
+  final val ubirchProd = "ubirch-prod"
+
+  final val trackleProd = "trackle-prod"
 }
 
 object AppIds {
