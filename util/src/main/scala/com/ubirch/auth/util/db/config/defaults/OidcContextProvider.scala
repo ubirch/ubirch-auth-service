@@ -27,11 +27,11 @@ object OidcContextProvider {
     ubirchAdminUIDemoGoogle,
     ubirchAdminUIDemoKeycloak,
     trackleAdminUIDemoGoogle,
-    trackleUIDemoGoogle
+    trackleUIDemoGoogle,
 
     // prod
     ubirchAdminUIProdGoogle,
-    ubirchAdminUIProdKeycloak,
+    //ubirchAdminUIProdKeycloak,
     trackleAdminUIProdGoogle
 
   )
