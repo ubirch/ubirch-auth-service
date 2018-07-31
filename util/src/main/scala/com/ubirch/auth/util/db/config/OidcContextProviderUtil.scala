@@ -5,7 +5,6 @@ import com.typesafe.scalalogging.slf4j.StrictLogging
 import com.ubirch.auth.model.db.ContextProviderConfig
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.util.db.config.defaults.OidcContextProvider
-import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.MyJsonProtocol
 
 import org.json4s.native.Serialization.write
@@ -53,7 +52,7 @@ object OidcContextProviderUtil extends StrictLogging
 
     Thread.sleep(sleepAfter)
 
-    FutureUtil.unfoldInnerFutures(contextsStored).map { seq =>
+    Future.sequence(contextsStored).map { seq =>
       seq.groupBy(_.context)
     }
 

@@ -3,7 +3,6 @@ package com.ubirch.auth.core.actor
 import com.ubirch.auth.config.Config
 import com.ubirch.auth.model.db.redis.RedisKeys
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
-import com.ubirch.util.futures.FutureUtil
 import com.ubirch.util.json.JsonFormats
 import com.ubirch.util.redis.RedisClientUtil
 
@@ -97,7 +96,7 @@ class OidcConfigActor extends Actor
     activeProviderIds() flatMap { providerIdList =>
 
       val configList: Seq[Future[OidcProviderConfig]] = providerIdList map providerBaseConfig
-      FutureUtil.unfoldInnerFutures(configList)
+      Future.sequence(configList)
 
     }
 
@@ -135,7 +134,7 @@ class OidcConfigActor extends Actor
 
     val pattern = s"${RedisKeys.oidcContextPrefix(context, appId)}.*"
     redis.keys(pattern) flatMap { providerList =>
-      FutureUtil.unfoldInnerFutures(
+      Future.sequence(
         providerList.map(contextProvider(context, appId,  _))
       )
     }

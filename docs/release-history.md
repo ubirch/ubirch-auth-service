@@ -1,8 +1,25 @@
 ## Release History
 
-### Version 0.3.1 (tbd)
+### Version 0.4.0 (tbd)
 
-* tbd
+* update to Scala 2.11.12
+* update to `com.typesafe.akka:akka-(actor|slf4j):2.5.11`
+* update to `com.typesafe.akka:akka-http(-testkit):10.1.3`
+* update to `org.json4s:json4s-*:3.6.0`
+* update to `com.nimbusds:oauth2-oidc-sdk:5.64.2`
+* update to `com.ubirch.user:*:0.10.1`
+* update to `com.ubirch.util:config:0.2.1`
+* update to `com.ubirch.util:crypto:0.4.9`
+* update to `com.ubirch.util:deep-check-model:0.3.0`
+* update to `com.ubirch.util:json:0.5.0`
+* update to `com.ubirch.util:mongo-utils:0.7.0`
+* update to `com.ubirch.util:mongo-test-utils:0.7.0`
+* update to `com.ubirch.util:oidc-utils:0.7.0`
+* update to `com.ubirch.util:redis-util:0.5.0`
+* update to `com.ubirch.util:redis-test-util:0.5.0`
+* update to `com.ubirch.util:rest-akka-http:0.4.0`
+* update to `com.ubirch.util:rest-akka-http-test:0.4.0`
+* update to `com.ubirch.util:response-util:0.4.0`
 
 ### Version 0.3.0 (2018-07-31)
 
