@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.3.1 (tbd)
+
+* tbd
+
 ### Version 0.3.0 (2018-07-31)
 
 * update sbt from `0.13.17` to `1.1.6`
