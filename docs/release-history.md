@@ -1,8 +1,36 @@
 ## Release History
 
-### Version 0.2.23 (tbd)
+### Version 0.4.0 (2018-07-31)
 
-* tbd
+* update to Scala 2.11.12
+* update to `com.typesafe.akka:akka-(actor|slf4j):2.5.11`
+* update to `com.typesafe.akka:akka-http(-testkit):10.1.3`
+* update to `org.json4s:json4s-*:3.6.0`
+* update to `com.nimbusds:oauth2-oidc-sdk:5.64.2`
+* update to `com.ubirch.user:*:0.10.1`
+* update to `com.ubirch.util:config:0.2.1`
+* update to `com.ubirch.util:crypto:0.4.9`
+* update to `com.ubirch.util:deep-check-model:0.3.0`
+* update to `com.ubirch.util:json:0.5.0`
+* update to `com.ubirch.util:mongo-utils:0.7.0`
+* update to `com.ubirch.util:mongo-test-utils:0.7.0`
+* update to `com.ubirch.util:oidc-utils:0.7.0`
+* update to `com.ubirch.util:redis-util:0.5.0`
+* update to `com.ubirch.util:redis-test-util:0.5.0`
+* update to `com.ubirch.util:rest-akka-http:0.4.0`
+* update to `com.ubirch.util:rest-akka-http-test:0.4.0`
+* update to `com.ubirch.util:response-util:0.4.0`
+
+### Version 0.3.0 (2018-07-31)
+
+* update sbt from `0.13.17` to `1.1.6`
+* update to plugin `com.eed3si9n:sbt-assembly:0.14.7`
+* update to plugin `net.virtual-void:sbt-dependency-graph:0.9.0`
+* update to plugin `se.marcuslonnberg:sbt-docker:1.5.0`
+* disabled plugin `com.zavakid.sbt:sbt-one-log` as it's not yet available for sbt `1.1.x`
+* update to plugin `net.vonbuchholtz:sbt-dependency-check:0.2.7`
+* update to plugin `org.scoverage:sbt-scoverage:1.5.1`
+* update to plugin `com.typesafe.sbt:sbt-twirl:1.3.15`
 
 ### Version 0.2.22 (2018-04-11)
 

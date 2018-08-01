@@ -8,7 +8,6 @@ import com.ubirch.auth.core.actor.{ContextProviderIds, GetContextProvider, GetPr
 import com.ubirch.auth.model.ProviderInfo
 import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.auth.oidcutil.AuthRequest
-import com.ubirch.util.futures.FutureUtil
 
 import akka.actor.ActorSystem
 import akka.pattern.ask
@@ -62,7 +61,7 @@ object ProviderInfoManager extends StrictLogging {
             }
 
           }
-          FutureUtil.unfoldInnerFutures(futureProviders)
+          Future.sequence(futureProviders)
 
         }
 
