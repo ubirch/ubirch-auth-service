@@ -24,6 +24,7 @@ object UserInfoManager {
   def getInfo(userContext: UserContext)
              (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
+    // TODO refactor: move to user-service and expose through REST API
     UserManager.findByProviderIdAndExternalId(
       providerId = userContext.providerId,
       externalUserId = userContext.userId
@@ -61,6 +62,7 @@ object UserInfoManager {
   def update(userContext: UserContext, userUpdate: UserUpdate)
             (implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
+    // TODO refactor: move to user-service and expose through REST API
     UserManager.findByProviderIdAndExternalId(
       providerId = userContext.providerId,
       externalUserId = userContext.userId

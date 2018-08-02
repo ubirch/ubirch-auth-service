@@ -12,6 +12,7 @@ object UserInfoUtil {
 
   def toUserInfoGroups(groups: Set[Group]): Set[UserInfoGroup] = {
 
+    // TODO refactor: move to user-service
     // TODO automated tests
     groups map { group =>
       UserInfoGroup(

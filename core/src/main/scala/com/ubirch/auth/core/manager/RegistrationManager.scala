@@ -19,6 +19,7 @@ object RegistrationManager extends StrictLogging {
 
   def register(userContext: UserContext)(implicit mongo: MongoUtil): Future[Option[UserInfo]] = {
 
+    // TODO refactor: move to user-service and expose through REST API
     val context = userContext.context
     val providerId = userContext.providerId
     val externalUserId = userContext.userId
