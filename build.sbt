@@ -139,9 +139,6 @@ lazy val util = project
   .dependsOn(modelDb)
   .settings(
     description := "utils",
-    resolvers ++= Seq(
-      roundeightsHasher
-    ),
     libraryDependencies ++= depUtils
   )
 
@@ -287,8 +284,7 @@ lazy val ubirchUserTestToolsExt = ubirchUserG %% "test-tools-ext" % ubirchUserV
  * RESOLVER
  ********************************************************/
 
-lazy val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
-lazy val roundeightsHasher = "RoundEights" at "http://maven.spikemark.net/roundeights"
+val resolverSeebergerJson = Resolver.bintrayRepo("hseeberger", "maven")
 
 /*
  * MISC
