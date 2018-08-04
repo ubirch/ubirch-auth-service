@@ -2,7 +2,7 @@
 
 ### Version 0.4.1 (tbd)
 
-* tbd
+* switched `user-service` connection from managers to REST endpoints 
 
 ### Version 0.4.0 (2018-07-31)
 

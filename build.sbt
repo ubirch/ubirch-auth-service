@@ -155,8 +155,8 @@ lazy val depServer = Seq(
   ubirchUtilRestAkkaHttpTest % "test",
 
   ubirchUtilMongo,
-
-  ubirchUtilResponse
+  ubirchUtilResponse,
+  ubirchUserRest
 
 )
 
@@ -280,7 +280,7 @@ lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.4.0" excludeAl
 
 lazy val ubirchUserCore = ubirchUserG %% "core" % ubirchUserV
 lazy val ubirchUserTestToolsExt = ubirchUserG %% "test-tools-ext" % ubirchUserV
-//lazy val ubirchUserRest = ubirchUserG %% "client-rest" % ubirchUserV
+lazy val ubirchUserRest = ubirchUserG %% "client-rest" % "0.12.0"
 
 /*
  * RESOLVER

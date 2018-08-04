@@ -17,8 +17,8 @@ import scala.language.postfixOps
   */
 object TestUserUtil extends StrictLogging {
 
-  implicit val system = ActorSystem()
-  implicit val timeout = Timeout(15 seconds)
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val timeout: Timeout = Timeout(15 seconds)
 
   private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.OIDC_CONFIG)
 

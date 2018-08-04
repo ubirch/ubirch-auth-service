@@ -26,13 +26,12 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-06-08
   */
-trait DeepCheckRoute extends CORSDirective
+class DeepCheckRoute(implicit system: ActorSystem) extends CORSDirective
   with ResponseUtil
   with StrictLogging {
 
-  implicit val system = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-  implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val timeout: Timeout = Timeout(Config.actorTimeout seconds)
 
   private val deepCheckActor = system.actorOf(DeepCheckActor.props(), ActorNames.DEEP_CHECK)
 

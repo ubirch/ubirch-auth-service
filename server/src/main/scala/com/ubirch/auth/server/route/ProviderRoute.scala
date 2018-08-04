@@ -24,11 +24,10 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-01-26
   */
-trait ProviderRoute extends ResponseUtil
+class ProviderRoute(implicit system: ActorSystem) extends ResponseUtil
   with CORSDirective
   with StrictLogging {
 
-  implicit val system: ActorSystem = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout: Timeout = Timeout(Config.actorTimeout seconds)
 

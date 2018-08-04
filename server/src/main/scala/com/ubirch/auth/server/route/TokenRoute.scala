@@ -27,13 +27,12 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-01-31
   */
-trait TokenRoute extends ResponseUtil
+class TokenRoute(implicit system: ActorSystem) extends ResponseUtil
   with CORSDirective
   with StrictLogging {
 
-  implicit val system = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-  implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val timeout: Timeout = Timeout(Config.actorTimeout seconds)
 
   private val stateAndCodeActor = system.actorOf(StateAndCodeActor.props(), ActorNames.REDIS)
 

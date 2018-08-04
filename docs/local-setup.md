@@ -24,10 +24,9 @@ generated contexts
 * ubirch-admin-ui-demo
 * trackle-admin-ui-demo
 
-3) Start MongoDB
+3) Start UserService
 
-The `/register` and `/userInfo` calls use managers from the user-service and hence depend on MongoDB. Please follow the
-local setup section in the user-service's README, too.
+The `/register` and `/userInfo` depend on the `user-service` for it's REST API.
 
 4) Start AuthService
 

@@ -21,12 +21,11 @@ import scala.language.postfixOps
   * author: cvandrei
   * since: 2017-02-01
   */
-trait LogoutRoute extends ResponseUtil
+class LogoutRoute(implicit system: ActorSystem) extends ResponseUtil
   with CORSDirective {
 
-  implicit val system = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-  implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val timeout: Timeout = Timeout(Config.actorTimeout seconds)
 
   private val logoutActor = system.actorOf(LogoutActor.props(), ActorNames.LOGOUT)
 
