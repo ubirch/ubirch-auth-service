@@ -9,7 +9,6 @@ import com.ubirch.user.client.rest.UserServiceClientRest
 import com.ubirch.user.model.rest.SimpleUserContext
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.Json4sUtil
-import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.directive.OidcDirective
 import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.redis.RedisClientUtil
@@ -32,8 +31,7 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-04-25
   */
-class UserInfoRoute(implicit mongo: MongoUtil,
-                    system: ActorSystem,
+class UserInfoRoute(implicit system: ActorSystem,
                     httpClient: HttpExt,
                     materializer: Materializer
                    )

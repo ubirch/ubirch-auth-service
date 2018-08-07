@@ -40,12 +40,6 @@ object ConfigKeys {
   final val OIDC_TOKEN_TTL = s"$oidc.token.ttl"
 
   /*
-   * MongoDB
-   *********************************************************************************************/
-
-  final val MONGO_PREFIX = "ubirchUserService.mongo"
-
-  /*
    * Test User
    *********************************************************************************************/
 

@@ -8,7 +8,6 @@ import com.ubirch.auth.util.server.RouteConstants
 import com.ubirch.user.client.rest.UserServiceClientRest
 import com.ubirch.util.http.response.ResponseUtil
 import com.ubirch.util.json.Json4sUtil
-import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.oidc.directive.OidcDirective
 import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.redis.RedisClientUtil
@@ -31,8 +30,7 @@ import scala.util.{Failure, Success}
   * author: cvandrei
   * since: 2017-04-20
   */
-class RegisterRoute(implicit mongo: MongoUtil,
-                    system: ActorSystem,
+class RegisterRoute(implicit system: ActorSystem,
                     httpClient: HttpExt,
                     materializer: Materializer
                    )

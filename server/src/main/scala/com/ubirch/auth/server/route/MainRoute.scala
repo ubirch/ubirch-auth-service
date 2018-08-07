@@ -1,7 +1,6 @@
 package com.ubirch.auth.server.route
 
 import com.ubirch.auth.util.server.RouteConstants
-import com.ubirch.util.mongo.connection.MongoUtil
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.HttpExt
@@ -13,8 +12,7 @@ import akka.stream.Materializer
   * author: cvandrei
   * since: 2017-01-19
   */
-class MainRoute(implicit mongo: MongoUtil,
-                system: ActorSystem,
+class MainRoute(implicit system: ActorSystem,
                 httpClient: HttpExt,
                 materializer: Materializer
                ) {

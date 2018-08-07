@@ -4,21 +4,20 @@ import java.util.concurrent.TimeUnit
 
 import com.typesafe.scalalogging.slf4j.StrictLogging
 
-import com.ubirch.auth.config.{Config, ConfigKeys}
+import com.ubirch.auth.config.Config
 import com.ubirch.auth.server.route.MainRoute
 import com.ubirch.auth.util.db.config.{OidcContextProviderUtil, OidcProviderUtil}
-import com.ubirch.util.mongo.connection.MongoUtil
 import com.ubirch.util.redis.RedisClientUtil
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.{Http, HttpExt}
 import akka.http.scaladsl.Http.ServerBinding
+import akka.http.scaladsl.{Http, HttpExt}
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import redis.RedisClient
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.language.postfixOps
 
 /**
@@ -27,14 +26,13 @@ import scala.language.postfixOps
   */
 object Boot extends App with StrictLogging {
 
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
-  implicit val executionContext = system.dispatcher
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val httpClient: HttpExt = Http()
 
-  implicit val timeout = Timeout(Config.timeout seconds)
+  implicit val timeout: Timeout = Timeout(Config.timeout seconds)
 
-  implicit val mongo: MongoUtil = new MongoUtil(ConfigKeys.MONGO_PREFIX)
   implicit val redis: RedisClient = RedisClientUtil.getRedisClient()
 
   val bindingFuture = start()
@@ -44,7 +42,7 @@ object Boot extends App with StrictLogging {
 
     val interface = Config.interface
     val port = Config.port
-    implicit val timeout = Timeout(5, TimeUnit.SECONDS)
+    implicit val timeout: Timeout = Timeout(5, TimeUnit.SECONDS)
 
     OidcProviderUtil.initProviders()
     OidcContextProviderUtil.initContexts()
@@ -54,7 +52,7 @@ object Boot extends App with StrictLogging {
 
   }
 
-  private def registerShutdownHooks() = {
+  private def registerShutdownHooks(): Unit = {
 
     Runtime.getRuntime.addShutdownHook(new Thread() {
 
@@ -63,8 +61,6 @@ object Boot extends App with StrictLogging {
         bindingFuture
           .flatMap(_.unbind())
           .onComplete(_ => system.terminate())
-
-        mongo.close()
 
         redis.stop()
 
