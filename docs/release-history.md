@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.4.1 (tbd)
+### Version 0.4.1 (2018-08-07)
 
 * switched `user-service` connection from managers to REST endpoints 
 
