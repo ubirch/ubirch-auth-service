@@ -87,6 +87,7 @@ OpenID Connect provider).
 
 To register a new user:
 
+    # to make the call with a ubirch token use `-H "Authorization: $TOKEN"` instead
     curl -XPOST localhost:8091/api/authService/v1/register -H "Authorization: Bearer $TOKEN"
 
 If the registration is successful the response is:
@@ -120,6 +121,7 @@ If the registration fails the response is:
 
 #### Get
 
+    # to make the call with a ubirch token use `-H "Authorization: $TOKEN"` instead
     curl localhost:8091/api/authService/v1/userInfo -H "Authorization: Bearer $TOKEN"
 
 If the query is successful the response is (user exists but is not registered not in this context):
@@ -183,6 +185,7 @@ If the query fails the response is:
 
 #### Update
 
+    # to make the call with a ubirch token use `-H "Authorization: $TOKEN"` instead
     curl -XPUT localhost:8091/api/authService/v1/userInfo -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{
       "displayName": "my new display name",
       "locale": "en"
