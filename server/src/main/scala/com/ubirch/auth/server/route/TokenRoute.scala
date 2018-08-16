@@ -46,7 +46,7 @@ class TokenRoute(implicit system: ActorSystem) extends ResponseUtil
 
             val verifyCode = VerifyCode(
               context = afterLogin.context,
-              appId = afterLogin.appId, // TODO update documentation: new field "appId" in AfterLogin
+              appId = afterLogin.appId,
               provider = afterLogin.providerId,
               code = afterLogin.code,
               state = afterLogin.state
