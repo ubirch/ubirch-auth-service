@@ -71,7 +71,7 @@ class UserInfoRoute(implicit system: ActorSystem,
     val restCall = UserServiceClientRest.userInfoGET(
       context = userContext.context,
       providerId = userContext.providerId,
-      externalUserId = userContext.userId
+      externalUserId = userContext.externalUserId
     )
     onComplete(restCall) {
 
@@ -110,7 +110,7 @@ class UserInfoRoute(implicit system: ActorSystem,
       SimpleUserContext(
         context = userContext.context,
         providerId = userContext.providerId,
-        userId = userContext.userId
+        userId = userContext.externalUserId
       ),
       Json4sUtil.any2any[com.ubirch.user.model.rest.UserUpdate](update)
     )

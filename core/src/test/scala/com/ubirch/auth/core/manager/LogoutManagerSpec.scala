@@ -43,7 +43,7 @@ class LogoutManagerSpec extends RedisSpec {
         UserContext(
           context = "some-context",
           providerId = "some-provider-id",
-          userId = "some-user-id",
+          externalUserId = "some-user-id",
           userName = "some-user-name",
           locale = "en"
         )
@@ -77,7 +77,7 @@ class LogoutManagerSpec extends RedisSpec {
         UserContext(
           context = "some-context",
           providerId = "some-provider-id",
-          userId = "some-user-id",
+          externalUserId = "some-user-id",
           userName = "some-user-name",
           locale = "en"
         )

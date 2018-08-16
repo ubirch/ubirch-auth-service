@@ -193,7 +193,7 @@ class StateAndCodeActor extends Actor
     val userContext = UserContext(
       context = context,
       providerId = providerId,
-      userId = userId,
+      externalUserId = userId,
       userName = rt.userName,
       locale = rt.locale
     )
