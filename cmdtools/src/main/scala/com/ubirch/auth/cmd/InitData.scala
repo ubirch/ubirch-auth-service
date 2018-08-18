@@ -13,6 +13,7 @@ object InitData extends App
   with CmdBase
   with RedisCleanup {
 
+  // TODO migrate to encapsulate all executable logic within a method `run(): Unit`
   OidcProviderUtil.initProviders()
   OidcContextProviderUtil.initContexts()
 

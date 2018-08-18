@@ -14,6 +14,7 @@ object RedisDelete extends App
   with CmdBase
   with RedisCleanup {
 
+  // TODO migrate to encapsulate all executable logic within a method `run(): Unit`
   deleteAll(redisPrefix = RedisKeys.OIDC, configPrefix = ConfigKeys.CONFIG_PREFIX)
 
   closeResources()
