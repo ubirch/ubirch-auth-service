@@ -22,13 +22,16 @@ class ProviderInfoActor extends Actor
   override def receive: Receive = {
 
     case getInfos: GetProviderInfoList =>
+
       val sender = context.sender
       ProviderInfoManager.providerInfoList(context = getInfos.context, appId = getInfos.appId) map(sender ! ProviderInfoList(_))
 
-    case _ =>
-      log.error("unknown message")
-      sender ! JsonErrorResponse(errorType = "UnknownMessage", errorMessage = "unable to handle message")
 
+  }
+
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
+    context.sender ! JsonErrorResponse(errorType = "UnknownMessage", errorMessage = "unable to handle message")
   }
 
 }

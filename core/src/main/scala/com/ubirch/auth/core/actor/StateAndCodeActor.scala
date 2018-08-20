@@ -9,6 +9,7 @@ import com.ubirch.util.oidc.model.UserContext
 import com.ubirch.util.oidc.util.OidcUtil
 import com.ubirch.util.redis.RedisClientUtil
 
+import org.json4s.Formats
 import org.json4s.native.Serialization.write
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
@@ -29,11 +30,11 @@ import scala.util.{Failure, Success}
 class StateAndCodeActor extends Actor
   with ActorLogging {
 
-  implicit private val formatter = JsonFormats.default
+  implicit private val formatter: Formats = JsonFormats.default
 
   implicit val executionContext: ExecutionContextExecutor = context.dispatcher
   implicit val akkaSystem: ActorSystem = context.system
-  implicit val timeout = Timeout(Config.actorTimeout seconds)
+  implicit val timeout: Timeout = Timeout(Config.actorTimeout seconds)
   implicit val redis: RedisClient = RedisClientUtil.getRedisClient()
 
   private val oidcConfigActor = context.actorOf(OidcConfigActor.props(), ActorNames.OIDC_CONFIG)
@@ -41,31 +42,42 @@ class StateAndCodeActor extends Actor
   override def receive: Receive = {
 
     case vc: VerifyCode =>
+
       val sender = context.sender()
       verifyCodeGetToken(vc) map (sender ! _)
 
-    case rs: RememberState => rememberState(rs) // TODO integration tests
+    case rs: RememberState =>
+
+      rememberState(rs) // TODO integration tests
 
     case ds: DeleteState => // TODO integration tests
+
       val sender = context.sender()
       deleteState(ds) map (sender ! _)
 
     case vse: VerifyStateExists => // TODO integration tests
+
       val sender = context.sender()
       stateExists(vse) map (sender ! _)
 
-    case rt: RememberToken => rememberToken(rt) // TODO integration tests
+    case rt: RememberToken =>
+
+      rememberToken(rt) // TODO integration tests
 
     case dt: DeleteToken => // TODO integration tests
+
       val sender = context.sender()
       deleteToken(dt) map (sender ! _)
 
     case vte: VerifyTokenExists => // TODO integration tests
+
       val sender = context.sender()
       tokenExists(vte) map (sender ! _)
 
-    case _ => log.error("unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def verifyCodeGetToken(vc: VerifyCode): Future[VerifyCodeResult] = {

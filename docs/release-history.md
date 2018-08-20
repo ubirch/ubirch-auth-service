@@ -2,7 +2,15 @@
 
 ### Version 0.4.2 (tbd)
 
-* tbd
+* update to `com.ubirch.util:config:0.2.3`
+* update to `com.ubirch.util:crypto:0.4.11`
+* update to `com.ubirch.util:json:0.5.1`
+* update to `com.ubirch.util:oidc-utils:0.7.4`
+* update to `com.ubirch.user:client-rest:0.12.2`
+* update to `com.ubirch.util:redis-util:0.5.1`
+* update to `com.ubirch.util:redis-test-util:0.5.1`
+* update to `org.scalatest:scalatest:3.0.5`
+* `/deepCheck` endpoint now includes deepCheck of `user-service`, too (without proper timeout handling though)
 
 ### Version 0.4.1 (2018-08-07)
 

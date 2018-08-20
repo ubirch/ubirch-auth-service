@@ -206,7 +206,7 @@ val akkaV = "2.5.11"
 val akkaHttpV = "10.1.3"
 val json4sV = "3.6.0"
 
-val scalaTestV = "3.0.1"
+val scalaTestV = "3.0.5"
 
 lazy val logbackV = "1.2.3"
 lazy val logbackESV = "1.5"
@@ -217,7 +217,6 @@ lazy val scalaLogSLF4JV = "2.1.2"
 
 // GROUP NAMES
 val ubirchUtilG = "com.ubirch.util"
-val ubirchUserG = "com.ubirch.user"
 val json4sG = "org.json4s"
 val akkaG = "com.typesafe.akka"
 val slf4jG = "org.slf4j"
@@ -255,18 +254,18 @@ lazy val excludedLoggers = Seq(
   ExclusionRule(organization = logbackG)
 )
 
-lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.2.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.4.9" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.2.3" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.4.11" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.3.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.5.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.7.3.4" excludeAll (excludedLoggers: _*)
-lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.5.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.5.0" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.5.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.7.4" excludeAll (excludedLoggers: _*)
+lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.5.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.5.1" excludeAll(excludedLoggers: _*)
+lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.4.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.4.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.4.0" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.4.0" excludeAll(excludedLoggers: _*)
 
-lazy val ubirchUserRest = ubirchUserG %% "client-rest" % "0.12.0"
+lazy val ubirchUserRest = "com.ubirch.user" %% "client-rest" % "0.12.2"
 
 /*
  * RESOLVER
