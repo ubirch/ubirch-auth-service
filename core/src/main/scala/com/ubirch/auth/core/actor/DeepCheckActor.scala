@@ -5,7 +5,9 @@ import com.ubirch.auth.core.manager.DeepCheckManager
 import com.ubirch.util.deepCheck.model.{DeepCheckRequest, DeepCheckResponse}
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.http.scaladsl.HttpExt
 import akka.routing.RoundRobinPool
+import akka.stream.Materializer
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -13,7 +15,7 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
   * author: cvandrei
   * since: 2017-06-08
   */
-class DeepCheckActor extends Actor
+class DeepCheckActor(implicit httpClient: HttpExt, materializer: Materializer) extends Actor
   with ActorLogging {
 
   implicit val executionContext: ExecutionContextExecutor = context.dispatcher
@@ -22,11 +24,14 @@ class DeepCheckActor extends Actor
   override def receive: Receive = {
 
     case _: DeepCheckRequest =>
+
       val sender = context.sender()
       deepCheck() map (sender ! _)
 
-    case _ => log.error("unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def deepCheck(): Future[DeepCheckResponse] = DeepCheckManager.connectivityCheck()
@@ -34,5 +39,5 @@ class DeepCheckActor extends Actor
 }
 
 object DeepCheckActor {
-  def props(): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props[DeepCheckActor])
+  def props()(implicit httpClient: HttpExt, materializer: Materializer): Props = new RoundRobinPool(Config.akkaNumberOfWorkers).props(Props(new DeepCheckActor))
 }

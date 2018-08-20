@@ -6,6 +6,7 @@ import com.ubirch.auth.model.db.{ContextProviderConfig, OidcProviderConfig}
 import com.ubirch.util.json.JsonFormats
 import com.ubirch.util.redis.RedisClientUtil
 
+import org.json4s.Formats
 import org.json4s.native.Serialization.read
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
@@ -21,7 +22,7 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 class OidcConfigActor extends Actor
   with ActorLogging {
 
-  implicit private val formatter = JsonFormats.default
+  implicit private val formatter: Formats = JsonFormats.default
 
   implicit private val executionContext: ExecutionContextExecutor = context.dispatcher
   implicit private val akkaSystem: ActorSystem = context.system
@@ -31,34 +32,42 @@ class OidcConfigActor extends Actor
   override def receive: Receive = {
 
     case _: GetActiveProviderIds =>
+
       val sender = context.sender()
       activeProviderIds() map (sender ! _)
 
     case msg: GetProviderBaseConfig =>
+
       val sender = context.sender()
       providerBaseConfig(msg.providerId) map (sender ! _)
 
     case _: GetProviderBaseConfigs =>
+
       val sender = context.sender()
       providerBaseConfigs() map (sender ! _)
 
     case _: GetActiveContexts =>
+
       val sender = context.sender()
       activeContexts() map (sender ! _)
 
     case msg: IsContextActive =>
+
       val sender = context.sender()
       isContextActive(msg.context) map (sender ! _)
 
     case msg: ContextProviderIds =>
+
       val sender = context.sender()
       contextProviderIds(msg.context, msg.appId) map (sender ! _)
 
     case msg: GetContextProviders =>
+
       val sender = context.sender()
       contextProviders(msg.context, msg.appId) map (sender ! _)
 
     case msg: GetContextProvider =>
+
       val sender = context.sender()
       contextProvider(
         context = msg.context,
@@ -66,8 +75,10 @@ class OidcConfigActor extends Actor
         provider = msg.provider
       ) map (sender ! _)
 
-    case _ => log.error("unknown message")
+  }
 
+  override def unhandled(message: Any): Unit = {
+    log.error(s"received from ${context.sender().path} unknown message: ${message.toString} (${message.getClass})")
   }
 
   private def activeProviderIds(): Future[Seq[String]] = {
