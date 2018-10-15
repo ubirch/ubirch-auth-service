@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.4.4 (tbd)
+### Version 0.4.4 (2018-10-15)
 
 * update to `com.ubirch.util:oidc-utils:0.8.1`
 
