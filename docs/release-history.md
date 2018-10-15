@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.4.5 (tbd)
+### Version 0.4.5 (2018-10-15)
 
 * improved logging in `RegisterRoute`
 * fixed error: unhandled boolean messages resulting from processing of `DeleteState`
