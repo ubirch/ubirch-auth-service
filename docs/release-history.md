@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.4.3 (tbd)
+### Version 0.4.3 (2018-10-15)
 
 * update to `com.ubirch.user:client-rest:1.0.0`
 * update to `com.ubirch.util:oidc-utils:0.8.0`
