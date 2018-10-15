@@ -4,6 +4,7 @@
 
 * improved logging in `RegisterRoute`
 * fixed error: unhandled boolean messages resulting from processing of `DeleteState`
+* temporary revert to `com.ubirch.util:oidc-utils:0.7.4`
 
 ### Version 0.4.4 (2018-10-15)
 
