@@ -77,6 +77,8 @@ class RegisterRoute(implicit system: ActorSystem,
 
           case Some(userInfo: com.ubirch.user.model.rest.UserInfo) =>
 
+            logger.info(s"user registration has been successful: ${userContext.context}/${userContext.providerId} (context/providerId)")
+            logger.debug(s"user registration has been successful: userInfo=$userInfo)")
             complete(Json4sUtil.any2any[UserInfo](userInfo))
 
           case None =>

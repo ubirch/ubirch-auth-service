@@ -2,7 +2,8 @@
 
 ### Version 0.4.5 (tbd)
 
-* tbd
+* improved logging in `RegisterRoute`
+* fixed error: unhandled boolean messages resulting from processing of `DeleteState`
 
 ### Version 0.4.4 (2018-10-15)
 

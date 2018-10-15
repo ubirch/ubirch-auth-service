@@ -74,6 +74,10 @@ class StateAndCodeActor extends Actor
       val sender = context.sender()
       tokenExists(vte) map (sender ! _)
 
+    case deleteResult: DeleteStateResult =>
+
+      log.debug(s"DeleteStateResult=$deleteResult")
+
   }
 
   override def unhandled(message: Any): Unit = {
@@ -161,7 +165,7 @@ class StateAndCodeActor extends Actor
 
   }
 
-  private def deleteState(ds: DeleteState): Future[Boolean] = {
+  private def deleteState(ds: DeleteState): Future[DeleteStateResult] = {
 
     val provider = ds.provider
     val state = ds.state
@@ -172,15 +176,15 @@ class StateAndCodeActor extends Actor
       case 1 =>
         log.debug(s"deleted state: $provider::$state (key=$key)")
         log.info(s"deleted state: provider=$provider")
-        true
+        DeleteStateResult(true)
 
       case 0 =>
         log.error(s"failed to delete state: provider=$provider (key=$key)")
-        false
+        DeleteStateResult(false)
 
       case _ =>
         log.error(s"unexpected error while deleting state: provider=$provider (key=$key)")
-        false
+        DeleteStateResult(false)
 
     }
 
@@ -284,6 +288,8 @@ case class RememberState(provider: String,
 case class DeleteState(provider: String,
                        state: String
                       )
+
+case class DeleteStateResult(deleted: Boolean)
 
 case class VerifyStateExists(provider: String,
                              state: String
