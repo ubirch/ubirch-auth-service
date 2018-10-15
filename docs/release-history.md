@@ -2,7 +2,7 @@
 
 ### Version 0.4.4 (tbd)
 
-* tbd
+* update to `com.ubirch.util:oidc-utils:0.8.1`
 
 ### Version 0.4.3 (2018-10-15)
 
