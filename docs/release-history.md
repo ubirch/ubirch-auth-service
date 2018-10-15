@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.4.6 (tbd)
+
+* tbd
+
 ### Version 0.4.5 (2018-10-15)
 
 * improved logging in `RegisterRoute`
