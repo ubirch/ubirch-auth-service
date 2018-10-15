@@ -14,7 +14,7 @@ val commonSettings = Seq(
     url("https://github.com/ubirch/ubirch-auth-service"),
     "scm:git:git@github.com:ubirch/ubirch-auth-service.git"
   )),
-  version := "0.4.2",
+  version := "0.4.3",
   test in assembly := {},
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
@@ -258,14 +258,14 @@ lazy val ubirchUtilConfig = ubirchUtilG %% "config" % "0.2.3" excludeAll(exclude
 lazy val ubirchUtilCrypto = ubirchUtilG %% "crypto" % "0.4.11" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilDeepCheckModel = ubirchUtilG %% "deep-check-model" % "0.3.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilJson = ubirchUtilG %% "json" % "0.5.1" excludeAll(excludedLoggers: _*)
-lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.7.4" excludeAll (excludedLoggers: _*)
+lazy val ubirchUtilOidcUtils = ubirchUtilG %% "oidc-utils" % "0.8.0" excludeAll (excludedLoggers: _*)
 lazy val ubirchUtilRedisTestUtils = ubirchUtilG %% "redis-test-util" % "0.5.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRedisUtil = ubirchUtilG %% "redis-util" % "0.5.1" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilResponse = ubirchUtilG %% "response-util" % "0.4.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttp = ubirchUtilG %% "rest-akka-http" % "0.4.0" excludeAll(excludedLoggers: _*)
 lazy val ubirchUtilRestAkkaHttpTest = ubirchUtilG %% "rest-akka-http-test" % "0.4.0" excludeAll(excludedLoggers: _*)
 
-lazy val ubirchUserRest = "com.ubirch.user" %% "client-rest" % "0.12.2"
+lazy val ubirchUserRest = "com.ubirch.user" %% "client-rest" % "1.0.0"
 
 /*
  * RESOLVER
