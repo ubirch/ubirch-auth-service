@@ -1,5 +1,9 @@
 ## Release History
 
+### Version 0.4.8 (tbd)
+
+* tbd
+
 ### Version 0.4.7 (2018-10-16)
 
 * update to `com.ubirch.util:deep-check-model:0.3.1`
