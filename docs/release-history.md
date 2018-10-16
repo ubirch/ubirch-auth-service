@@ -2,7 +2,12 @@
 
 ### Version 0.4.7 (tbd)
 
-* tbd
+* update to `com.ubirch.util:deep-check-model:0.3.1`
+* update to `com.ubirch.util:oidc-utils:0.8.2`
+* update to `com.ubirch.util:redis-util:0.5.2`
+* update to `com.ubirch.util:redis-test-util:0.5.2`
+* update to `com.ubirch.util:response-util:0.4.1`
+* update to `com.ubirch.user:client-rest:1.0.1`
 
 ### Version 0.4.6 (2018-10-16)
 
