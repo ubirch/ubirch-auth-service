@@ -1,6 +1,6 @@
 ## Release History
 
-### Version 0.4.7 (tbd)
+### Version 0.4.7 (2018-10-16)
 
 * update to `com.ubirch.util:deep-check-model:0.3.1`
 * update to `com.ubirch.util:oidc-utils:0.8.2`
