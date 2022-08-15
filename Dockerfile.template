@@ -1,4 +1,4 @@
-FROM ubirch/java
+FROM amazoncorretto:8u342
 ARG GO_PIPELINE_COUNTER=manual
 ARG GO_PIPELINE_LABEL=manual
 ARG GO_PIPELINE_NAME=manual
